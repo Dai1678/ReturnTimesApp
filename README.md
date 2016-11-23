@@ -37,4 +37,6 @@ ToDo
 https://developers.google.com/maps/android/?hl=ja Android 向けの Google Maps APIサービス一覧
 https://developers.google.com/maps/web-services/?hl=ja Webサービス向けのGoogle Maps APIサービス一覧(Androidでも使える)
 https://www.youtube.com/watch?v=tXPEOJaeFm8 Google Distance Matrix APIを使ったサンプルの紹介動画。
-https://github.com/vastavch/GoogleMapsDistanceMatrixAPI_Demo ↑の動画のGithub。これを改造していく。
+https://github.com/vastavch/GoogleMapsDistanceMatrixAPI_Demo ↑の動画のGithub。これを改造していく。  
+<http://tech.admax.ninja/2014/09/16/how-to-get-location-by-android/>　GPS取得の参考サイト  
+<http://havoc0214.hatenablog.com/entry/2015/09/07/041956>　↑のサイトの詳細説明  
