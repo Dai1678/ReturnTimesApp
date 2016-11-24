@@ -41,6 +41,9 @@ ToDo
 - 設定画面作成  
 - その他機能の実装方法見積もり  
 
+2016/11/24  
+- 
+
 参考  
 https://developers.google.com/maps/android/?hl=ja Android 向けの Google Maps APIサービス一覧  
 https://developers.google.com/maps/web-services/?hl=ja Webサービス向けのGoogle Maps APIサービス一覧(Androidでも使える)  
