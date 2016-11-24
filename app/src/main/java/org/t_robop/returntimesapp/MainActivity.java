@@ -1,5 +1,6 @@
 package org.t_robop.returntimesapp;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,7 +14,7 @@ import android.widget.TextView;
 public class MainActivity extends AppCompatActivity implements GeoTask.Geo {
     EditText edttxt_from,edttxt_to;
     Button btn_get;
-    String str_from="yokohama,jp";  //現在位置の緯度経度
+    String str_from="asakusa,jp";  //現在位置の緯度経度
     String str_to="35.529792,139.698568"; //自宅の緯度経度
     TextView tv_result1,tv_result2;
 
@@ -21,6 +22,7 @@ public class MainActivity extends AppCompatActivity implements GeoTask.Geo {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         initialize();
         btn_get.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -29,6 +31,9 @@ public class MainActivity extends AppCompatActivity implements GeoTask.Geo {
                 Log.d("test",str_to);
 //                str_from=edttxt_from.getText().toString();
 //                str_to=edttxt_to.getText().toString();
+
+                //str_from = gg.
+
                 String url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=" + str_from + "&destinations=" + str_to + "&mode=train&language=ja&avoid=tolls&key=AIzaSyCRr1HoHvxqLabvjWwWe6SyYZViUuvQreo";
                 new GeoTask(MainActivity.this).execute(url);
 
