@@ -27,6 +27,9 @@ public class GeoTask extends AsyncTask<String, Void, String> {
     Context mContext;
     Double duration;
     Geo geo1;
+
+    static StringBuilder sb;
+
     //constructor is used to get the context.
     public GeoTask(Context mContext) {
         this.mContext = mContext;
@@ -65,7 +68,7 @@ public class GeoTask extends AsyncTask<String, Void, String> {
             if(statuscode==HttpURLConnection.HTTP_OK)
             {
                 BufferedReader br=new BufferedReader(new InputStreamReader(con.getInputStream()));
-                StringBuilder sb=new StringBuilder();
+                sb=new StringBuilder();
                 String line=br.readLine();
                 while(line!=null)
                 {
@@ -73,7 +76,14 @@ public class GeoTask extends AsyncTask<String, Void, String> {
                     line=br.readLine();
                 }
                 String json=sb.toString();
-                Log.d("JSON",json);
+                StringBuilder test=sb;
+                int cal=test.indexOf("]");
+                int endString=test.indexOf("]",cal+1);
+                int sttString=test.indexOf("[",cal+1);
+                String fromPo=test.substring(sttString+1,endString);
+                //最初の]の位置げと
+                //最初からそこorその一個次まで削る
+                Log.d("JSON", fromPo);
                 JSONObject root=new JSONObject(json);
                 JSONArray array_rows=root.getJSONArray("rows");
                 Log.d("JSON","array_rows:"+array_rows);
@@ -103,6 +113,17 @@ public class GeoTask extends AsyncTask<String, Void, String> {
     }
     interface Geo{
         public void setDouble(String min);
+    }
+
+
+    static String getFromPo(){
+        StringBuilder test=sb;
+        int cal=test.indexOf("]");
+        int endString=test.indexOf("]",cal+1);
+        int sttString=test.indexOf("[",cal+1);
+        String fromPo=test.substring(sttString+1,endString);
+
+        return fromPo;
     }
 
 }

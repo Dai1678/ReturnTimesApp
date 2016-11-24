@@ -16,7 +16,7 @@ public class MainActivity extends AppCompatActivity implements GeoTask.Geo {
     Button btn_get;
     String str_from="asakusa,jp";  //現在位置の緯度経度
     String str_to="35.529792,139.698568"; //自宅の緯度経度
-    TextView tv_result1,tv_result2;
+    TextView tv_result1,tv_result2,tv_result3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +49,7 @@ public class MainActivity extends AppCompatActivity implements GeoTask.Geo {
         int dist=Integer.parseInt(res[1])/1000;
         tv_result1.setText("Duration= " + (int) (min / 60) + " hr " + (int) (min % 60) + " mins");
         tv_result2.setText("Distance= " + dist + " kilometers");
+        tv_result3.setText("現在位置:"+GeoTask.getFromPo());
 
     }
     public void initialize()
@@ -58,6 +59,7 @@ public class MainActivity extends AppCompatActivity implements GeoTask.Geo {
         btn_get= (Button) findViewById(R.id.button_get);
         tv_result1= (TextView) findViewById(R.id.textView_result1);
         tv_result2=(TextView) findViewById(R.id.textView_result2);
+        tv_result3=(TextView) findViewById(R.id.textView_result3);
 
     }
 }
