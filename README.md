@@ -29,7 +29,10 @@
 
 2016/11/23  
 - 2点間の距離と所要時間の表示完了(座標、文字列を変数に入れて両方確認済み)  
-- 現在地の緯度経度、取得時間、Provider、ネットワーク状態の取得・表示完了　→ <https://github.com/Dai1678/gpsGetter>
+- 現在地の緯度経度、取得時間、Provider、ネットワーク状態の取得・表示完了　→ <https://github.com/Dai1678/gpsGetter>  
+
+2016/11/24  
+- ボタンを押してもエラーがでる → ?
 
 ToDo
 2016/11/22  
@@ -42,7 +45,10 @@ ToDo
 - その他機能の実装方法見積もり  
 
 2016/11/24  
-- 
+- MainActivityとGpsGetterの同期  
+- str_fromにGpsGetterで取得した緯度経度を代入して、APIで正常に処理させる  
+- 設定画面作成  
+- その他機能の実装方法見積もり  
 
 参考  
 https://developers.google.com/maps/android/?hl=ja Android 向けの Google Maps APIサービス一覧  
