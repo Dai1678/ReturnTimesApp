@@ -20,7 +20,7 @@ import java.net.URL;
 /**
  * Created by SRIVASTAVA on 1/9/2016.
  */
-/*The instance of this class is called by "MainActivty",to get the time taken reach the destination from Google Distance Matrix API in background.
+/*The instance of this class is called by "MainActivity",to get the time taken reach the destination from Google Distance Matrix API in background.
   This class contains interface "Geo" to call the function setDouble(String) defined in "MainActivity.class" to display the result.*/
 public class GeoTask extends AsyncTask<String, Void, String> {
     ProgressDialog pd;
@@ -109,14 +109,18 @@ public class GeoTask extends AsyncTask<String, Void, String> {
         public void setDouble(String min);
     }
 
-
+    //取得した文字列から現住所の部分のみ取得(バグの兆しあり)
     static String getFromPo(){
+        //String型で代入用変数の宣言
         StringBuilder test=sb;
+        //取得した文字列の先頭から数えて"]"の位置を取得
         int cal=test.indexOf("]");
+        //↑で取得した位置から数えて"]"と"["の位置をそれぞれ開始位置と終了位置として取得
         int endString=test.indexOf("]",cal+1);
         int sttString=test.indexOf("[",cal+1);
+        //開始位置と終了位置から現住所を割り出す
         String fromPo=test.substring(sttString+1,endString);
-
+        //帰れ！
         return fromPo;
     }
 
