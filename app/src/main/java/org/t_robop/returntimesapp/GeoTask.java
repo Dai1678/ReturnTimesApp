@@ -76,14 +76,8 @@ public class GeoTask extends AsyncTask<String, Void, String> {
                     line=br.readLine();
                 }
                 String json=sb.toString();
-                StringBuilder test=sb;
-                int cal=test.indexOf("]");
-                int endString=test.indexOf("]",cal+1);
-                int sttString=test.indexOf("[",cal+1);
-                String fromPo=test.substring(sttString+1,endString);
-                //最初の]の位置げと
-                //最初からそこorその一個次まで削る
-                Log.d("JSON", fromPo);
+
+                Log.d("JSON", json);
                 JSONObject root=new JSONObject(json);
                 JSONArray array_rows=root.getJSONArray("rows");
                 Log.d("JSON","array_rows:"+array_rows);
