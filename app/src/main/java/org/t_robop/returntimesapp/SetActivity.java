@@ -8,7 +8,7 @@ import android.widget.EditText;
 
 public class SetActivity extends AppCompatActivity {
 
-    String text;
+    String text;  //自宅情報(今は緯度経度)
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,11 +18,9 @@ public class SetActivity extends AppCompatActivity {
         EditText editText = (EditText)findViewById(R.id.editHome);
 
         text = editText.getText().toString();
-
-
-
     }
 
+    //自宅情報送信
     public void sendClick(View view){
         Intent intent = new Intent(SetActivity.this,MainActivity.class);
         intent.putExtra("data",text);

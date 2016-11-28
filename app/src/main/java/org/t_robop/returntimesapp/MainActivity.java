@@ -2,7 +2,6 @@ package org.t_robop.returntimesapp;
 
 import android.Manifest;
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -16,22 +15,18 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import static android.location.LocationManager.GPS_PROVIDER;
 
-/*Replace YOUR_API_KEY in String url with your API KEY obtained by registering your application with google.
-
- */
 public class MainActivity extends AppCompatActivity implements GeoTask.Geo, LocationListener {
-    Button btn_get;
-    String str_from;  //現在位置の緯度経度
-    String str_to; //自宅の緯度経度
-    TextView tv_result1, tv_result2, tv_result3, place;
+    Button buttonGet;  //帰宅時間計算ボタン
+    String strFrom;  //現在位置の緯度経度
+    String strTo; //自宅の緯度経度
+    TextView tvResult1, tvResult2, tvResult3, place;  //帰宅時間,距離,現在位置,緯度経度
 
     private static final String TAG = MainActivity.class.getSimpleName();
-    // 更新時間(目安)
-    private static final int LOCATION_UPDATE_MIN_TIME = 0;
-    // 更新距離(目安)
-    private static final int LOCATION_UPDATE_MIN_DISTANCE = 0;
+
+    private static final int LOCATION_UPDATE_MIN_TIME = 0;  // 更新時間(目安)
+
+    private static final int LOCATION_UPDATE_MIN_DISTANCE = 0;  // 更新距離(目安)
 
     private LocationManager mLocationManager;
 
@@ -42,42 +37,44 @@ public class MainActivity extends AppCompatActivity implements GeoTask.Geo, Loca
 
         mLocationManager = (LocationManager) this.getSystemService(Service.LOCATION_SERVICE);
 
-        initialize();
+        initialize();  //ID設定
 
         Intent intent = getIntent();
-        str_to = intent.getStringExtra("data");
+        strTo = intent.getStringExtra("data");  //自宅情報代入
 
-        btn_get.setOnClickListener(new View.OnClickListener() {
+        buttonGet.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                requestLocationUpdates();
+                requestLocationUpdates();  //現在地情報取得
 
-                Log.d("test", str_from);
-                Log.d("test", str_to);
+                Log.d("test", strFrom);
+                Log.d("test", strTo);
 
-                String url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=" + str_from + "&destinations=" + str_to + "&mode=train&language=ja&avoid=tolls&key=AIzaSyCRr1HoHvxqLabvjWwWe6SyYZViUuvQreo";
-                new GeoTask(MainActivity.this).execute(url);
+                String url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=" + strFrom + "&destinations=" + strTo + "&mode=train&language=ja&avoid=tolls&key=AIzaSyCRr1HoHvxqLabvjWwWe6SyYZViUuvQreo";  //API処理
+                new GeoTask(MainActivity.this).execute(url);  //JSONデータ処理
             }
         });
     }
 
+    //表示テキスト計算
     @Override
     public void setDouble(String result) {
         String res[] = result.split(",");
         Double min = Double.parseDouble(res[0]) / 60;
         int dist = Integer.parseInt(res[1]) / 1000;
-        tv_result1.setText("Duration= " + (int) (min / 60) + " hr " + (int) (min % 60) + " mins");
-        tv_result2.setText("Distance= " + dist + " kilometers");
-        tv_result3.setText("現在位置:" + GeoTask.getFromPo());
+        tvResult1.setText("帰宅時間: " + (int) (min / 60) + " hr " + (int) (min % 60) + " mins");
+        tvResult2.setText("距離: " + dist + " kilometers");
+        tvResult3.setText("現在位置:" + GeoTask.getFromPo());
 
     }
 
+    //ID設定
     public void initialize() {
-        btn_get = (Button) findViewById(R.id.button_get);
-        tv_result1 = (TextView) findViewById(R.id.textView_result1);
-        tv_result2 = (TextView) findViewById(R.id.textView_result2);
-        tv_result3 = (TextView) findViewById(R.id.textView_result3);
+        buttonGet = (Button) findViewById(R.id.button_get);
+        tvResult1 = (TextView) findViewById(R.id.textView_result1);
+        tvResult2 = (TextView) findViewById(R.id.textView_result2);
+        tvResult3 = (TextView) findViewById(R.id.textView_result3);
         place = (TextView) findViewById(R.id.placeText);
 
     }
@@ -104,6 +101,7 @@ public class MainActivity extends AppCompatActivity implements GeoTask.Geo, Loca
 
     }
 
+    //現在地情報取得
     private void requestLocationUpdates() {
         Log.e(TAG, "requestLocationUpdates()");
         //showProvider(LocationManager.NETWORK_PROVIDER);
@@ -120,6 +118,7 @@ public class MainActivity extends AppCompatActivity implements GeoTask.Geo, Loca
                 // for ActivityCompat#requestPermissions for more details.
                 return;
             }
+            //ここで取得
             mLocationManager.requestLocationUpdates(
                     LocationManager.NETWORK_PROVIDER,
                     LOCATION_UPDATE_MIN_TIME,
@@ -135,18 +134,20 @@ public class MainActivity extends AppCompatActivity implements GeoTask.Geo, Loca
         }
     }
 
+    //現在地の緯度経度取得
     private void showLocation(Location location) {
-        double longitude = location.getLongitude();
-        double latitude = location.getLatitude();
+        double longitude = location.getLongitude();  //経度取得
+        double latitude = location.getLatitude();  //緯度取得
 
-        String place = String.valueOf(latitude)+ "," + String.valueOf(longitude);
+        String place = String.valueOf(latitude)+ "," + String.valueOf(longitude);  //緯度経度連結
 
         TextView placeTextView = (TextView) findViewById(R.id.placeText);
         placeTextView.setText("緯度,経度 = " + String.valueOf(place));
 
-        str_from = place;
+        strFrom = place;  //代入
     }
 
+    //自宅情報取得ボタン
     public void setClick(View view){
         Intent intent = new Intent(getApplicationContext(),SetActivity.class);
         startActivity(intent);
