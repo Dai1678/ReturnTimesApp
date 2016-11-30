@@ -10,18 +10,18 @@
 
 - 自宅場所設定
 - 現在位置取得 →　GPSで現在地取得   
-- 現在位置→自宅の経路探索　→　Google Maps API ウェブサービス Directions API(?)  
-- 現在位置→自宅の時間算出　→　Google Maps API ウェブサービス Distance Matrix API  
+- 現在位置→自宅の時間算出　→　Google Maps API ウェブサービス Distance Matrix API  
 
 優先度B：  
 
-- メール連携
-- ウィジェット対応  
+- メール連携  
 - 自宅非登録時の例外処理実装  
-- 自宅情報保存(SharedPreference)
+- 自宅情報保存(SharedPreference)  
+- 現在位置→自宅の帰宅方法(車,電車など) → Distance Matrix APIのmodeを変更
 
 優先度C:  
 
+- ウィジェット対応  
 - LINE連携  
 
 進捗
