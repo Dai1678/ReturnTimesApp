@@ -54,7 +54,7 @@ public class GeoTask extends AsyncTask<String, Void, String> {
             pd.dismiss();
         }
         else
-            Toast.makeText(mContext, "Error4!Please Try Again wiht proper values", Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, "API Error! 適切な値をいれてください", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -101,7 +101,6 @@ public class GeoTask extends AsyncTask<String, Void, String> {
         } catch (JSONException e) {
             Log.d("error","error3");
         }
-
 
         return null;
     }

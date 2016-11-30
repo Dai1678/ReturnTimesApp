@@ -1,6 +1,7 @@
 package org.t_robop.returntimesapp;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.Service;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -8,12 +9,14 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 public class MainActivity extends AppCompatActivity implements GeoTask.Geo, LocationListener {
@@ -41,18 +44,29 @@ public class MainActivity extends AppCompatActivity implements GeoTask.Geo, Loca
 
         Intent intent = getIntent();
         strTo = intent.getStringExtra("data");  //自宅情報代入
+        //TODO:デバッグ用
+        strTo = "35.681298,139.7640582";  //テスト(東京駅)
 
         buttonGet.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                requestLocationUpdates();  //現在地情報取得
+                if(strTo != null){
 
-                Log.d("test", strFrom);
-                Log.d("test", strTo);
+                    requestLocationUpdates();  //現在地情報取得
 
-                String url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=" + strFrom + "&destinations=" + strTo + "&mode=train&language=ja&avoid=tolls&key=AIzaSyCRr1HoHvxqLabvjWwWe6SyYZViUuvQreo";  //API処理
-                new GeoTask(MainActivity.this).execute(url);  //JSONデータ処理
+                    Log.d("test", strFrom);
+                    Log.d("test", strTo);
+
+
+                    String url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=" + strFrom + "&destinations=" + strTo + "&mode=train&language=ja&avoid=tolls&key=AIzaSyCRr1HoHvxqLabvjWwWe6SyYZViUuvQreo";  //API処理
+                    new GeoTask(MainActivity.this).execute(url);  //JSONデータ処理
+
+                }
+                else{
+                    Toast.makeText(getApplicationContext(),"自宅設定がおこなわれていません",Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
     }
@@ -103,20 +117,18 @@ public class MainActivity extends AppCompatActivity implements GeoTask.Geo, Loca
 
     //現在地情報取得
     private void requestLocationUpdates() {
-        Log.e(TAG, "requestLocationUpdates()");
+        Log.d(TAG, "requestLocationUpdates()");
         //showProvider(LocationManager.NETWORK_PROVIDER);
         boolean isNetworkEnabled = mLocationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
         //showNetworkEnabled(isNetworkEnabled);
         if (isNetworkEnabled) {
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                // TODO: Consider calling
-                //    ActivityCompat#requestPermissions
-                // here to request the missing permissions, and then overriding
-                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                //                                          int[] grantResults)
-                // to handle the case where the user grants the permission. See the documentation
-                // for ActivityCompat#requestPermissions for more details.
-                return;
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                    == PackageManager.PERMISSION_GRANTED) {
+                //パーミッション許可時
+
+                //パーミッション未許可時
+            } else {
+                // Show rationale and request permission.
             }
             //ここで取得
             mLocationManager.requestLocationUpdates(
@@ -129,8 +141,7 @@ public class MainActivity extends AppCompatActivity implements GeoTask.Geo, Loca
                 showLocation(location);
             }
         } else {
-            String message = "Networkが無効になっています。";
-            //showMessage(message);
+            Toast.makeText(getApplicationContext(),"Networkが向こうになっています",Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -138,6 +149,7 @@ public class MainActivity extends AppCompatActivity implements GeoTask.Geo, Loca
     private void showLocation(Location location) {
         double longitude = location.getLongitude();  //経度取得
         double latitude = location.getLatitude();  //緯度取得
+        long time = location.getTime();
 
         String place = String.valueOf(latitude)+ "," + String.valueOf(longitude);  //緯度経度連結
 
