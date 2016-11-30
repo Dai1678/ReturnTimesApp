@@ -80,8 +80,9 @@ ToDo
 2016/11/30  
 
 - パーミッションの処理  
+- 帰宅時間の表示形式の変更  
 
-参考  
+参考  
 https://developers.google.com/maps/android/?hl=ja Android 向けの Google Maps APIサービス一覧  　
 https://developers.google.com/maps/web-services/?hl=ja Webサービス向けのGoogle Maps APIサービス一覧(Androidでも使える)
 https://www.youtube.com/watch?v=tXPEOJaeFm8 Google Distance Matrix APIを使ったサンプルの紹介動画。  
