@@ -44,7 +44,11 @@
 
 - GPSで現在位置の緯度経度取得が完了(LocationLisner)  
 - 自宅の緯度経度を入力する設定画面を作成。APIに入れて正常動作を確認。
-- xmlの更新
+- xmlの更新  
+
+2016/11/30  
+
+- 自宅非登録時の例外処理実装完了  
 
 ToDo
 2016/11/22  
@@ -71,9 +75,13 @@ ToDo
 - xmlテキストの日本語化
 - 自宅情報の入力を住所で行い、アプリ側で緯度経度に変えてAPIに入れる → Google Maps Geocoding API  
 
+2016/11/30  
+
+- パーミッションの処理  
+
 参考  
-https://developers.google.com/maps/android/?hl=ja Android 向けの Google Maps APIサービス一覧  
-https://developers.google.com/maps/web-services/?hl=ja Webサービス向けのGoogle Maps APIサービス一覧(Androidでも使える)  
+https://developers.google.com/maps/android/?hl=ja Android 向けの Google Maps APIサービス一覧  　
+https://developers.google.com/maps/web-services/?hl=ja Webサービス向けのGoogle Maps APIサービス一覧(Androidでも使える)
 https://www.youtube.com/watch?v=tXPEOJaeFm8 Google Distance Matrix APIを使ったサンプルの紹介動画。  
 https://github.com/vastavch/GoogleMapsDistanceMatrixAPI_Demo ↑の動画のGithub。これを改造していく。    
 <http://tech.admax.ninja/2014/09/16/how-to-get-location-by-android/>　GPS取得の参考サイト    
