@@ -23,7 +23,12 @@ public class MainActivity extends AppCompatActivity implements GeoTask.Geo, Loca
     Button buttonGet;  //帰宅時間計算ボタン
     String strFrom;  //現在位置の緯度経度
     String strTo; //自宅の緯度経度
-    TextView tvResult1, tvResult2, tvResult3, place;  //帰宅時間,距離,現在位置,緯度経度
+    TextView tvResult1, tvResult2, tvResult3, tvResult4,place;  //帰宅時間,距離,現在位置,緯度経度
+
+    //緯度
+    double latitude;
+    //経度
+    double longitude;
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -45,15 +50,15 @@ public class MainActivity extends AppCompatActivity implements GeoTask.Geo, Loca
         Intent intent = getIntent();
         strTo = intent.getStringExtra("data");  //自宅情報代入
         //TODO:デバッグ用
-        strTo = "35.681298,139.7640582";  //テスト(東京駅)
+        //strTo = "35.681298,139.7640582";  //テスト(東京駅)
+
+        requestLocationUpdates();  //現在地情報取得
 
         buttonGet.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
                 if(strTo != null){
-
-                    requestLocationUpdates();  //現在地情報取得
 
                     Log.d("test", strFrom);
                     Log.d("test", strTo);
@@ -80,6 +85,7 @@ public class MainActivity extends AppCompatActivity implements GeoTask.Geo, Loca
         tvResult1.setText("帰宅時間: " + (int) (min / 60) + " hr " + (int) (min % 60) + " mins");
         tvResult2.setText("距離: " + dist + " kilometers");
         tvResult3.setText("現在位置:" + GeoTask.getFromPo());
+        tvResult4.setText("自宅:"+GeoTask.getToPo());
 
     }
 
@@ -89,6 +95,7 @@ public class MainActivity extends AppCompatActivity implements GeoTask.Geo, Loca
         tvResult1 = (TextView) findViewById(R.id.textView_result1);
         tvResult2 = (TextView) findViewById(R.id.textView_result2);
         tvResult3 = (TextView) findViewById(R.id.textView_result3);
+        tvResult4 = (TextView) findViewById(R.id.textView_result4);
         place = (TextView) findViewById(R.id.placeText);
 
     }
@@ -147,8 +154,9 @@ public class MainActivity extends AppCompatActivity implements GeoTask.Geo, Loca
 
     //現在地の緯度経度取得
     private void showLocation(Location location) {
-        double longitude = location.getLongitude();  //経度取得
-        double latitude = location.getLatitude();  //緯度取得
+        latitude = location.getLatitude();  //緯度取得
+        longitude = location.getLongitude();  //経度取得
+
         long time = location.getTime();
 
         String place = String.valueOf(latitude)+ "," + String.valueOf(longitude);  //緯度経度連結
@@ -161,7 +169,10 @@ public class MainActivity extends AppCompatActivity implements GeoTask.Geo, Loca
 
     //自宅情報取得ボタン
     public void setClick(View view){
-        Intent intent = new Intent(getApplicationContext(),SetActivity.class);
+        Intent intent = new Intent(getApplicationContext(),SettingMapsActivity.class);
+        //緯度経度を飛ばす
+        intent.putExtra("lat",latitude);
+        intent.putExtra("lng",longitude);
         startActivity(intent);
     }
 }

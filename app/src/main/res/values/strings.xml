@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">ReturnTimesApp</string>
     <string name="txt_btn">帰宅時間計算</string>
+    <string name="title_activity_setting_maps">Map</string>
 </resources>

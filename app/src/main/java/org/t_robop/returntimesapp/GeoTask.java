@@ -123,4 +123,19 @@ public class GeoTask extends AsyncTask<String, Void, String> {
         return fromPo;
     }
 
+    //帰る場所（目的地）の取得
+    static String getToPo(){
+
+        //String型で代入用変数の宣言
+        StringBuilder test=sb;
+        //↑で取得した位置から数えて"]"と"["の位置をそれぞれ開始位置と終了位置として取得
+        int endString=test.indexOf("]",0);
+        int sttString=test.indexOf("[",0);
+        //開始位置と終了位置から現住所を割り出す
+        String toPo=test.substring(sttString+1,endString);
+        //帰れ！
+        return toPo;
+
+    }
+
 }

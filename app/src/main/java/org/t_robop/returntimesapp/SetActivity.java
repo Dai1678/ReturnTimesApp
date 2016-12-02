@@ -40,4 +40,6 @@ public class SetActivity extends AppCompatActivity {
         Intent intent = new Intent(SetActivity.this,MainActivity.class);
         startActivity(intent);
     }
+
+
 }
