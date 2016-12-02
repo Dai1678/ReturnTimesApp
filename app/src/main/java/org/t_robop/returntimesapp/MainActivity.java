@@ -1,14 +1,12 @@
 package org.t_robop.returntimesapp;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.Service;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -17,13 +15,16 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 
 public class MainActivity extends AppCompatActivity implements GeoTask.Geo, LocationListener {
     Button buttonGet;  //帰宅時間計算ボタン
     String strFrom;  //現在位置の緯度経度
     String strTo; //自宅の緯度経度
-    TextView tvResult1, tvResult2, tvResult3, tvResult4,place;  //帰宅時間,距離,現在位置,緯度経度
+
+    TextView tvResult1, tvResult2, tvResult3, tvResult4,place,arriveHome;  //帰宅時間,距離,現在位置,緯度経度
 
     //緯度
     double latitude;
@@ -79,11 +80,20 @@ public class MainActivity extends AppCompatActivity implements GeoTask.Geo, Loca
     //表示テキスト計算
     @Override
     public void setDouble(String result) {
-        String res[] = result.split(",");
-        Double min = Double.parseDouble(res[0]) / 60;
+
+        String res[] = result.split(","); //res[0] = 帰宅にかかる時間　res[1] = 距離
+        Double min = Double.parseDouble(res[0]) / 60;  //APIから秒単位で送られているので、60で割って分単位に変えている
         int dist = Integer.parseInt(res[1]) / 1000;
-        tvResult1.setText("帰宅時間: " + (int) (min / 60) + " hr " + (int) (min % 60) + " mins");
-        tvResult2.setText("距離: " + dist + " kilometers");
+        int times = Integer.parseInt(res[0]);
+
+        int HH = times / 3600;  //帰宅にかかる時間の時間部分抽出
+        int mm = times % 3600 / 60;  //帰宅にかかる時間の分部分抽出
+        int ss = times % 60;  //帰宅にかかる時間の秒部分抽出
+
+        arriveTime(HH,mm,ss);  //自宅到着時刻の算出
+
+        tvResult1.setText("帰宅にかかる時間: " + (int) (min / 60) + " 時 " + (int) (min % 60) + " 分");
+        tvResult2.setText("距離: " + dist + " キロメートル");
         tvResult3.setText("現在位置:" + GeoTask.getFromPo());
         tvResult4.setText("自宅:"+GeoTask.getToPo());
 
@@ -97,7 +107,7 @@ public class MainActivity extends AppCompatActivity implements GeoTask.Geo, Loca
         tvResult3 = (TextView) findViewById(R.id.textView_result3);
         tvResult4 = (TextView) findViewById(R.id.textView_result4);
         place = (TextView) findViewById(R.id.placeText);
-
+        arriveHome = (TextView)findViewById(R.id.returnResult);
     }
 
     // Called when the location has changed.
@@ -154,10 +164,12 @@ public class MainActivity extends AppCompatActivity implements GeoTask.Geo, Loca
 
     //現在地の緯度経度取得
     private void showLocation(Location location) {
+
         latitude = location.getLatitude();  //緯度取得
         longitude = location.getLongitude();  //経度取得
 
         long time = location.getTime();
+
 
         String place = String.valueOf(latitude)+ "," + String.valueOf(longitude);  //緯度経度連結
 
@@ -174,6 +186,31 @@ public class MainActivity extends AppCompatActivity implements GeoTask.Geo, Loca
         intent.putExtra("lat",latitude);
         intent.putExtra("lng",longitude);
         startActivity(intent);
+    }
+
+    public void arriveTime(int addHour,int addMinute,int addSecond)
+    {
+        Calendar calendar = Calendar.getInstance();
+
+        SimpleDateFormat sdf = new SimpleDateFormat("HH時mm分ss秒");
+
+        //現在時刻取得
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        int minute = calendar.get(Calendar.MINUTE);
+        int second = calendar.get(Calendar.SECOND);
+
+        //現在時刻に帰宅にかかる時間を足す
+        calendar.set(hour,minute,second);
+        calendar.add(Calendar.HOUR_OF_DAY,addHour);
+        calendar.add(Calendar.MINUTE,addMinute);
+        calendar.add(Calendar.SECOND,addSecond);
+
+        Log.d("到着時刻",sdf.format(calendar.getTime()));
+
+        String times = sdf.format(calendar.getTime());
+
+        arriveHome.setText("到着時間: " +times);
+
     }
 }
 
