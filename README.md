@@ -92,7 +92,7 @@
 - アプリ起動時に情報の取得  
 - メール機能の実装  
 
-**参考**  
+**参考**  
 https://developers.google.com/maps/android/?hl=ja Android 向けの Google Maps APIサービス一覧  　
 https://developers.google.com/maps/web-services/?hl=ja Webサービス向けのGoogle Maps APIサービス一覧(Androidでも使える)
 https://www.youtube.com/watch?v=tXPEOJaeFm8 Google Distance Matrix APIを使ったサンプルの紹介動画。  
