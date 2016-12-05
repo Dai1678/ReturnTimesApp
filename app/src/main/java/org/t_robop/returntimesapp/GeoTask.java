@@ -33,65 +33,65 @@ public class GeoTask extends AsyncTask<String, Void, String> {
     //constructor is used to get the context.
     public GeoTask(Context mContext) {
         this.mContext = mContext;
-        geo1= (Geo) mContext;
+        geo1 = (Geo) mContext;
     }
+
     //This function is executed before before "doInBackground(String...params)" is executed to dispaly the progress dialog
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        pd=new ProgressDialog(mContext);
+        pd = new ProgressDialog(mContext);
         pd.setMessage("Loading");
         pd.setCancelable(false);
         pd.show();
     }
+
     //This function is executed after the execution of "doInBackground(String...params)" to dismiss the dispalyed progress dialog and call "setDouble(Double)" defined in "MainActivity.java"
     @Override
     protected void onPostExecute(String aDouble) {
         super.onPostExecute(aDouble);
-        if(aDouble!=null)
-        {
+
+        if (aDouble != null) {
             geo1.setDouble(aDouble);
-            pd.dismiss();
-        }
-        else
+            pd.dismiss();  //ダイアログ閉じる
+        } else
             Toast.makeText(mContext, "API Error! 適切な値をいれてください", Toast.LENGTH_SHORT).show();
+            pd.dismiss();
     }
 
     @Override
     protected String doInBackground(String... params) {
         try {
-            URL url=new URL(params[0]);
-            HttpURLConnection con= (HttpURLConnection) url.openConnection();
+            URL url = new URL(params[0]);
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.setRequestMethod("GET");
             con.connect();
-            int statuscode=con.getResponseCode();
-            if(statuscode==HttpURLConnection.HTTP_OK)
-            {
-                BufferedReader br=new BufferedReader(new InputStreamReader(con.getInputStream()));
-                sb=new StringBuilder();
-                String line=br.readLine();
-                while(line!=null)
-                {
+            int statuscode = con.getResponseCode();
+            if (statuscode == HttpURLConnection.HTTP_OK) {
+                BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
+                sb = new StringBuilder();
+                String line = br.readLine();
+                while (line != null) {
                     sb.append(line);
-                    line=br.readLine();
+                    line = br.readLine();
                 }
-                String json=sb.toString();
+                String json = sb.toString();
 
                 Log.d("JSON", json);
-                JSONObject root=new JSONObject(json);
-                JSONArray array_rows=root.getJSONArray("rows");
-                Log.d("JSON","array_rows:"+array_rows);
-                JSONObject object_rows=array_rows.getJSONObject(0);
-                Log.d("JSON","object_rows:"+object_rows);
-                JSONArray array_elements=object_rows.getJSONArray("elements");
-                Log.d("JSON","array_elements:"+array_elements);
-                JSONObject  object_elements=array_elements.getJSONObject(0);
-                Log.d("JSON","object_elements:"+object_elements);
-                JSONObject object_duration=object_elements.getJSONObject("duration");
-                JSONObject object_distance=object_elements.getJSONObject("distance");
+                JSONObject root = new JSONObject(json);
+                JSONArray array_rows = root.getJSONArray("rows");
+                Log.d("JSON", "array_rows:" + array_rows);
+                JSONObject object_rows = array_rows.getJSONObject(0);
+                Log.d("JSON", "object_rows:" + object_rows);
+                JSONArray array_elements = object_rows.getJSONArray("elements");
+                Log.d("JSON", "array_elements:" + array_elements);
+                JSONObject object_elements = array_elements.getJSONObject(0);
+                Log.d("JSON", "object_elements:" + object_elements);
+                JSONObject object_duration = object_elements.getJSONObject("duration");
+                JSONObject object_distance = object_elements.getJSONObject("distance");
 
-                Log.d("JSON","object_duration:"+object_duration);
-                return object_duration.getString("value")+","+object_distance.getString("value");
+                Log.d("JSON", "object_duration:" + object_duration);
+                return object_duration.getString("value") + "," + object_distance.getString("value");
 
             }
         } catch (MalformedURLException e) {
@@ -99,40 +99,41 @@ public class GeoTask extends AsyncTask<String, Void, String> {
         } catch (IOException e) {
             Log.d("error", "error2");
         } catch (JSONException e) {
-            Log.d("error","error3");
+            Log.d("error", "error3");
         }
 
         return null;
     }
-    interface Geo{
+
+    interface Geo {
         public void setDouble(String min);
     }
 
     //取得した文字列から現住所の部分のみ取得(バグの兆しあり)
-    static String getFromPo(){
+    static String getFromPo() {
         //String型で代入用変数の宣言
-        StringBuilder test=sb;
+        StringBuilder test = sb;
         //取得した文字列の先頭から数えて"]"の位置を取得
-        int cal=test.indexOf("]");
+        int cal = test.indexOf("]");
         //↑で取得した位置から数えて"]"と"["の位置をそれぞれ開始位置と終了位置として取得
-        int endString=test.indexOf("]",cal+1);
-        int sttString=test.indexOf("[",cal+1);
+        int endString = test.indexOf("]", cal + 1);
+        int sttString = test.indexOf("[", cal + 1);
         //開始位置と終了位置から現住所を割り出す
-        String fromPo=test.substring(sttString+1,endString);
+        String fromPo = test.substring(sttString + 1, endString);
         //帰れ！
         return fromPo;
     }
 
     //帰る場所（目的地）の取得
-    static String getToPo(){
+    static String getToPo() {
 
         //String型で代入用変数の宣言
-        StringBuilder test=sb;
+        StringBuilder test = sb;
         //↑で取得した位置から数えて"]"と"["の位置をそれぞれ開始位置と終了位置として取得
-        int endString=test.indexOf("]",0);
-        int sttString=test.indexOf("[",0);
+        int endString = test.indexOf("]", 0);
+        int sttString = test.indexOf("[", 0);
         //開始位置と終了位置から現住所を割り出す
-        String toPo=test.substring(sttString+1,endString);
+        String toPo = test.substring(sttString + 1, endString);
         //帰れ！
         return toPo;
 
