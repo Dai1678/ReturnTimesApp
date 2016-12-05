@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdate;
@@ -29,7 +30,7 @@ public class SettingMapsActivity extends FragmentActivity implements OnMapReadyC
     double lng;
 
     String text;  //自宅情報(今は緯度経度)
-    EditText editText;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,8 +41,9 @@ public class SettingMapsActivity extends FragmentActivity implements OnMapReadyC
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        editText = (EditText)findViewById(R.id.editHome);
-        text = editText.getText().toString();
+
+        //editText = (EditText)findViewById(R.id.editHome);
+        //text = editText.getText().toString();
 
         Intent intent = getIntent();
         //現在位置情報
@@ -52,12 +54,12 @@ public class SettingMapsActivity extends FragmentActivity implements OnMapReadyC
     //自宅情報送信
     public void sendClick(View view){
 
-        text=editText.getText().toString();
+        //text=editText.getText().toString();
 
         Intent intent = new Intent(SettingMapsActivity.this,MainActivity.class);
         intent.putExtra("data",text);
 
-        if(editText.length() != 0){  //文字数判定
+        if(text != null){  //文字数判定
             startActivity(intent);
         }
         else{
@@ -105,7 +107,9 @@ public class SettingMapsActivity extends FragmentActivity implements OnMapReadyC
 
                 String nowPo=latLng.latitude+","+latLng.longitude;
 
-                editText.setText(nowPo);
+                text=nowPo;
+
+
 
                 if(mMarker!=null) {
                     mMarker.remove();
