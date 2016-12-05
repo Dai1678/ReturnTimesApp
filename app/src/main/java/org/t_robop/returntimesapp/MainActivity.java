@@ -20,7 +20,6 @@ import java.util.Calendar;
 
 
 public class MainActivity extends AppCompatActivity implements GeoTask.Geo, LocationListener {
-    Button buttonGet;  //帰宅時間計算ボタン
     String strFrom;  //現在位置の緯度経度
     String strTo; //自宅の緯度経度
 
@@ -55,26 +54,19 @@ public class MainActivity extends AppCompatActivity implements GeoTask.Geo, Loca
 
         requestLocationUpdates();  //現在地情報取得
 
-        //buttonGet.setOnClickListener(new View.OnClickListener() {
+        if(strTo != null){
 
-       //     @Override
-         //   public void onClick(View v) {
-                if(strTo != null){
-
-                    Log.d("test", strFrom);
-                    Log.d("test", strTo);
+            Log.d("test", strFrom);
+            Log.d("test", strTo);
 
 
-                    String url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=" + strFrom + "&destinations=" + strTo + "&transit_mode=rail&language=ja&avoid=tolls&key=AIzaSyCRr1HoHvxqLabvjWwWe6SyYZViUuvQreo";  //API処理
-                    new GeoTask(MainActivity.this).execute(url);  //JSONデータ処理
+            String url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=" + strFrom + "&destinations=" + strTo + "&transit_mode=rail&language=ja&avoid=tolls&key=AIzaSyCRr1HoHvxqLabvjWwWe6SyYZViUuvQreo";  //API処理
+            new GeoTask(MainActivity.this).execute(url);  //JSONデータ処理
 
-                }
-                else{
-                    Toast.makeText(getApplicationContext(),"自宅設定がおこなわれていません",Toast.LENGTH_SHORT).show();
-                }
-
-           // }
-        //});
+        }
+        else{
+            Toast.makeText(getApplicationContext(),"自宅設定がおこなわれていません",Toast.LENGTH_SHORT).show();
+        }
     }
 
 
@@ -102,7 +94,6 @@ public class MainActivity extends AppCompatActivity implements GeoTask.Geo, Loca
 
     //ID設定
     public void initialize() {
-        buttonGet = (Button) findViewById(R.id.button_get);
         tvResult1 = (TextView) findViewById(R.id.textView_result1);
         tvResult2 = (TextView) findViewById(R.id.textView_result2);
         tvResult3 = (TextView) findViewById(R.id.textView_result3);
@@ -175,7 +166,7 @@ public class MainActivity extends AppCompatActivity implements GeoTask.Geo, Loca
         String place = String.valueOf(latitude)+ "," + String.valueOf(longitude);  //緯度経度連結
 
         TextView placeTextView = (TextView) findViewById(R.id.placeText);
-        placeTextView.setText("緯度,経度 = " + String.valueOf(place));
+        placeTextView.setText("現在の緯度,経度 = " + String.valueOf(place));  //現在位置の緯度経度表示
 
         strFrom = place;  //代入
     }
