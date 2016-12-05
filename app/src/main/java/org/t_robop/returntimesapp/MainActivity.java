@@ -55,17 +55,17 @@ public class MainActivity extends AppCompatActivity implements GeoTask.Geo, Loca
 
         requestLocationUpdates();  //現在地情報取得
 
-        buttonGet.setOnClickListener(new View.OnClickListener() {
+        //buttonGet.setOnClickListener(new View.OnClickListener() {
 
-            @Override
-            public void onClick(View v) {
+       //     @Override
+         //   public void onClick(View v) {
                 if(strTo != null){
 
                     Log.d("test", strFrom);
                     Log.d("test", strTo);
 
 
-                    String url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=" + strFrom + "&destinations=" + strTo + "&mode=train&language=ja&avoid=tolls&key=AIzaSyCRr1HoHvxqLabvjWwWe6SyYZViUuvQreo";  //API処理
+                    String url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=" + strFrom + "&destinations=" + strTo + "&transit_mode=rail&language=ja&avoid=tolls&key=AIzaSyCRr1HoHvxqLabvjWwWe6SyYZViUuvQreo";  //API処理
                     new GeoTask(MainActivity.this).execute(url);  //JSONデータ処理
 
                 }
@@ -73,9 +73,10 @@ public class MainActivity extends AppCompatActivity implements GeoTask.Geo, Loca
                     Toast.makeText(getApplicationContext(),"自宅設定がおこなわれていません",Toast.LENGTH_SHORT).show();
                 }
 
-            }
-        });
+           // }
+        //});
     }
+
 
     //表示テキスト計算
     @Override
@@ -92,7 +93,7 @@ public class MainActivity extends AppCompatActivity implements GeoTask.Geo, Loca
 
         arriveTime(HH,mm,ss);  //自宅到着時刻の算出
 
-        tvResult1.setText("帰宅にかかる時間: " + (int) (min / 60) + " 時 " + (int) (min % 60) + " 分");
+        tvResult1.setText("帰宅にかかる時間: " + (int) (min / 60) + " 時間 " + (int) (min % 60) + " 分");
         tvResult2.setText("距離: " + dist + " キロメートル");
         tvResult3.setText("現在位置:" + GeoTask.getFromPo());
         tvResult4.setText("自宅:"+GeoTask.getToPo());
@@ -168,7 +169,7 @@ public class MainActivity extends AppCompatActivity implements GeoTask.Geo, Loca
         latitude = location.getLatitude();  //緯度取得
         longitude = location.getLongitude();  //経度取得
 
-        long time = location.getTime();
+        //long time = location.getTime();
 
 
         String place = String.valueOf(latitude)+ "," + String.valueOf(longitude);  //緯度経度連結
@@ -192,7 +193,7 @@ public class MainActivity extends AppCompatActivity implements GeoTask.Geo, Loca
     {
         Calendar calendar = Calendar.getInstance();
 
-        SimpleDateFormat sdf = new SimpleDateFormat("HH時mm分ss秒");
+        SimpleDateFormat sdf = new SimpleDateFormat("HH時mm分ss秒");  //フォーマット初期化
 
         //現在時刻取得
         int hour = calendar.get(Calendar.HOUR_OF_DAY);
@@ -209,7 +210,7 @@ public class MainActivity extends AppCompatActivity implements GeoTask.Geo, Loca
 
         String times = sdf.format(calendar.getTime());
 
-        arriveHome.setText("到着時間: " +times);
+        arriveHome.setText("到着時間: " +times);  //到着時間表示
 
     }
 }
