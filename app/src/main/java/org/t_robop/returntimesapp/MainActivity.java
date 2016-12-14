@@ -9,6 +9,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.StrictMode;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -59,9 +60,6 @@ public class MainActivity extends AppCompatActivity implements GeoTask.Geo, Loca
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
-
         mLocationManager = (LocationManager) this.getSystemService(Service.LOCATION_SERVICE);
 
         initialize();  //ID設定
@@ -77,7 +75,7 @@ public class MainActivity extends AppCompatActivity implements GeoTask.Geo, Loca
             // 位置情報の取得が許可されているかチェック
             if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 // 権限があればLocationManagerを取得
-                Toast.makeText(MainActivity.this, "位置情報の取得は既に許可されています", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(MainActivity.this, "位置情報の取得は既に許可されています", Toast.LENGTH_SHORT).show();
                 requestLocationUpdates();  //現在地情報取得
             } else {
                 // なければ権限を求めるダイアログを表示
@@ -87,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements GeoTask.Geo, Loca
             // Android 6.0以下の場合
         } else {
             // インストール時点で許可されているのでチェックの必要なし
-            Toast.makeText(MainActivity.this, "位置情報の取得は既に許可されています(Android 5.0以下です)", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(MainActivity.this, "位置情報の取得は既に許可されています(Android 5.0以下です)", Toast.LENGTH_SHORT).show();
             requestLocationUpdates();  //現在地情報取得
         }
 
@@ -103,7 +101,7 @@ public class MainActivity extends AppCompatActivity implements GeoTask.Geo, Loca
             new GeoTask(MainActivity.this).execute(url);  //JSONデータ処理
 
         } else {
-            Toast.makeText(getApplicationContext(), "自宅設定がおこなわれていません", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "自宅設定が行われていません", Toast.LENGTH_SHORT).show();
         }
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -143,6 +141,9 @@ public class MainActivity extends AppCompatActivity implements GeoTask.Geo, Loca
         place = (TextView) findViewById(R.id.placeText);
         arriveHome = (TextView) findViewById(R.id.returnResult);
     }
+
+
+
 
     // Called when the location has changed.
     @Override
@@ -192,7 +193,7 @@ public class MainActivity extends AppCompatActivity implements GeoTask.Geo, Loca
                 showLocation(location);
             }
         } else {
-            Toast.makeText(getApplicationContext(), "Networkが向こうになっています", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "Networkが無効になっています", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -246,7 +247,7 @@ public class MainActivity extends AppCompatActivity implements GeoTask.Geo, Loca
 
     public void mailClick(View view){
         if(strTo==null){
-            Toast.makeText(getApplicationContext(),"自宅設定を行ってください",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(),"自宅設定が行われていません",Toast.LENGTH_SHORT).show();
         }
         else{
             String mailTo = "";  //宛先メールアドレス
@@ -276,7 +277,6 @@ public class MainActivity extends AppCompatActivity implements GeoTask.Geo, Loca
             // 許可されたら
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // テキストを表示してLocationManagerを取得
-                Toast.makeText(this, "位置情報取得が許可されました", Toast.LENGTH_SHORT).show();
                 // 許可されなかったら
             } else {
                 // 何もしない

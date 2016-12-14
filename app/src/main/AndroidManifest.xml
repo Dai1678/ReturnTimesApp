@@ -6,7 +6,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <!-- GPSベース -->
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"  />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -35,12 +35,16 @@
 
         <activity
             android:name=".SettingMapsActivity"
-            android:label="@string/title_activity_setting_maps"
-            /><!-- ATTENTION: This was auto-generated to add Google Play services to your project for
-     App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->
+            android:label="@string/title_activity_setting_maps" />
+        <!--
+ ATTENTION: This was auto-generated to add Google Play services to your project for
+     App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information.
+        -->
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
+
+        <activity android:name=".SettingMailActivity"></activity>
     </application>
 
 </manifest>
