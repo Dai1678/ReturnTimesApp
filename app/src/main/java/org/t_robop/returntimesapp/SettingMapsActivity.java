@@ -2,6 +2,7 @@ package org.t_robop.returntimesapp;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -29,21 +30,21 @@ public class SettingMapsActivity extends FragmentActivity implements OnMapReadyC
     double lat;
     double lng;
 
-    String text;  //自宅情報(今は緯度経度)
+    String text;  //自宅情報(緯度経度)
 
+    private SharedPreferences dataStore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting_maps);
+
+        dataStore = getSharedPreferences("DataStore",MODE_PRIVATE);
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
-
-        //editText = (EditText)findViewById(R.id.editHome);
-        //text = editText.getText().toString();
 
         Intent intent = getIntent();
         //現在位置情報
@@ -58,6 +59,10 @@ public class SettingMapsActivity extends FragmentActivity implements OnMapReadyC
 
         Intent intent = new Intent(SettingMapsActivity.this,MainActivity.class);
         intent.putExtra("data",text);
+
+        SharedPreferences.Editor editor = dataStore.edit();
+        editor.putString("input",text);  //inputというkeyに紐付け
+        editor.commit();
 
         if(text != null){  //文字数判定
             startActivity(intent);

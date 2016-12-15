@@ -2,8 +2,10 @@ package org.t_robop.returntimesapp;
 
 import android.Manifest;
 import android.app.Service;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -11,6 +13,8 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.StrictMode;
+import android.preference.Preference;
+import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -18,6 +22,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.google.android.gms.appindexing.AppIndex;
@@ -25,6 +30,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+import static android.R.attr.data;
 
 
 public class MainActivity extends AppCompatActivity implements GeoTask.Geo, LocationListener {
@@ -46,6 +52,8 @@ public class MainActivity extends AppCompatActivity implements GeoTask.Geo, Loca
     private static final int LOCATION_UPDATE_MIN_DISTANCE = 0;  // 更新距離(目安)
 
     private LocationManager mLocationManager;
+
+    private SharedPreferences dataStore;
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -66,6 +74,15 @@ public class MainActivity extends AppCompatActivity implements GeoTask.Geo, Loca
 
         Intent intent = getIntent();
         strTo = intent.getStringExtra("data");  //自宅情報代入
+
+        if(strTo == null){
+            strTo = dataStore.getString("input","Nothing");
+            if(strTo.equals("Nothing")){
+                Toast.makeText(getApplicationContext(),"自宅設定が行われていません",Toast.LENGTH_SHORT).show();
+            }
+        }
+
+
         //TODO:デバッグ用
         //strTo = "35.681298,139.7640582";  //テスト(東京駅)
 
@@ -140,6 +157,7 @@ public class MainActivity extends AppCompatActivity implements GeoTask.Geo, Loca
         home = (TextView) findViewById(R.id.textView_result4);
         place = (TextView) findViewById(R.id.placeText);
         arriveHome = (TextView) findViewById(R.id.returnResult);
+        dataStore = getSharedPreferences("DataStore", MODE_PRIVATE);
     }
 
 
@@ -256,6 +274,15 @@ public class MainActivity extends AppCompatActivity implements GeoTask.Geo, Loca
 
             String mailText = times+"頃に帰宅します";  //メール本文
 
+            //宛先メールアドレスが設定されていないとき
+            if(mailTo == ""){
+                mailTo = dataStore.getString("SaveString","Nothing");  //SaveStringから読み出し
+                //未設定時
+                if(mailTo.equals("Nothing")){
+                    Toast.makeText(getApplicationContext(),"メールアドレスが設定されていません",Toast.LENGTH_SHORT).show();
+                }
+            }
+
             //インテントのインスタンス生成
             Intent intent = new Intent();
             //インテントにアクション及び送信情報をセット
@@ -283,6 +310,39 @@ public class MainActivity extends AppCompatActivity implements GeoTask.Geo, Loca
                 Toast.makeText(this, "位置情報取得が拒否されました", Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    //宛先メールアドレスのダイアログ
+    public void toClick(View view){
+        //テキスト入力のView
+        final EditText editView = new EditText(MainActivity.this);
+        new AlertDialog.Builder(MainActivity.this)
+                .setIcon(android.R.drawable.ic_dialog_info)
+                .setTitle("宛先メールアドレス入力")
+                //setViewにてビューを設定します。
+                .setView(editView)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        //入力した文字をトースト出力する
+                        Toast.makeText(MainActivity.this,
+                                editView.getText().toString(),
+                                Toast.LENGTH_SHORT).show();
+
+                        String text = editView.getText().toString();  //保存用変数に格納
+
+                        SharedPreferences.Editor editor = dataStore.edit();
+                        editor.putString("SaveString",text);  //SaveStringというkeyに紐付け
+                        editor.commit();
+
+//                        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+//                        sp.edit().putString("SaveString",editView.getText().toString()).commit();
+                    }
+                })
+                .setNegativeButton("キャンセル", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                    }
+                })
+                .show();
     }
 
 }

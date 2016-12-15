@@ -93,6 +93,14 @@
                 android:id="@+id/mailbtn"
                 android:onClick="mailClick"/>
 
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="宛先設定"
+                android:onClick="toClick"
+                />
+
         </LinearLayout>
 
 
