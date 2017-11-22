@@ -25,7 +25,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.google.android.gms.appindexing.AppIndex;
+//import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements GeoTask.Geo, Loca
 
         // Android 6.0以上の場合
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-            // 位置情報の取得が許可されているかチェック
+            // 位置情報の取得が許可されrequestLocationUpdatesているかチェック
             if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 // 権限があればLocationManagerを取得
 //                Toast.makeText(MainActivity.this, "位置情報の取得は既に許可されています", Toast.LENGTH_SHORT).show();
@@ -122,7 +122,7 @@ public class MainActivity extends AppCompatActivity implements GeoTask.Geo, Loca
         }
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+        //client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
 
 
     }
