@@ -65,6 +65,13 @@ public class SetMapAddressActivity extends AppCompatActivity implements PlaceSel
         mapFragment.getMapAsync(this);
     }
 
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        //TODO 現在地付近からマップ描画
+        LatLng japan = new LatLng(35.68,139.75);
+        googleMap.addMarker(new MarkerOptions().position(japan).title("Marker in Japan")); //マーカーはできてる
+        googleMap.moveCamera(CameraUpdateFactory.newLatLng(japan));
+    }
 
     @Override
     public void onPlaceSelected(Place place) {
@@ -74,14 +81,6 @@ public class SetMapAddressActivity extends AppCompatActivity implements PlaceSel
     @Override
     public void onError(Status status) {
 
-    }
-
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        //TODO 現在地付近からマップ描画
-        LatLng sydney = new LatLng(35.68,139.75);
-        googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Japan")); //マーカーはできてる
-        googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
     }
 
     //TODO 場所の選択、選択した場所の住所を保存
