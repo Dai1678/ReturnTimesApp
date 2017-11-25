@@ -3,27 +3,27 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    >
+    android:padding="16dp">
 
     <ImageView
         android:id="@+id/thumbnail"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:layout_gravity="center"
-        android:layout_marginLeft="10dp"/>
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/ic_launcher"
+        android:layout_marginRight="16dp"/>
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_margin="10dp">
+        android:layout_weight="1">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:id="@+id/addressName"
             android:text="宛先 : 母親"
-            android:textSize="18sp"
+            android:textSize="17sp"
             android:textColor="#000"/>
 
         <TextView
@@ -31,15 +31,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="#000"
-            android:gravity="center_vertical"
             android:text="行き先 : 家"
-            android:textSize="18sp"/>
+            android:textSize="17sp"/>
 
         <TextView
             android:id="@+id/addressMail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
             android:text="メール : example@gmail.com"
             android:textSize="15sp"/>
     </LinearLayout>
