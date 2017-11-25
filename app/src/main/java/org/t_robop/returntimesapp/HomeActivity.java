@@ -36,9 +36,11 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
+        //Toolbar
         Toolbar toolbar = (Toolbar)findViewById(R.id.homeToolbar);
         toolbar.setTitle("連絡先を選択してください");   //TODO 意味考えて、適切な言葉に変更
 
+        //右下フロートボタン
         ButtonFloat buttonFloat = (ButtonFloat)findViewById(R.id.homeFloatingButton);
         if(buttonFloat != null){
             buttonFloat.setDrawableIcon(getResources().getDrawable(R.drawable.ic_float_button));
@@ -46,6 +48,7 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
         assert buttonFloat != null;
         buttonFloat.setOnClickListener(this);
 
+        //ListView処理
         ListView listView = (ListView)findViewById(R.id.list);
         TextView emptyView = (TextView)findViewById(R.id.emptyTextView);
         listView.setEmptyView(emptyView);
@@ -68,6 +71,7 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
         listView.setOnItemClickListener(this);
     }
 
+    //ListViewクリック処理
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
         ListView listView = (ListView) adapterView;
@@ -81,7 +85,7 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
 
     //TODO onItemLongClickで削除処理の実装
 
-
+    //フロートボタンのクリック処理
     @Override
     public void onClick(View view) {
         Intent intent = new Intent(this,SetDestinationActivity.class);

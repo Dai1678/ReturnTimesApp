@@ -18,6 +18,7 @@ class CustomHomeListAdapter extends ArrayAdapter<CustomHomeListItem> {
     private List<CustomHomeListItem> mItems;
     private LayoutInflater mInflater;
 
+    //コンストラクタ
     CustomHomeListAdapter(Context context, int resource, List<CustomHomeListItem> items) {
         super(context, resource,items);
 
@@ -38,17 +39,21 @@ class CustomHomeListAdapter extends ArrayAdapter<CustomHomeListItem> {
         }
         CustomHomeListItem item = mItems.get(position);
 
+        //画像のセット
         ImageView thumbnail = (ImageView)view.findViewById(R.id.thumbnail);
         thumbnail.setImageBitmap(item.getThumbnail());
 
+        //宛先名のセット
         TextView addressName = (TextView)view.findViewById(R.id.addressName);
         addressName.setText(item.getAddressName());
 
+        //行き先名のセット
         TextView destination = (TextView)view.findViewById(R.id.destination);
         destination.setText(item.getDestination());
 
-        TextView address = (TextView)view.findViewById(R.id.addressMail);
-        address.setText(item.getAddressMail());
+        //メアドのセット
+        TextView addressMail = (TextView)view.findViewById(R.id.addressMail);
+        addressMail.setText(item.getAddressMail());
 
         return view;
     }
