@@ -1,18 +1,15 @@
 package org.t_robop.returntimesapp;
 
-import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.app.FragmentManager;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -49,7 +46,7 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
         buttonFloat.setOnClickListener(this);
 
         //ListView処理
-        ListView listView = (ListView)findViewById(R.id.list);
+        ListView listView = (ListView)findViewById(R.id.homeList);
         TextView emptyView = (TextView)findViewById(R.id.emptyTextView);
         listView.setEmptyView(emptyView);
 
@@ -65,7 +62,7 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
         }
 
 
-        CustomHomeListAdapter adapter = new CustomHomeListAdapter(this,R.layout.custom_list_item,listItems);
+        CustomHomeListAdapter adapter = new CustomHomeListAdapter(this,R.layout.home_list_item,listItems);
         listView.setAdapter(adapter);
 
         listView.setOnItemClickListener(this);

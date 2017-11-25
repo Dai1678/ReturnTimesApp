@@ -40,7 +40,7 @@ class CustomHomeListAdapter extends ArrayAdapter<CustomHomeListItem> {
         CustomHomeListItem item = mItems.get(position);
 
         //画像のセット
-        ImageView thumbnail = (ImageView)view.findViewById(R.id.thumbnail);
+        ImageView thumbnail = (ImageView)view.findViewById(R.id.destinationImage);
         thumbnail.setImageBitmap(item.getThumbnail());
 
         //宛先名のセット
