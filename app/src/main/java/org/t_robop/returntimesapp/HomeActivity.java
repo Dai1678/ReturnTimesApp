@@ -52,12 +52,12 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
 
         ArrayList<CustomHomeListItem> listItems = new ArrayList<>();
         //ToDO RealmからListItem情報を取得して表示
-        //ListItem情報： 行き先、宛先(名前orメールアドレス)、場所画像id
+        //ListItem情報： 場所画像id、宛先名、行き先、メアド
 
         for(int i = 0; i<1; i++){
             //TODO 行き先によって画像変更  int型の画像idでswitchしたほうがいいかも
             Bitmap bmp = BitmapFactory.decodeResource(getResources(),R.mipmap.ic_house);
-            CustomHomeListItem item = new CustomHomeListItem(bmp,"行き先 : 自宅", "宛先 : example@gmail.com");
+            CustomHomeListItem item = new CustomHomeListItem(bmp, "宛先 : 母親","行き先 : 自宅", "宛先 : example@gmail.com");
             listItems.add(item);
         }
 

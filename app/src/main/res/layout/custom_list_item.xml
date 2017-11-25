@@ -3,40 +3,45 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="16dp">
+    >
 
     <ImageView
         android:id="@+id/thumbnail"
         android:layout_width="70dp"
         android:layout_height="70dp"
-        android:padding="3dp" />
+        android:layout_gravity="center"
+        android:layout_marginLeft="10dp"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_margin="10dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/addressName"
+            android:text="宛先 : 母親"
+            android:textSize="18sp"
+            android:textColor="#000"/>
 
         <TextView
             android:id="@+id/destination"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="#000"
-            android:padding="5dp"
             android:gravity="center_vertical"
-            android:maxLines="1"
             android:text="行き先 : 家"
-            android:textSize="23sp"/>
+            android:textSize="18sp"/>
 
         <TextView
-            android:id="@+id/address"
+            android:id="@+id/addressMail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="#000"
-            android:padding="5dp"
             android:gravity="center_vertical"
-            android:maxLines="1"
-            android:text="宛先: example@gmail.com"
-            android:textSize="20sp"/>
+            android:text="メール : example@gmail.com"
+            android:textSize="15sp"/>
     </LinearLayout>
 
 </LinearLayout>

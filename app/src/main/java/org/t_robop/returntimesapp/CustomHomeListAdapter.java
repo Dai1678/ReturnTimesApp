@@ -3,7 +3,6 @@ package org.t_robop.returntimesapp;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,18 +36,19 @@ class CustomHomeListAdapter extends ArrayAdapter<CustomHomeListItem> {
         }else{
             view = mInflater.inflate(mResource,null);
         }
-        Log.d("test",view.toString());
         CustomHomeListItem item = mItems.get(position);
 
         ImageView thumbnail = (ImageView)view.findViewById(R.id.thumbnail);
-        Log.d("test",thumbnail.toString());
         thumbnail.setImageBitmap(item.getThumbnail());
+
+        TextView addressName = (TextView)view.findViewById(R.id.addressName);
+        addressName.setText(item.getAddressName());
 
         TextView destination = (TextView)view.findViewById(R.id.destination);
         destination.setText(item.getDestination());
 
-        TextView address = (TextView)view.findViewById(R.id.address);
-        address.setText(item.getAddress());
+        TextView address = (TextView)view.findViewById(R.id.addressMail);
+        address.setText(item.getAddressMail());
 
         return view;
     }
