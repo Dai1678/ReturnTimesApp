@@ -5,10 +5,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="org.t_robop.returntimesapp.SettingProfileActivity">
 
     <android.support.v7.widget.Toolbar
-        android:id="@+id/homeToolbar"
+        android:id="@+id/profileToolbar"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
@@ -16,6 +17,13 @@
         android:background="?attr/colorPrimary"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
     </android.support.v7.widget.Toolbar>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:id="@+id/profileTitle"
+        android:background="?attr/colorPrimary"
+        android:hint="タイトルの入力" />
 
     <ListView
         android:layout_width="match_parent"
