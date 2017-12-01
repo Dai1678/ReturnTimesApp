@@ -39,6 +39,7 @@ class CustomHomeListAdapter extends ArrayAdapter<CustomHomeListItem> {
         }
         CustomHomeListItem item = mItems.get(position);
 
+        //TODO ViewHolderを使えば処理の重いfindViewByIdを使わずに済む
         //画像のセット
         ImageView thumbnail = (ImageView)view.findViewById(R.id.destinationImage);
         thumbnail.setImageBitmap(item.getThumbnail());

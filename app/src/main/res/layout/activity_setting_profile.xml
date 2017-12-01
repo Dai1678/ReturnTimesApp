@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context="org.t_robop.returntimesapp.SettingProfileActivity">
 
     <android.support.v7.widget.Toolbar
@@ -18,20 +17,14 @@
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
     </android.support.v7.widget.Toolbar>
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:id="@+id/profileTitle"
-        android:background="?attr/colorPrimary"
-        android:hint="タイトルの入力" />
-
     <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/profileList">
+        android:id="@+id/profileList"
+        android:layout_below="@+id/profileToolbar">
 
     </ListView>
 
 
 
-</LinearLayout>
+</RelativeLayout>

@@ -85,7 +85,7 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
     //フロートボタンのクリック処理
     @Override
     public void onClick(View view) {
-        Intent intent = new Intent(this,SetDestinationActivity.class);
+        Intent intent = new Intent(this,SettingProfileActivity.class);
         startActivity(intent);
     }
 }

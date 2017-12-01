@@ -3,20 +3,20 @@ package org.t_robop.returntimesapp;
 import android.graphics.Bitmap;
 
 public class CustomHomeListItem {
-    private Bitmap mThumbnail = null;
+    private Bitmap mDestinationImage = null;
     private String mAddressName = null;
     private String mDestination = null;
     private String mAddressMail = null;
 
     public CustomHomeListItem(Bitmap thumbnail, String addressName, String destination, String addressMail){
-        mThumbnail = thumbnail;
+        mDestinationImage = thumbnail;
         mAddressName = addressName;
         mDestination = destination;
         mAddressMail = addressMail;
     }
 
-    public void setThumbnail(Bitmap thumbnail){
-        mThumbnail = thumbnail;
+    public void setThumbnail(Bitmap destinationImage){
+        mDestinationImage = destinationImage;
     }
 
     public void setAddressName(String name){
@@ -32,7 +32,7 @@ public class CustomHomeListItem {
     }
 
     public Bitmap getThumbnail(){
-        return mThumbnail;
+        return mDestinationImage;
     }
 
     public String getAddressName(){
