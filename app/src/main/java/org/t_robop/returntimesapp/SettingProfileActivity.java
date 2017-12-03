@@ -2,6 +2,7 @@ package org.t_robop.returntimesapp;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v7.app.AppCompatActivity;
@@ -11,13 +12,15 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class SettingProfileActivity extends AppCompatActivity implements View.OnClickListener{
+public class SettingProfileActivity extends AppCompatActivity implements AdapterView.OnItemClickListener{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,12 +53,30 @@ public class SettingProfileActivity extends AppCompatActivity implements View.On
         CustomProfileListAdapter adapter = new CustomProfileListAdapter(this,R.layout.profile_item,listItems);
         listView.setAdapter(adapter);
 
+
+        listView.setOnItemClickListener(this);
     }
 
     //ListViewクリック処理
     @Override
-    public void onClick(View view) {
+    public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
 
+        Intent intent = null;
+
+        switch (position){
+            case 0:
+                intent = new Intent(this.getApplicationContext(),SetDestinationActivity.class);
+                break;
+
+            case 1:
+                intent = new Intent(this.getApplicationContext(),SetMailDetailActivity.class);
+                break;
+
+            case 2:
+                intent = new Intent(this.getApplicationContext(),SetMapAddressActivity.class);
+                break;
+        }
+        startActivity(intent);
     }
 
     @Override
