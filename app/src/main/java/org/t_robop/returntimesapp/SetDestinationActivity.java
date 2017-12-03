@@ -26,7 +26,7 @@ public class SetDestinationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_set_destination);
 
         Toolbar toolbar = (Toolbar)findViewById(R.id.setDestinationToolbar);
-        toolbar.setTitle("連絡先名を入力してください");  //TODO 意味考えて、適切な文章に変更
+        toolbar.setTitle("行き先名を入力してください");  //TODO 意味考えて、適切な文章に変更
         setSupportActionBar(toolbar);
 
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
