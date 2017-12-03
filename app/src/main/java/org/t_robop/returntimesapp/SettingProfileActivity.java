@@ -91,6 +91,7 @@ public class SettingProfileActivity extends AppCompatActivity implements Adapter
             finish();
             return true;
         }else if(item.getItemId() == R.id.save_profile){
+            //TODO すべての設定項目が入力されていないと押せないようにしたい
             Toast.makeText(SettingProfileActivity.this,"SAVED!",Toast.LENGTH_SHORT).show();
             return  true;
         }

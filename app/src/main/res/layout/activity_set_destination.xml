@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:padding="60dp"
-        android:hint="Destination Address"
+        android:hint="行き先名"
         android:textCursorDrawable="@drawable/text_cursor_cyan"
         android:textSize="25sp"
         app:met_baseColor="@android:color/black"
@@ -44,45 +44,5 @@
         android:gravity="center">
 
     </GridView>
-
-    <com.gc.materialdesign.views.ButtonFloat
-        android:id="@+id/setDestinationFloatingButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_margin="28dp"
-        android:layout_marginBottom="30dp">
-
-    </com.gc.materialdesign.views.ButtonFloat>
-    <!--
-    <com.gc.materialdesign.views.ButtonFlat
-        android:id="@+id/next"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="#1E88E5"
-        android:textColor="@android:color/black"
-        android:text="次へ"
-        android:textSize="20sp"
-        android:layout_margin="30dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true">
-
-    </com.gc.materialdesign.views.ButtonFlat>
-
-    <com.gc.materialdesign.views.ButtonFlat
-        android:id="@+id/back"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="#1E88E5"
-        android:textColor="@android:color/black"
-        android:text="戻る"
-        android:textSize="20sp"
-        android:layout_alignParentBottom="true"
-        android:layout_toStartOf="@+id/next">
-
-    </com.gc.materialdesign.views.ButtonFlat>
-    -->
-
 
 </RelativeLayout>
