@@ -23,7 +23,7 @@
         android:layout_below="@+id/setMailDetailToolbar"
         android:layout_centerHorizontal="true"
         android:padding="60dp"
-        android:hint="Contact Address"
+        android:hint="メールアドレス"
         android:textCursorDrawable="@drawable/text_cursor_cyan"
         android:textSize="25sp"
         app:met_baseColor="@android:color/black"
@@ -38,16 +38,5 @@
         android:layout_below="@+id/contactEdit">
 
     </ListView>
-
-    <com.gc.materialdesign.views.ButtonFloat
-        android:id="@+id/setMailDetailFloatingButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_margin="25dp">
-
-    </com.gc.materialdesign.views.ButtonFloat>
-
 
 </RelativeLayout>

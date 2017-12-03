@@ -16,6 +16,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
@@ -34,7 +36,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class SetMapAddressActivity extends AppCompatActivity implements PlaceSelectionListener, OnMapReadyCallback, View.OnClickListener {
+public class SetMapAddressActivity extends AppCompatActivity implements PlaceSelectionListener, OnMapReadyCallback {
 
     private static final int LOCATION_UPDATE_MIN_TIME = 0;  // 更新時間(目安)
 
@@ -49,13 +51,12 @@ public class SetMapAddressActivity extends AppCompatActivity implements PlaceSel
 
         Toolbar toolbar = (Toolbar)findViewById(R.id.setMapToolbar);
         toolbar.setTitle("行き先の設定");     //TODO 意味考えて、適切な文章に変更
+        setSupportActionBar(toolbar);
 
-        ButtonFloat buttonFloat = (ButtonFloat)findViewById(R.id.setMapFloatingButton);
-        if(buttonFloat != null){
-            buttonFloat.setDrawableIcon(getResources().getDrawable(R.mipmap.ic_float_right));
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        if(actionBar != null){
+            actionBar.setDisplayHomeAsUpEnabled(true);
         }
-        assert buttonFloat != null;
-        buttonFloat.setOnClickListener(this);
 
         //TODO 入力フォームバグ すぐに消えてしまう
         PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment)getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
@@ -86,8 +87,21 @@ public class SetMapAddressActivity extends AppCompatActivity implements PlaceSel
     //TODO 場所の選択、選択した場所の住所を保存
 
     @Override
-    public void onClick(View view) {
-        Intent intent = new Intent(SetMapAddressActivity.this,SetMailDetailActivity.class);
-        startActivity(intent);
+    public boolean onCreateOptionsMenu(Menu menu){
+        getMenuInflater().inflate(R.menu.menu_profile,menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        if(item.getItemId() == android.R.id.home){
+            finish();
+            return true;
+        }else if(item.getItemId() == R.id.save_profile){
+            //TODO すべての設定項目が入力されていないと押せないようにしたい
+            Toast.makeText(SetMapAddressActivity.this,"SAVED!",Toast.LENGTH_SHORT).show();
+            return  true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
