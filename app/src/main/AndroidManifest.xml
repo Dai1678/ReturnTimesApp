@@ -49,7 +49,7 @@
         <activity android:name=".SetDestinationActivity" />
         <activity android:name=".SetMapAddressActivity" />
         <activity android:name=".SetMailDetailActivity" />
-        <activity android:name=".SettingProfileActivity"></activity>
+        <activity android:name=".SettingProfileActivity"/>
     </application>
 
 </manifest>

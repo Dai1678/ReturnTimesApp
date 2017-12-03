@@ -5,6 +5,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -17,10 +19,27 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.common.api.Api;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.places.AutocompleteFilter;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.Places;
+import com.google.android.gms.location.places.ui.PlaceAutocomplete;
+
+import java.io.FileDescriptor;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class SettingProfileActivity extends AppCompatActivity implements AdapterView.OnItemClickListener{
+
+    int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,22 +80,47 @@ public class SettingProfileActivity extends AppCompatActivity implements Adapter
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
 
-        Intent intent = null;
+        Intent intent;
 
         switch (position){
             case 0:
                 intent = new Intent(this.getApplicationContext(),SetDestinationActivity.class);
+                startActivity(intent);
                 break;
 
             case 1:
-                intent = new Intent(this.getApplicationContext(),SetMapAddressActivity.class);
+                //intent = new Intent(this.getApplicationContext(),SetMapAddressActivity.class);
+                try {
+                    AutocompleteFilter typeFilter = new AutocompleteFilter.Builder().setTypeFilter(AutocompleteFilter.TYPE_FILTER_ADDRESS).build();
+                    intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN).setFilter(typeFilter).build(this);
+                    startActivityForResult(intent,PLACE_AUTOCOMPLETE_REQUEST_CODE);
+                } catch (GooglePlayServicesRepairableException e) {
+                    Log.i("Place:",e.toString());e.printStackTrace();
+                } catch (GooglePlayServicesNotAvailableException e) {
+                    Log.i("Place:",e.toString());
+                }
                 break;
 
             case 2:
                 intent = new Intent(this.getApplicationContext(),SetMailDetailActivity.class);
+                startActivity(intent);
                 break;
         }
-        startActivity(intent);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+        if(requestCode == PLACE_AUTOCOMPLETE_REQUEST_CODE){
+            if(resultCode == RESULT_OK){
+                Place place = PlaceAutocomplete.getPlace(this,data);
+                Log.i("Place",place.getName().toString());
+            }else if(resultCode == PlaceAutocomplete.RESULT_ERROR){
+                Status status = PlaceAutocomplete.getStatus(this,data);
+                Log.i("Place",status.getStatusMessage());
+            }else if(resultCode == RESULT_CANCELED){
+                Log.i("Place","failed");
+            }
+        }
     }
 
     @Override
@@ -97,4 +141,5 @@ public class SettingProfileActivity extends AppCompatActivity implements Adapter
         }
         return super.onOptionsItemSelected(item);
     }
+
 }
