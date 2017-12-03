@@ -69,11 +69,11 @@ public class SettingProfileActivity extends AppCompatActivity implements Adapter
                 break;
 
             case 1:
-                intent = new Intent(this.getApplicationContext(),SetMailDetailActivity.class);
+                intent = new Intent(this.getApplicationContext(),SetMapAddressActivity.class);
                 break;
 
             case 2:
-                intent = new Intent(this.getApplicationContext(),SetMapAddressActivity.class);
+                intent = new Intent(this.getApplicationContext(),SetMailDetailActivity.class);
                 break;
         }
         startActivity(intent);
