@@ -47,7 +47,6 @@
 
         <!-- <activity android:name=".HomeActivity"></activity> -->
         <activity android:name="org.dai1678.returntimesapp.SetDestinationActivity" />
-        <activity android:name="org.dai1678.returntimesapp.SetMapAddressActivity" />
         <activity android:name="org.dai1678.returntimesapp.SetMailDetailActivity" />
         <activity android:name="org.dai1678.returntimesapp.SettingProfileActivity"/>
     </application>

@@ -75,7 +75,6 @@ public class SettingProfileActivity extends AppCompatActivity implements Adapter
                 break;
 
             case 1:
-                //intent = new Intent(this.getApplicationContext(),SetMapAddressActivity.class);
                 try {
                     AutocompleteFilter typeFilter = new AutocompleteFilter.Builder().setTypeFilter(AutocompleteFilter.TYPE_FILTER_ADDRESS).build();
                     intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN).setFilter(typeFilter).build(this);
