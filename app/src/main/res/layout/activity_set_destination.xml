@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:context="org.t_robop.returntimesapp.SetDestinationActivity">
+    tools:context="org.dai1678.returntimesapp.SetDestinationActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/setDestinationToolbar"

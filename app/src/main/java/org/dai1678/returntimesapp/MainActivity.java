@@ -1,8 +1,7 @@
-package org.t_robop.returntimesapp;
+package org.dai1678.returntimesapp;
 
 import android.Manifest;
 import android.app.Service;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -11,11 +10,6 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
-import android.os.Build;
-import android.os.StrictMode;
-import android.preference.Preference;
-import android.preference.PreferenceManager;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -29,8 +23,6 @@ import android.widget.Toast;
 import com.google.android.gms.common.api.GoogleApiClient;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-
-import static android.R.attr.data;
 
 
 public class MainActivity extends AppCompatActivity implements GeoTask.Geo, LocationListener {

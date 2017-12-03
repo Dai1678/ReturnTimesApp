@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="org.t_robop.returntimesapp.SettingProfileActivity">
+    tools:context="org.dai1678.returntimesapp.SettingProfileActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/profileToolbar"
