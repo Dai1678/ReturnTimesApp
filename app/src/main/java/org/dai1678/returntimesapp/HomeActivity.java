@@ -76,7 +76,7 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
 
         FragmentManager fragmentManager = getFragmentManager();
 
-        DialogFragment dialogFragment = new AlertDialogFragment();
+        AlertDialogFragment dialogFragment = new AlertDialogFragment();
         dialogFragment.show(fragmentManager,"alert dialog");
     }
 
