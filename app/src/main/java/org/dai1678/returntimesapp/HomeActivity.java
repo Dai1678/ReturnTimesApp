@@ -24,7 +24,7 @@ HomeActivity    初期表示画面
           メールorLINEへの移動
 ***************************************************************************************************/
 
-public class HomeActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, View.OnClickListener {
+public class HomeActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener, View.OnClickListener {
 
     private static final int MY_PERMISSIONS_REQUEST_LOCATION = 1;
 
@@ -53,11 +53,15 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
         ArrayList<CustomHomeListItem> listItems = new ArrayList<>();
         //ToDO RealmからListItem情報を取得して表示
         //ListItem情報： 場所画像id、宛先名、行き先、メアド
+        String[] addressNameArray = {"母親"};
+        String[] destinationArray = {"自宅"};
+        String[] addressMailArray = {"example@gmail.com"};
 
-        for(int i = 0; i<1; i++){
+        for(int i = 0; i<addressNameArray.length; i++){
             //TODO 行き先によって画像変更  int型の画像idでswitchしたほうがいいかも
             Bitmap bmp = BitmapFactory.decodeResource(getResources(),R.mipmap.ic_house);
-            CustomHomeListItem item = new CustomHomeListItem(bmp, "宛先 : 母親","行き先 : 自宅", "宛先 : example@gmail.com");
+            //TODO ↓が1つのリストに入る情報なので、: 後を変数管理していく
+            CustomHomeListItem item = new CustomHomeListItem(bmp, "宛先 : " + addressNameArray[i],"行き先 : " + destinationArray[i], "E-mail : " + addressMailArray[i]);
             listItems.add(item);
         }
 
@@ -71,6 +75,8 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
     //ListViewクリック処理
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+        //TODO プログレスバーで待機しながら、現在地から目的地までの所要時間と予想到着時間を算出 -> メールとLINEの選択
+
         ListView listView = (ListView) adapterView;
         CustomHomeListItem item = (CustomHomeListItem)listView.getItemAtPosition(position);
 
@@ -81,6 +87,11 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     //TODO onItemLongClickで削除処理の実装
+    @Override
+    public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+        return false;
+    }
 
     //フロートボタンのクリック処理
     @Override
@@ -88,4 +99,5 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
         Intent intent = new Intent(this,SettingProfileActivity.class);
         startActivity(intent);
     }
+
 }

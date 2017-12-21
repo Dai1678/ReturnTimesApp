@@ -14,17 +14,17 @@ import java.util.List;
 
 class CustomHomeListAdapter extends ArrayAdapter<CustomHomeListItem> {
 
-    private int mResource;
-    private List<CustomHomeListItem> mItems;
-    private LayoutInflater mInflater;
+    private int resource;
+    private List<CustomHomeListItem> items;
+    private LayoutInflater layoutInflater;
 
     //コンストラクタ
     CustomHomeListAdapter(Context context, int resource, List<CustomHomeListItem> items) {
         super(context, resource,items);
 
-        mResource = resource;
-        mItems = items;
-        mInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        this.resource = resource;
+        this.items = items;
+        this.layoutInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     @NonNull
@@ -35,9 +35,9 @@ class CustomHomeListAdapter extends ArrayAdapter<CustomHomeListItem> {
         if(convertView != null){
             view = convertView;
         }else{
-            view = mInflater.inflate(mResource,null);
+            view = this.layoutInflater.inflate(this.resource,null);
         }
-        CustomHomeListItem item = mItems.get(position);
+        CustomHomeListItem item = this.items.get(position);
 
         //TODO ViewHolderを使えば処理の重いfindViewByIdを使わずに済む
         //画像のセット

@@ -46,12 +46,12 @@ public class SettingProfileActivity extends AppCompatActivity implements Adapter
         ListView listView = (ListView)findViewById(R.id.profileList);
 
         ArrayList<CustomProfileListItem> listItems = new ArrayList<>();
+        String[] profileHint = {"Title","Map","Mail"};
+        Bitmap bmp = BitmapFactory.decodeResource(getResources(),R.mipmap.ic_launcher);     //TODO それぞれ適切な画像をセット
 
         //0番目 : 行き先  1番目 : Map 2番目 : メアド入力
-        for(int i = 0; i<3; i++){
-            Bitmap bmp = BitmapFactory.decodeResource(getResources(),R.mipmap.ic_launcher);
-            String[] profileHint = {"Title","Map","Mail"};
-            CustomProfileListItem item = new CustomProfileListItem(bmp,profileHint[i]);
+        for (String aProfileHint : profileHint) {
+            CustomProfileListItem item = new CustomProfileListItem(bmp, aProfileHint);
             listItems.add(item);
         }
 
@@ -76,8 +76,7 @@ public class SettingProfileActivity extends AppCompatActivity implements Adapter
 
             case 1:
                 try {
-                    AutocompleteFilter typeFilter = new AutocompleteFilter.Builder().setTypeFilter(AutocompleteFilter.TYPE_FILTER_ADDRESS).build();
-                    intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN).setFilter(typeFilter).build(this);
+                    intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN).build(this);    //プレイスオートコンプリートへ
                     startActivityForResult(intent,PLACE_AUTOCOMPLETE_REQUEST_CODE);
                 } catch (GooglePlayServicesRepairableException e) {
                     Log.i("Place:",e.toString());e.printStackTrace();
@@ -93,12 +92,15 @@ public class SettingProfileActivity extends AppCompatActivity implements Adapter
         }
     }
 
+    //プレイスオートコンプリートの結果取得
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         if(requestCode == PLACE_AUTOCOMPLETE_REQUEST_CODE){
             if(resultCode == RESULT_OK){
                 Place place = PlaceAutocomplete.getPlace(this,data);
                 Log.i("Place",place.getName().toString());
+                Log.i("Place",place.getAddress().toString());
+                Log.i("Place",place.getLatLng().toString());
             }else if(resultCode == PlaceAutocomplete.RESULT_ERROR){
                 Status status = PlaceAutocomplete.getStatus(this,data);
                 Log.i("Place",status.getStatusMessage());
@@ -120,7 +122,7 @@ public class SettingProfileActivity extends AppCompatActivity implements Adapter
             finish();
             return true;
         }else if(item.getItemId() == R.id.save_profile){
-            //TODO すべての設定項目が入力されていないと押せないようにしたい
+            //TODO すべての設定項目が入力されていないと押せないようにしたい or 設定されていない項目はHomeActivityで未設定と表示する
             Toast.makeText(SettingProfileActivity.this,"SAVED!",Toast.LENGTH_SHORT).show();
             return  true;
         }

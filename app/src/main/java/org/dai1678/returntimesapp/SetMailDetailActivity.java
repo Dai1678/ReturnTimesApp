@@ -17,7 +17,7 @@ public class SetMailDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_set_mail_detail);
 
         Toolbar toolbar = (Toolbar)findViewById(R.id.setMailDetailToolbar);
-        toolbar.setTitle("宛先とメール本文の設定");
+        toolbar.setTitle("宛先とメール本文の設定");    //TODO 適切な名前に変更
         setSupportActionBar(toolbar);
 
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
@@ -25,10 +25,10 @@ public class SetMailDetailActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        ListView listView = (ListView)findViewById(R.id.templateTextList);
+        ListView listView = (ListView)findViewById(R.id.templateTextList);  //TODO チェックボックス月のListViewにする
         final String[] templateText = {"◯時◯分に帰宅します","◯時◯分に到着します","◯時◯分に家を出ます"};
 
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,templateText);
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this,android.R.layout.simple_list_item_1,templateText);
 
         listView.setAdapter(arrayAdapter);
     }

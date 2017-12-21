@@ -5,28 +5,28 @@ import android.graphics.Bitmap;
 
 public class CustomProfileListItem {
 
-    private Bitmap mProfileItemImage = null;
-    private String mProfileHint = null;
+    private Bitmap profileItemImage;
+    private String profileHint;
 
     public CustomProfileListItem(Bitmap profileItemImage,String profileHint){
-        mProfileItemImage = profileItemImage;
-        mProfileHint = profileHint;
+        this.profileItemImage = profileItemImage;
+        this.profileHint = profileHint;
     }
 
     public void setProfileItemImage(Bitmap profileItemImage){
-        mProfileItemImage = profileItemImage;
+        this.profileItemImage = profileItemImage;
     }
 
     public void setProfileHint(String profileHint){
-        mProfileHint = profileHint;
+        this.profileHint = profileHint;
     }
 
     public Bitmap getProfileItemImage(){
-        return mProfileItemImage;
+        return this.profileItemImage;
     }
 
     public String getProfileHint(){
-        return mProfileHint;
+        return this.profileHint;
     }
 
 }

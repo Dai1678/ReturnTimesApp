@@ -14,16 +14,16 @@ import java.util.List;
 
 public class CustomProfileListAdapter extends ArrayAdapter<CustomProfileListItem> {
 
-    private int mResource;
-    private List<CustomProfileListItem> mItems;
-    private LayoutInflater mInflater;
+    private int resource;
+    private List<CustomProfileListItem> items;
+    private LayoutInflater layoutInflater;
 
     public CustomProfileListAdapter(Context context, int resource, List<CustomProfileListItem> items) {
         super(context, resource, items);
 
-        mResource = resource;
-        mItems = items;
-        mInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        this.resource = resource;
+        this.items = items;
+        this.layoutInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     @NonNull
@@ -35,9 +35,9 @@ public class CustomProfileListAdapter extends ArrayAdapter<CustomProfileListItem
         if(convertView != null){
             view = convertView;
         }else{
-            view = mInflater.inflate(mResource,null);
+            view = this.layoutInflater.inflate(this.resource,null);
         }
-        CustomProfileListItem item = mItems.get(position);
+        CustomProfileListItem item = this.items.get(position);
 
         //TODO ViewHolderを使えば処理の重いfindViewByIdを使わずに済む
         ImageView thumbnail = (ImageView)view.findViewById(R.id.profileItemImage);

@@ -3,47 +3,47 @@ package org.dai1678.returntimesapp;
 import android.graphics.Bitmap;
 
 public class CustomHomeListItem {
-    private Bitmap mDestinationImage = null;
-    private String mAddressName = null;
-    private String mDestination = null;
-    private String mAddressMail = null;
+    private Bitmap destinationImage;
+    private String addressName;
+    private String destination;
+    private String addressMail;
 
     public CustomHomeListItem(Bitmap thumbnail, String addressName, String destination, String addressMail){
-        mDestinationImage = thumbnail;
-        mAddressName = addressName;
-        mDestination = destination;
-        mAddressMail = addressMail;
+        this.destinationImage = thumbnail;
+        this.addressName = addressName;
+        this.destination = destination;
+        this.addressMail = addressMail;
     }
 
     public void setThumbnail(Bitmap destinationImage){
-        mDestinationImage = destinationImage;
+        this.destinationImage = destinationImage;
     }
 
-    public void setAddressName(String name){
-        mAddressName = name;
+    public void setAddressName(String addressName){
+        this.addressName = addressName;
     }
 
     public void setDestination(String destination){
-        mDestination = destination;
+        this.destination = destination;
     }
 
-    public void setAddressMail(String address){
-        mAddressMail = address;
+    public void setAddressMail(String addressMail){
+        this.addressMail = addressMail;
     }
 
     public Bitmap getThumbnail(){
-        return mDestinationImage;
+        return this.destinationImage;
     }
 
     public String getAddressName(){
-        return mAddressName;
+        return this.addressName;
     }
 
     public String getDestination(){
-        return mDestination;
+        return this.destination;
     }
 
     public String getAddressMail(){
-        return mAddressMail;
+        return this.addressMail;
     }
 }
