@@ -35,7 +35,7 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
 
         //Toolbar
         Toolbar toolbar = (Toolbar)findViewById(R.id.homeToolbar);
-        toolbar.setTitle("連絡先を選択してください");   //TODO 意味考えて、適切な言葉に変更
+        toolbar.setTitle("連絡先を選択してください");
 
         //右下フロートボタン
         ButtonFloat buttonFloat = (ButtonFloat)findViewById(R.id.homeFloatingButton);

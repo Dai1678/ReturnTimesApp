@@ -3,6 +3,7 @@ package org.dai1678.returntimesapp;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -11,9 +12,12 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-public class SetMailDetailActivity extends AppCompatActivity implements ListView.OnItemClickListener {
+import com.rengwuxian.materialedittext.MaterialEditText;
 
-    ListView listView;
+public class SetMailDetailActivity extends AppCompatActivity {
+
+    MaterialEditText editText;
+    //ListView listView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,7 +25,7 @@ public class SetMailDetailActivity extends AppCompatActivity implements ListView
         setContentView(R.layout.activity_set_mail_detail);
 
         Toolbar toolbar = (Toolbar)findViewById(R.id.setMailDetailToolbar);
-        toolbar.setTitle("宛先とメール本文の設定");    //TODO 適切な名前に変更
+        toolbar.setTitle("宛先とメール本文の設定");
         setSupportActionBar(toolbar);
 
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
@@ -29,19 +33,21 @@ public class SetMailDetailActivity extends AppCompatActivity implements ListView
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
+        editText = (MaterialEditText)findViewById(R.id.contactEdit);
+
+        //TODO メアド入力フォームの下に送信先LINEユーザー設定フォームをいれたい
+
+        /*
         listView = (ListView)findViewById(R.id.templateTextList);
         final String[] templateText = {"◯時◯分に帰宅します","◯時◯分に到着します","◯時◯分に家を出ます"};
 
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this,android.R.layout.simple_list_item_single_choice,templateText);
 
         listView.setAdapter(arrayAdapter);
+        */
     }
 
-    //TODO ListViewのチェック処理
-    @Override
-    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        listView.getItemAtPosition(i);
-    }
+    //ListViewのチェック処理
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
@@ -55,8 +61,11 @@ public class SetMailDetailActivity extends AppCompatActivity implements ListView
             finish();
             return true;
         }else if(item.getItemId() == R.id.save_profile){
+            //TODO データベースに保存
+            Log.i("Address",editText.getText().toString());
             //TODO すべての設定項目が入力されていないと押せないようにしたい
             Toast.makeText(SetMailDetailActivity.this,"SAVED!",Toast.LENGTH_SHORT).show();
+            finish();
             return  true;
         }
         return super.onOptionsItemSelected(item);

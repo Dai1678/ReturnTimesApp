@@ -26,26 +26,33 @@ public class CustomProfileListAdapter extends ArrayAdapter<CustomProfileListItem
         this.layoutInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
+    private static class ViewHolder{
+        public ImageView thumbnail;
+        public TextView textView;
+    }
+
     @NonNull
     @Override
     public View getView(int position, View convertView, @NonNull ViewGroup parent){
+        ViewHolder holder;
 
-        View view;
-
-        if(convertView != null){
-            view = convertView;
+        if(convertView == null){
+            convertView = this.layoutInflater.inflate(this.resource,null);
+            holder = new ViewHolder();
+            holder.thumbnail = (ImageView)convertView.findViewById(R.id.profileItemImage);
+            holder.textView = (TextView)convertView.findViewById(R.id.textProfile);
+            convertView.setTag(holder);
         }else{
-            view = this.layoutInflater.inflate(this.resource,null);
+            holder = (ViewHolder)convertView.getTag();
         }
+
         CustomProfileListItem item = this.items.get(position);
 
         //TODO ViewHolderを使えば処理の重いfindViewByIdを使わずに済む
-        ImageView thumbnail = (ImageView)view.findViewById(R.id.profileItemImage);
-        thumbnail.setImageBitmap(item.getProfileItemImage());
+        holder.thumbnail.setImageBitmap(item.getProfileItemImage());
 
-        TextView textView = (TextView)view.findViewById(R.id.textProfile);
-        textView.setText(item.getProfileHint());
+        holder.textView.setText(item.getProfileHint());
 
-        return view;
+        return convertView;
     }
 }

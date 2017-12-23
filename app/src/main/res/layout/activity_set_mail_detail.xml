@@ -31,6 +31,7 @@
         app:met_primaryColor="?colorAccent"
         app:met_singleLineEllipsis="true" />
 
+    <!--
     <ListView
         android:id="@+id/templateTextList"
         android:layout_width="match_parent"
@@ -39,5 +40,6 @@
         android:layout_below="@+id/contactEdit">
 
     </ListView>
+    -->
 
 </RelativeLayout>

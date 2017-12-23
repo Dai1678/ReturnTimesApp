@@ -34,7 +34,7 @@ public class SettingProfileActivity extends AppCompatActivity implements Adapter
 
         //Toolbar
         Toolbar toolbar = (Toolbar)findViewById(R.id.profileToolbar);
-        toolbar.setTitle("profile設定");   //TODO 意味考えて、適切な言葉に変更
+        toolbar.setTitle("profile設定");
         setSupportActionBar(toolbar);
 
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
@@ -98,6 +98,7 @@ public class SettingProfileActivity extends AppCompatActivity implements Adapter
         if(requestCode == PLACE_AUTOCOMPLETE_REQUEST_CODE){
             if(resultCode == RESULT_OK){
                 Place place = PlaceAutocomplete.getPlace(this,data);
+                //TODO 必要な情報を取得して、帰宅時間算出に使う
                 Log.i("Place",place.getName().toString());
                 Log.i("Place",place.getAddress().toString());
                 Log.i("Place",place.getLatLng().toString());

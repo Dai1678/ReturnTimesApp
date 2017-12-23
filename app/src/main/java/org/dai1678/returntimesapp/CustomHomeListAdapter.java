@@ -7,10 +7,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.nineoldandroids.view.ViewHelper;
+
 import java.util.List;
+import java.util.concurrent.TimeoutException;
 
 class CustomHomeListAdapter extends ArrayAdapter<CustomHomeListItem> {
 
@@ -27,35 +31,44 @@ class CustomHomeListAdapter extends ArrayAdapter<CustomHomeListItem> {
         this.layoutInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
+    private static class ViewHolder{
+        public ImageView thumbnail;
+        public TextView addressName;
+        public TextView destination;
+        public TextView addressMail;
+    }
+
     @NonNull
     @Override
     public View getView(int position, View convertView, @NonNull ViewGroup parent){
-        View view;
+        ViewHolder holder;
 
-        if(convertView != null){
-            view = convertView;
+        if(convertView == null){
+            convertView = this.layoutInflater.inflate(this.resource,null);
+            holder = new ViewHolder();
+            holder.thumbnail = (ImageView) convertView.findViewById(R.id.destinationImage);
+            holder.addressName = (TextView)convertView.findViewById(R.id.addressName);
+            holder.destination = (TextView)convertView.findViewById(R.id.destination);
+            holder.addressMail = (TextView)convertView.findViewById(R.id.addressMail);
+            convertView.setTag(holder);
         }else{
-            view = this.layoutInflater.inflate(this.resource,null);
+            holder = (ViewHolder)convertView.getTag();
         }
+
         CustomHomeListItem item = this.items.get(position);
 
-        //TODO ViewHolderを使えば処理の重いfindViewByIdを使わずに済む
         //画像のセット
-        ImageView thumbnail = (ImageView)view.findViewById(R.id.destinationImage);
-        thumbnail.setImageBitmap(item.getThumbnail());
+        holder.thumbnail.setImageBitmap(item.getThumbnail());
 
         //宛先名のセット
-        TextView addressName = (TextView)view.findViewById(R.id.addressName);
-        addressName.setText(item.getAddressName());
+        holder.addressName.setText(item.getAddressName());
 
         //行き先名のセット
-        TextView destination = (TextView)view.findViewById(R.id.destination);
-        destination.setText(item.getDestination());
+        holder.destination.setText(item.getDestination());
 
         //メアドのセット
-        TextView addressMail = (TextView)view.findViewById(R.id.addressMail);
-        addressMail.setText(item.getAddressMail());
+        holder.addressMail.setText(item.getAddressMail());
 
-        return view;
+        return convertView;
     }
 }

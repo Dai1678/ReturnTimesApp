@@ -1,6 +1,7 @@
 package org.dai1678.returntimesapp;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,10 +27,6 @@ public class GridItemAdapter extends ArrayAdapter<GridItem> {
     private List<GridItem> items;
     private LayoutInflater layoutInflater;
 
-    private static class ViewHolder{
-        public ImageButton imageButton;
-        public TextView textView;
-    }
 
     public GridItemAdapter(Context context, int resource, List<GridItem> items){
         super(context,resource,items);
@@ -37,6 +34,11 @@ public class GridItemAdapter extends ArrayAdapter<GridItem> {
         this.resource = resource;
         this.items = items;
         this.layoutInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    }
+
+    private static class ViewHolder{
+        public ImageButton imageButton;
+        public TextView textView;
     }
 
     @Override
@@ -54,14 +56,15 @@ public class GridItemAdapter extends ArrayAdapter<GridItem> {
         return position;
     }
 
+    @NonNull
     @Override
-    public View getView(int position, View view, ViewGroup viewGroup) {
+    public View getView(int position, View convertView, @NonNull ViewGroup viewGroup) {
         ViewHolder holder;
 
-        if(view == null){
-            view = this.layoutInflater.inflate(this.resource, null);
+        if(convertView == null){
+            convertView = this.layoutInflater.inflate(this.resource, null);
             holder = new ViewHolder();
-            holder.imageButton = (ImageButton) view.findViewById(R.id.imageItem);
+            holder.imageButton = (ImageButton) convertView.findViewById(R.id.imageItem);
             holder.imageButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -69,10 +72,10 @@ public class GridItemAdapter extends ArrayAdapter<GridItem> {
                     Toast.makeText(getContext(), "Clicked", Toast.LENGTH_SHORT).show();
                 }
             });
-            holder.textView = (TextView)view.findViewById(R.id.imageText);
-            view.setTag(holder);
+            holder.textView = (TextView)convertView.findViewById(R.id.imageText);
+            convertView.setTag(holder);
         }else{
-            holder = (ViewHolder)view.getTag();
+            holder = (ViewHolder)convertView.getTag();
         }
 
         GridItem item = this.items.get(position);
@@ -80,6 +83,6 @@ public class GridItemAdapter extends ArrayAdapter<GridItem> {
         holder.imageButton.setImageResource(item.getItemImage());
         holder.textView.setText(item.getItemName());
 
-        return view;
+        return convertView;
     }
 }
