@@ -36,7 +36,7 @@ public class SetDestinationActivity extends AppCompatActivity {
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);   //自動でキーボードが起動するのを防ぐ
 
         Toolbar toolbar = (Toolbar)findViewById(R.id.setDestinationToolbar);
-        toolbar.setTitle("行き先名の設定");  //TODO 意味考えて、適切な文章に変更
+        toolbar.setTitle("行き先名の設定");
         setSupportActionBar(toolbar);
 
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
