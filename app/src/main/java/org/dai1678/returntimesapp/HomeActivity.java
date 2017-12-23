@@ -46,8 +46,8 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
         buttonFloat.setOnClickListener(this);
 
         //ListView処理
-        ListView listView = (ListView)findViewById(R.id.homeList);
-        TextView emptyView = (TextView)findViewById(R.id.emptyTextView);
+        ListView listView = findViewById(R.id.homeList);
+        TextView emptyView = findViewById(R.id.emptyTextView);
         listView.setEmptyView(emptyView);
 
         ArrayList<CustomHomeListItem> listItems = new ArrayList<>();
