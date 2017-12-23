@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="org.t_robop.returntimesapp">
+    package="org.dai1678.returntimesapp">
 
     <!-- ネットワークベース(Networkを使って位置情報を取得する場合は以下の２つを追加)(INTERNETは通信が発生するので必要) -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <!-- GPSベース -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
 
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
-        android:name="android.support.multidex.MultiDexApplication">
-        <activity android:name=".MainActivity">
+        android:theme="@style/AppTheme">
+        <activity android:name="org.dai1678.returntimesapp.HomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -28,14 +28,14 @@
              Note that the API key is linked to the encryption key used to sign the APK.
              You need a different API key for each encryption key, including the release key that is used to
              sign the APK for publishing.
-             You can define the keys for the debug and release targets in src/debug/ and src/release/. 
+             You can define the keys for the debug and release targets in src/debug/ and src/release/.
         -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_maps_key" />
+            android:value="AIzaSyCWQEu_-ghxt5na0m1NnKl0SNZ85c9CQPc" />
 
         <activity
-            android:name=".SettingMapsActivity"
+            android:name="org.dai1678.returntimesapp.SettingMapsActivity"
             android:label="@string/title_activity_setting_maps" />
         <!--
  ATTENTION: This was auto-generated to add Google Play services to your project for
@@ -45,6 +45,10 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
+        <!-- <activity android:name=".HomeActivity"></activity> -->
+        <activity android:name="org.dai1678.returntimesapp.SetDestinationActivity" />
+        <activity android:name="org.dai1678.returntimesapp.SetMailDetailActivity" />
+        <activity android:name="org.dai1678.returntimesapp.SettingProfileActivity"/>
     </application>
 
 </manifest>
