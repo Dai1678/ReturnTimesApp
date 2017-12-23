@@ -35,7 +35,7 @@
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="org.t_robop.returntimesapp.SettingMapsActivity"
+        tools:context="org.dai1678.returntimesapp.SettingMapsActivity"
         android:layout_weight="1"/>
 
     </LinearLayout>
