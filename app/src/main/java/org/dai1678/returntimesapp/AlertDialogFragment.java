@@ -48,21 +48,11 @@ public class AlertDialogFragment extends DialogFragment implements ImageButton.O
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
-            case R.id.mailButton:
-                getDialog().dismiss();
-                break;
-
-            case R.id.lineButton:
-                //getDialog().dismiss();
-
-                if (isInstallLine()){
-                    startActivity(getIntentSendLine());
-                }else{
-                    Toast.makeText(getActivity(), "Lineがインストールされていません", Toast.LENGTH_SHORT).show();
-                    getDialog().dismiss();
-                }
-                break;
+        if (isInstallLine()){
+            startActivity(getIntentSend(view));
+        }else{
+            Toast.makeText(getActivity(), "Lineがインストールされていません", Toast.LENGTH_SHORT).show();
+            getDialog().dismiss();
         }
     }
 
@@ -82,12 +72,27 @@ public class AlertDialogFragment extends DialogFragment implements ImageButton.O
         return appInstalled;
     }
 
-    public Intent getIntentSendLine(){
+    public Intent getIntentSend(View view){
+
         Intent intent = new Intent();
-        intent.setAction(Intent.ACTION_VIEW);
-        //TODO 送り先のユーザーを事前に設定できるようにしたい
-        //TODO 送るメッセージを取得
-        intent.setData(Uri.parse("line://msg/text/" + "test"));
+
+        switch (view.getId()){
+            case R.id.mailButton:
+                intent.setAction(Intent.ACTION_SENDTO);
+                intent.setType("text/plain");
+                intent.setData(Uri.parse("mailto:example@gmail.com"));  //TODO 送り先のメールアドレスを取得して設定
+                intent.putExtra(Intent.EXTRA_SUBJECT,"帰宅連絡");
+                intent.putExtra(Intent.EXTRA_TEXT,"帰宅します");     //TODO 送る本文を設定
+                break;
+
+            case R.id.lineButton:
+                intent.setAction(Intent.ACTION_VIEW);
+                //TODO 送り先のユーザーを事前に設定できるようにしたい
+                //TODO 送るメッセージを取得
+                intent.setData(Uri.parse("line://msg/text/" + "test"));
+                break;
+        }
+
         return intent;
     }
 }

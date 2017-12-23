@@ -48,7 +48,6 @@ public class CustomProfileListAdapter extends ArrayAdapter<CustomProfileListItem
 
         CustomProfileListItem item = this.items.get(position);
 
-        //TODO ViewHolderを使えば処理の重いfindViewByIdを使わずに済む
         holder.thumbnail.setImageBitmap(item.getProfileItemImage());
 
         holder.textView.setText(item.getProfileHint());
