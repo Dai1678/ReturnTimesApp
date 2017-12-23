@@ -5,11 +5,15 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-public class SetMailDetailActivity extends AppCompatActivity {
+public class SetMailDetailActivity extends AppCompatActivity implements ListView.OnItemClickListener {
+
+    ListView listView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,12 +29,18 @@ public class SetMailDetailActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        ListView listView = (ListView)findViewById(R.id.templateTextList);  //TODO チェックボックス月のListViewにする
+        listView = (ListView)findViewById(R.id.templateTextList);
         final String[] templateText = {"◯時◯分に帰宅します","◯時◯分に到着します","◯時◯分に家を出ます"};
 
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this,android.R.layout.simple_list_item_1,templateText);
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this,android.R.layout.simple_list_item_single_choice,templateText);
 
         listView.setAdapter(arrayAdapter);
+    }
+
+    //TODO ListViewのチェック処理
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+        listView.getItemAtPosition(i);
     }
 
     @Override
@@ -51,4 +61,5 @@ public class SetMailDetailActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
 }
