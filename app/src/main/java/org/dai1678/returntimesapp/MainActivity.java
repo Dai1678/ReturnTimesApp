@@ -1,31 +1,22 @@
 package org.dai1678.returntimesapp;
 
 import android.Manifest;
-import android.app.Service;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
-import android.net.Uri;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
+import android.os.Build;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 //import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.common.api.GoogleApiClient;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 
 
-public class MainActivity extends AppCompatActivity implements GeoTask.Geo, LocationListener {
+public class MainActivity extends AppCompatActivity  { //implements GeoTask.Geo, LocationListener
+
+    private final int REQUEST_PERMISSION = 10;
+
+    /*
     String strFrom;  //現在位置の緯度経度
     String strTo; //自宅の緯度経度
 
@@ -46,18 +37,28 @@ public class MainActivity extends AppCompatActivity implements GeoTask.Geo, Loca
     private LocationManager mLocationManager;
 
     private SharedPreferences dataStore;
-    /**
+
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
+
     private GoogleApiClient client;
 
     // 許可されたパーミッションの種類を識別する番号
     private static final int MY_PERMISSIONS_REQUEST_LOCATION = 1;
+    */
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_home);
+
+        if(Build.VERSION.SDK_INT >= 23){
+            checkPermission();
+        }else{
+            StartApplication();
+        }
+
+        /*
         setContentView(R.layout.activity_main);
 
         mLocationManager = (LocationManager) this.getSystemService(Service.LOCATION_SERVICE);
@@ -115,11 +116,48 @@ public class MainActivity extends AppCompatActivity implements GeoTask.Geo, Loca
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         //client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
-
+        */
 
     }
 
+    public void checkPermission() {
+        //すでに許可している場合
+        if(ActivityCompat.checkSelfPermission(this,Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+            StartApplication();
+        }else{  //拒否していた場合
+            requestLocationPermission();
+        }
+    }
 
+    public void requestLocationPermission(){
+        if(ActivityCompat.shouldShowRequestPermissionRationale(this,Manifest.permission.ACCESS_FINE_LOCATION)){
+            ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION},REQUEST_PERMISSION);
+        }else{
+            Toast.makeText(this, "アプリを実行できません", Toast.LENGTH_SHORT).show();
+
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION,},REQUEST_PERMISSION);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults){
+        if(requestCode == REQUEST_PERMISSION){
+            //使用が許可された
+            if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                StartApplication();
+            }else{
+                Toast.makeText(this, "アプリを実行できません", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private void StartApplication() {
+        Intent intent = new Intent(getApplication(), HomeActivity.class);
+        startActivity(intent);
+    }
+
+
+    /*
     //表示テキスト計算
     @Override
     public void setDouble(String result) {
@@ -336,5 +374,5 @@ public class MainActivity extends AppCompatActivity implements GeoTask.Geo, Loca
                 })
                 .show();
     }
-
+    */
 }

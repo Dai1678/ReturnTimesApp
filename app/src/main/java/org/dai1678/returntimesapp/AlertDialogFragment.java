@@ -1,5 +1,6 @@
 package org.dai1678.returntimesapp;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Intent;
@@ -10,10 +11,21 @@ import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+@SuppressLint("ValidFragment")
 public class AlertDialogFragment extends DialogFragment implements ImageButton.OnClickListener {
 
+    private double latitude;
+    private double longitude;
+    private double accuracy;
+    private double altitude;
+    private double speed;
+    private double bearing;
+
+
+    @SuppressLint("SetTextI18n")
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState){
         AlertDialog dialog;
@@ -21,14 +33,42 @@ public class AlertDialogFragment extends DialogFragment implements ImageButton.O
         AlertDialog.Builder alert = new AlertDialog.Builder(getActivity(),R.style.MyAlertDialogStyle);
         alert.setTitle("連絡をします");
 
+        HomeActivity homeActivity = new HomeActivity();
+
         View alertView = getActivity().getLayoutInflater().inflate(R.layout.alert_layout,null);
 
         //TODO 現在位置の取得 (別クラスで処理したほうがいいかも)
         //TODO 所要時間、予想到着時間の表示
 
-        ImageView mailButton = (ImageView)alertView.findViewById(R.id.mailButton);
+        //homeActivity.stopLocationUpdates();
+
+        //homeActivity.fuseData = new double[6];
+
+        this.latitude = homeActivity.getFuseData(0);
+        this.longitude = homeActivity.getFuseData(1);
+        this.accuracy = homeActivity.getFuseData(2);
+        this.altitude = homeActivity.getFuseData(3);
+        this.speed = homeActivity.getFuseData(4);
+        this.bearing = homeActivity.getFuseData(5);
+
+        //
+
+        TextView latitudeText = alertView.findViewById(R.id.latitude);
+        latitudeText.setText("緯度 : " + this.latitude);
+        TextView longitudeText = alertView.findViewById(R.id.longitude);
+        longitudeText.setText("経度 : " + this.longitude);
+        TextView accuracyText = alertView.findViewById(R.id.accuracy);
+        accuracyText.setText("正確性 : " + this.accuracy);
+        TextView altitude = alertView.findViewById(R.id.altitude);
+        altitude.setText("高度 : " + this.altitude);
+        TextView speedText = alertView.findViewById(R.id.speed);
+        speedText.setText("速度 : " + this.speed);
+        TextView bearingText = alertView.findViewById(R.id.bearing);
+        bearingText.setText("ペアリング : " + this.bearing);
+
+        ImageView mailButton = alertView.findViewById(R.id.mailButton);
         mailButton.setOnClickListener(this);
-        ImageView lineButton = (ImageView)alertView.findViewById(R.id.lineButton);
+        ImageView lineButton = alertView.findViewById(R.id.lineButton);
         lineButton.setOnClickListener(this);
 
         alert.setView(alertView);
