@@ -24,7 +24,7 @@ import java.util.ArrayList;
           行き先の選択(家、レストラン、病院、銀行、郵便局、駅)　場所名と画像idをデータベースに保存
 ***************************************************************************************************/
 
-public class SetDestinationActivity extends AppCompatActivity {
+public class SetDestinationActivity extends AppCompatActivity implements GridView.OnItemClickListener {
 
     MaterialEditText destinationName;
 
@@ -35,7 +35,7 @@ public class SetDestinationActivity extends AppCompatActivity {
 
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);   //自動でキーボードが起動するのを防ぐ
 
-        Toolbar toolbar = (Toolbar)findViewById(R.id.setDestinationToolbar);
+        Toolbar toolbar = findViewById(R.id.setDestinationToolbar);
         toolbar.setTitle("行き先名の設定");
         setSupportActionBar(toolbar);
 
@@ -44,7 +44,7 @@ public class SetDestinationActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        destinationName = (MaterialEditText)findViewById(R.id.destinationEdit);
+        destinationName = findViewById(R.id.destinationEdit);
 
         ArrayList<GridItem> gridItems = new ArrayList<>();
 
@@ -57,13 +57,12 @@ public class SetDestinationActivity extends AppCompatActivity {
             gridItems.add(item);
         }
 
-        GridView gridView = (GridView)findViewById(R.id.gridView);
+        GridView gridView = findViewById(R.id.gridView);
+        gridView.setChoiceMode(GridView.CHOICE_MODE_SINGLE);
         GridItemAdapter adapter = new GridItemAdapter(this,R.layout.grid_item,gridItems);
         gridView.setAdapter(adapter);
 
     }
-
-    //GridView上の各itemのクリック処理はGridItemAdapterに書いてある
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
@@ -86,4 +85,9 @@ public class SetDestinationActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    //GridViewのクリック処理
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+        Toast.makeText(this, position, Toast.LENGTH_SHORT).show();
+    }
 }

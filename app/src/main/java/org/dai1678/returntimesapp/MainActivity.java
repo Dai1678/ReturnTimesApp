@@ -28,23 +28,7 @@ public class MainActivity extends AppCompatActivity  { //implements GeoTask.Geo,
 
     String times;  //到着時間
 
-    private static final String TAG = MainActivity.class.getSimpleName();
-
-    private static final int LOCATION_UPDATE_MIN_TIME = 0;  // 更新時間(目安)
-
-    private static final int LOCATION_UPDATE_MIN_DISTANCE = 0;  // 更新距離(目安)
-
-    private LocationManager mLocationManager;
-
     private SharedPreferences dataStore;
-
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-
-    private GoogleApiClient client;
-
-    // 許可されたパーミッションの種類を識別する番号
-    private static final int MY_PERMISSIONS_REQUEST_LOCATION = 1;
     */
 
     @Override
@@ -59,11 +43,6 @@ public class MainActivity extends AppCompatActivity  { //implements GeoTask.Geo,
         }
 
         /*
-        setContentView(R.layout.activity_main);
-
-        mLocationManager = (LocationManager) this.getSystemService(Service.LOCATION_SERVICE);
-
-        initialize();  //ID設定
 
         Intent intent = getIntent();
         strTo = intent.getStringExtra("data");  //自宅情報代入
@@ -79,28 +58,6 @@ public class MainActivity extends AppCompatActivity  { //implements GeoTask.Geo,
         //TODO:デバッグ用
         //strTo = "35.681298,139.7640582";  //テスト(東京駅)
 
-
-        // Android 6.0以上の場合
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-            // 位置情報の取得が許可されrequestLocationUpdatesているかチェック
-            if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                // 権限があればLocationManagerを取得
-//                Toast.makeText(MainActivity.this, "位置情報の取得は既に許可されています", Toast.LENGTH_SHORT).show();
-                requestLocationUpdates();  //現在地情報取得
-            } else {
-                // なければ権限を求めるダイアログを表示
-                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                        MY_PERMISSIONS_REQUEST_LOCATION);
-            }
-            // Android 6.0以下の場合
-        } else {
-            // インストール時点で許可されているのでチェックの必要なし
-//            Toast.makeText(MainActivity.this, "位置情報の取得は既に許可されています(Android 5.0以下です)", Toast.LENGTH_SHORT).show();
-            requestLocationUpdates();  //現在地情報取得
-        }
-
-
-
         if (strTo != null) {
 
             Log.d("test", strFrom);
@@ -113,9 +70,6 @@ public class MainActivity extends AppCompatActivity  { //implements GeoTask.Geo,
         } else {
             Toast.makeText(getApplicationContext(), "自宅設定が行われていません", Toast.LENGTH_SHORT).show();
         }
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        //client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
         */
 
     }
@@ -323,22 +277,6 @@ public class MainActivity extends AppCompatActivity  { //implements GeoTask.Geo,
 
             //メール起動
             startActivity(intent);
-        }
-    }
-
-    // 許可を求めるダイアログでクリックした後に呼ばれる
-    // どの種類の権限でもここを通るので位置情報取得の権限なのかどうかをrequestCodeで判別
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        // GPSの権限を求めるコード
-        if (requestCode == MY_PERMISSIONS_REQUEST_LOCATION) {
-            // 許可されたら
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // テキストを表示してLocationManagerを取得
-                // 許可されなかったら
-            } else {
-                // 何もしない
-                Toast.makeText(this, "位置情報取得が拒否されました", Toast.LENGTH_SHORT).show();
-            }
         }
     }
 

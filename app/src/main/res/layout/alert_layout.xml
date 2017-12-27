@@ -9,7 +9,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/requiredTime"
-        android:text="所要時間 : 2時間00分"
         android:textSize="20sp"
         android:layout_margin="10dp"/>
 
@@ -17,7 +16,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/arrivalTime"
-        android:text="予想到着時刻 : 20時00分"
         android:textSize="20sp"
         />
 
@@ -32,30 +30,6 @@
         android:layout_height="wrap_content"
         android:id="@+id/longitude"
         android:textSize="20sp"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/accuracy"
-        android:textSize="15sp"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/altitude"
-        android:textSize="15sp"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/speed"
-        android:textSize="15sp"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/bearing"
-        android:textSize="15sp"/>
 
     <LinearLayout
         android:layout_width="match_parent"
