@@ -25,7 +25,9 @@ import java.util.ArrayList;
 
 public class SettingProfileActivity extends AppCompatActivity implements AdapterView.OnItemClickListener{
 
-    int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
+    int SET_DESTINATION_REQUEST_CODE = 1;
+    int PLACE_AUTOCOMPLETE_REQUEST_CODE = 2;
+    int SET_MAIL_DETAIL_REQUEST_CODE = 3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +35,7 @@ public class SettingProfileActivity extends AppCompatActivity implements Adapter
         setContentView(R.layout.activity_setting_profile);
 
         //Toolbar
-        Toolbar toolbar = (Toolbar)findViewById(R.id.profileToolbar);
+        Toolbar toolbar = findViewById(R.id.profileToolbar);
         toolbar.setTitle("profile設定");
         setSupportActionBar(toolbar);
 
@@ -43,7 +45,7 @@ public class SettingProfileActivity extends AppCompatActivity implements Adapter
         }
 
         //ListView
-        ListView listView = (ListView)findViewById(R.id.profileList);
+        ListView listView = findViewById(R.id.profileList);
 
         ArrayList<CustomProfileListItem> listItems = new ArrayList<>();
         String[] profileHint = {"Title","Map","Mail"};
@@ -71,7 +73,7 @@ public class SettingProfileActivity extends AppCompatActivity implements Adapter
         switch (position){
             case 0:
                 intent = new Intent(this.getApplicationContext(),SetDestinationActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, SET_DESTINATION_REQUEST_CODE);
                 break;
 
             case 1:
@@ -87,28 +89,41 @@ public class SettingProfileActivity extends AppCompatActivity implements Adapter
 
             case 2:
                 intent = new Intent(this.getApplicationContext(),SetMailDetailActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, SET_MAIL_DETAIL_REQUEST_CODE);
                 break;
         }
     }
 
-    //プレイスオートコンプリートの結果取得
+    //各設定Activityからの結果取得
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
-        if(requestCode == PLACE_AUTOCOMPLETE_REQUEST_CODE){
+        if(requestCode == SET_DESTINATION_REQUEST_CODE){
+            if (resultCode == RESULT_OK){
+                Log.i("Destination", data.getStringExtra("destinationName"));
+                Log.i("Destination", String.valueOf(data.getIntExtra("imageType",0)));
+            }
+        }
+
+        else if(requestCode == PLACE_AUTOCOMPLETE_REQUEST_CODE){
             if(resultCode == RESULT_OK){
                 Place place = PlaceAutocomplete.getPlace(this,data);
-                //TODO 必要な情報を取得して、帰宅時間算出に使う
                 Log.i("Place",place.getName().toString());
                 Log.i("Place",place.getAddress().toString());
                 Log.i("Place",place.getLatLng().toString());
             }else if(resultCode == PlaceAutocomplete.RESULT_ERROR){
                 Status status = PlaceAutocomplete.getStatus(this,data);
                 Log.i("Place",status.getStatusMessage());
-            }else if(resultCode == RESULT_CANCELED){
+            }else if(resultCode == RESULT_CANCELED){    //何も入力せずに戻ってきた時
                 Log.i("Place","failed");
             }
         }
+
+        else if (requestCode == SET_MAIL_DETAIL_REQUEST_CODE){
+            if(resultCode == RESULT_OK){
+                Log.i("MAIL", data.getStringExtra("address"));
+            }
+        }
+
     }
 
     @Override

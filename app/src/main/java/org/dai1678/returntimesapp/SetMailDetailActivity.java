@@ -1,5 +1,7 @@
 package org.dai1678.returntimesapp;
 
+import android.app.FragmentManager;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -33,7 +35,7 @@ public class SetMailDetailActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        editText = (MaterialEditText)findViewById(R.id.contactEdit);
+        editText = findViewById(R.id.contactEdit);
 
         //TODO メアド入力フォームの下に送信先LINEユーザー設定フォームをいれたい
 
@@ -61,11 +63,22 @@ public class SetMailDetailActivity extends AppCompatActivity {
             finish();
             return true;
         }else if(item.getItemId() == R.id.save_profile){
-            //TODO データベースに保存
-            Log.i("Address",editText.getText().toString());
-            //TODO すべての設定項目が入力されていないと押せないようにしたい
-            Toast.makeText(SetMailDetailActivity.this,"SAVED!",Toast.LENGTH_SHORT).show();
-            finish();
+            String address = editText.getText().toString();
+
+            if(address.equals("")){
+                int ALERT_ADDRESS = 2;
+                FragmentManager fragmentManager = getFragmentManager();
+
+                AlertDialogFragment alertDialogFragment = new AlertDialogFragment(ALERT_ADDRESS);
+                alertDialogFragment.show(fragmentManager,"alertDialog");    //警告アラート表示
+
+            }else{
+                Intent intent = new Intent();
+                intent.putExtra("address", address);    //メールアドレスをSettingProfileActivityへ送る
+                setResult(RESULT_OK, intent);
+
+                finish();
+            }
             return  true;
         }
         return super.onOptionsItemSelected(item);

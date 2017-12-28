@@ -24,7 +24,7 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-        <activity android:name="org.dai1678.returntimesapp.MainActivity">
+        <activity android:name="org.dai1678.returntimesapp.PermissionCheckActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -32,11 +32,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".HomeActivity" />
-
-        <activity
-            android:name="org.dai1678.returntimesapp.SettingMapsActivity"
-            android:label="@string/title_activity_setting_maps" />
+        <activity android:name=".MainActivity" />
 
         <activity android:name="org.dai1678.returntimesapp.SetDestinationActivity" />
         <activity android:name="org.dai1678.returntimesapp.SetMailDetailActivity" />

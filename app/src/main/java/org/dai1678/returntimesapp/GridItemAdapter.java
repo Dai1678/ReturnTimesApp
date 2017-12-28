@@ -1,6 +1,7 @@
 package org.dai1678.returntimesapp;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
