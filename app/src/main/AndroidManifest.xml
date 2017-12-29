@@ -20,7 +20,7 @@
         tools:ignore="HardcodedDebugMode">
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyCWQEu_-ghxt5na0m1NnKl0SNZ85c9CQPc" />
+            android:value="@string/google_maps_distance_matrix_key" />
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />

@@ -203,24 +203,20 @@ public class SettingProfileActivity extends AppCompatActivity implements Adapter
     //データベースへ保存
     private void savedProfiles(){
         realm = Realm.getDefaultInstance();
-        try{
-            realm.executeTransaction(new Realm.Transaction() {
-                @Override
-                public void execute(@NonNull Realm realm) {
-                    ProfileItems items = realm.createObject(ProfileItems.class);
-                    items.setProfileId(getNextProfileItemsId());
-                    items.setDestinationName(destinationName);
-                    items.setImagePosition(imagePosition);
-                    items.setPlaceName(placeName);
-                    items.setLatitude(latitude);
-                    items.setLongitude(longitude);
-                    items.setContact(contact);
-                    items.setMail(address);
-                }
-            });
-        }finally {
-            realm.close();
-        }
+
+        realm.beginTransaction();
+        ProfileItems items = realm.createObject(ProfileItems.class);
+
+        items.setProfileId(getNextProfileItemsId());
+        items.setDestinationName(destinationName);
+        items.setImagePosition(imagePosition);
+        items.setPlaceName(placeName);
+        items.setLatitude(latitude);
+        items.setLongitude(longitude);
+        items.setContact(contact);
+        items.setMail(address);
+
+        realm.commitTransaction();
     }
 
     //id設定

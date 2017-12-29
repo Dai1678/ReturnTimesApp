@@ -4,7 +4,7 @@ import io.realm.RealmObject;
 
 public class ProfileItems extends RealmObject {
 
-    private int profileId;
+    private Integer profileId;
 
     private String destinationName;
     private int imagePosition;
@@ -17,7 +17,7 @@ public class ProfileItems extends RealmObject {
     private String mail;
 
     //getter
-    public int getProfileId(){ return profileId; }
+    public Integer getProfileId(){ return profileId; }
 
     public String getDestinationName() { return destinationName; }
 
@@ -42,7 +42,7 @@ public class ProfileItems extends RealmObject {
     public String getMail() { return mail; }
 
     //setter
-    public void setProfileId(int profileId) { this.profileId = profileId; }
+    public void setProfileId(Integer profileId) { this.profileId = profileId; }
 
     public void setDestinationName(String destinationName) { this.destinationName = destinationName; }
 

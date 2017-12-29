@@ -27,18 +27,14 @@ import java.util.concurrent.Executor;
 @SuppressLint("ValidFragment")
 public class ReturnTimeDialogFragment extends DialogFragment implements ImageButton.OnClickListener {
 
-    String latitudeLabel;
-    String longitudeLabel;
+    private String requiredTime;
+    private String arrivalTIme;
+    private String mailAddress;
 
-    TextView latitudeText;
-    TextView longitudeText;
-
-    private double latitude;
-    private double longitude;
-
-    public ReturnTimeDialogFragment(double latitude, double longitude){
-        this.latitude = latitude;
-        this.longitude = longitude;
+    public ReturnTimeDialogFragment(String requiredTime, String arrivalTime, String mailAddress){
+        this.requiredTime = requiredTime;
+        this.arrivalTIme = arrivalTime;
+        this.mailAddress = mailAddress;
     }
 
     @SuppressLint("SetTextI18n")
@@ -51,18 +47,10 @@ public class ReturnTimeDialogFragment extends DialogFragment implements ImageBut
 
         View alertView = getActivity().getLayoutInflater().inflate(R.layout.alert_layout,null);
 
-        //TODO 所要時間、予想到着時間の表示
         TextView requiredTimeText = alertView.findViewById(R.id.requiredTime);
-        requiredTimeText.setText("所要時間 : ");
+        requiredTimeText.setText("所要時間 : " + requiredTime);
         TextView arrivalTimeText = alertView.findViewById(R.id.arrivalTime);
-        arrivalTimeText.setText("予想到着時刻 : ");
-
-        latitudeLabel = getResources().getString(R.string.latitude_label);
-        longitudeLabel = getResources().getString(R.string.longitude_label);
-        latitudeText = alertView.findViewById(R.id.latitude);
-        latitudeText.setText("緯度 : " + latitude);
-        longitudeText = alertView.findViewById(R.id.longitude);
-        longitudeText.setText("経度 : " + longitude);
+        arrivalTimeText.setText("予想到着時刻 : " + arrivalTIme);
 
         ImageView mailButton = alertView.findViewById(R.id.mailButton);
         mailButton.setOnClickListener(this);
@@ -113,7 +101,7 @@ public class ReturnTimeDialogFragment extends DialogFragment implements ImageBut
             case R.id.mailButton:
                 intent.setAction(Intent.ACTION_SENDTO);
                 intent.setType("text/plain");
-                intent.setData(Uri.parse("mailto:example@gmail.com"));  //TODO 送り先のメールアドレスを取得して設定
+                intent.setData(Uri.parse("mailto:" + mailAddress));
                 intent.putExtra(Intent.EXTRA_SUBJECT,"帰宅連絡");
                 intent.putExtra(Intent.EXTRA_TEXT,"帰宅します");     //TODO 送る本文を設定
                 break;
@@ -121,8 +109,8 @@ public class ReturnTimeDialogFragment extends DialogFragment implements ImageBut
             case R.id.lineButton:
                 intent.setAction(Intent.ACTION_VIEW);
                 //TODO 送り先のユーザーを事前に設定できるようにしたい
-                //TODO 送るメッセージを取得
-                intent.setData(Uri.parse("line://msg/text/" + "帰宅します"));
+
+                intent.setData(Uri.parse("line://msg/text/" + "帰宅します")); //TODO 送るメッセージを取得
                 break;
         }
 
