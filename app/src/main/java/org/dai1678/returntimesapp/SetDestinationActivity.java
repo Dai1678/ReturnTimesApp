@@ -1,14 +1,7 @@
 package org.dai1678.returntimesapp;
 
-import android.annotation.SuppressLint;
-import android.app.AlertDialog;
-import android.app.DialogFragment;
 import android.app.FragmentManager;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.media.Image;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -19,18 +12,10 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.gc.materialdesign.widgets.Dialog;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 import java.util.ArrayList;
-
-import io.realm.Realm;
-import io.realm.RealmConfiguration;
 
 /***************************************************************************************************
  SetDestinationActivity     第一設定画面
@@ -41,14 +26,13 @@ import io.realm.RealmConfiguration;
 
 public class SetDestinationActivity extends AppCompatActivity implements GridView.OnItemClickListener {
 
-    //TODO データベースなどから取得する
     public String[] itemNameArray = {"家","レストラン","病院","銀行","郵便局","駅"};
     public Integer[] itemImageArray = {R.mipmap.ic_house,R.mipmap.ic_restaurant,R.mipmap.ic_hospital,R.mipmap.ic_bank,R.mipmap.ic_postoffice,R.mipmap.ic_station};
 
     GridView gridView;
 
     private MaterialEditText destinationEditText = null;
-    private int imageType = 0;
+    private int imagePosition = 0;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -107,7 +91,7 @@ public class SetDestinationActivity extends AppCompatActivity implements GridVie
             }else{
                 Intent intent = new Intent();
                 intent.putExtra("destinationName", destinationName);    //行き先名をSettingProfileActivityへ送る
-                intent.putExtra("imageType", imageType);    //アイコンのpositionをSettingProfileActivityへ送る
+                intent.putExtra("imagePosition", imagePosition);    //アイコンのpositionをSettingProfileActivityへ送る
                 setResult(RESULT_OK, intent);
 
                 finish();
@@ -122,8 +106,7 @@ public class SetDestinationActivity extends AppCompatActivity implements GridVie
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
         Log.i("position",String.valueOf(position));
-        //TODO positionだけ取得して、その番号と同じ要素をitemImageArrayと連携する
-        this.imageType = position;
+        this.imagePosition = position;
     }
 
 }

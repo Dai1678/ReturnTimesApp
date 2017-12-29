@@ -1,5 +1,6 @@
 package org.dai1678.returntimesapp;
 
+import android.app.Application;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -9,6 +10,8 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -20,6 +23,7 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
+import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,12 +61,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         //Realm init
         Realm.init(this);
-        //RealmConfiguration configuration = new RealmConfiguration.Builder().build();
-        //Realm.setDefaultConfiguration(configuration);
+        RealmConfiguration realmConfig = new RealmConfiguration.Builder().build();
+        Realm.deleteRealm(realmConfig);
+        realm = Realm.getInstance(realmConfig);
 
         //Toolbar
         Toolbar toolbar = findViewById(R.id.homeToolbar);
         toolbar.setTitle("連絡先を選択してください");
+        setSupportActionBar(toolbar);
 
         //右下フロートボタン
         ButtonFloat buttonFloat = findViewById(R.id.homeFloatingButton);
@@ -81,20 +87,16 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         listView.setEmptyView(emptyView);
 
         ArrayList<CustomHomeListItem> listItems = new ArrayList<>();
-        //ToDO RealmからListItem情報を取得して表示
+
         //ListItem情報： 場所画像id、宛先名、行き先、メアド
         String[] addressNameArray = {"母親"};
         String[] destinationArray = {"自宅"};
         String[] addressMailArray = {"example@gmail.com"};
 
+        //ToDO RealmからProfileItems情報を取得して表示
         /*
         RealmResults<Profiles> results = null;
 
-        results = getProfileInfo();
-
-        for(final Profiles model : results){
-            model.getItems().toString();
-        }
         */
         for (int i = 0; i < addressNameArray.length; i++) {
             //TODO 行き先によって画像変更  int型の画像idでswitchしたほうがいいかも
@@ -121,7 +123,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     //ListViewクリック処理
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-        //TODO プログレスバーで待機しながら、現在地から目的地までの所要時間と予想到着時間を算出 -> メールとLINEの選択
 
         ListView listView = (ListView) adapterView;
         CustomHomeListItem item = (CustomHomeListItem)listView.getItemAtPosition(position);
@@ -132,10 +133,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         dialogFragment.show(fragmentManager,"alert dialog");
     }
 
-    //TODO onItemLongClickで削除処理の実装
     @Override
     public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
-
+        //TODO Listの削除と該当データベースの削除
         return false;
     }
 
@@ -144,15 +144,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     public void onClick(View view) {
         Intent intent = new Intent(this,SettingProfileActivity.class);
         startActivity(intent);
-    }
-
-    //Listに表示する情報の取得
-    private RealmResults<Profiles> getProfileInfo(){
-
-        RealmQuery<Profiles> query = realm.where(Profiles.class);
-
-        return query.findAll();
-
     }
 
     //端末の位置情報取得

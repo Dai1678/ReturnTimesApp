@@ -5,20 +5,15 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.widget.Toast;
 
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 public class SetMailDetailActivity extends AppCompatActivity {
 
-    MaterialEditText editText;
+    MaterialEditText contactEdit;
+    MaterialEditText addressEdit;
     //ListView listView;
 
     @Override
@@ -35,7 +30,8 @@ public class SetMailDetailActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        editText = findViewById(R.id.contactEdit);
+        contactEdit = findViewById(R.id.contactEdit);
+        addressEdit = findViewById(R.id.addressEdit);
 
         //TODO メアド入力フォームの下に送信先LINEユーザー設定フォームをいれたい
 
@@ -63,22 +59,36 @@ public class SetMailDetailActivity extends AppCompatActivity {
             finish();
             return true;
         }else if(item.getItemId() == R.id.save_profile){
-            String address = editText.getText().toString();
+            String contact = contactEdit.getText().toString();
+            String address = addressEdit.getText().toString();
 
-            if(address.equals("")){
-                int ALERT_ADDRESS = 2;
-                FragmentManager fragmentManager = getFragmentManager();
-
-                AlertDialogFragment alertDialogFragment = new AlertDialogFragment(ALERT_ADDRESS);
-                alertDialogFragment.show(fragmentManager,"alertDialog");    //警告アラート表示
-
-            }else{
+            if(!contact.equals("") && !address.equals("")){
                 Intent intent = new Intent();
+                intent.putExtra("contact", contact);
                 intent.putExtra("address", address);    //メールアドレスをSettingProfileActivityへ送る
                 setResult(RESULT_OK, intent);
 
                 finish();
+            }else{
+                if(contact.equals("")){
+                    int ALERT_CONTACT = 2;
+
+                    FragmentManager fragmentManager = getFragmentManager();
+
+                    AlertDialogFragment alertDialogFragment = new AlertDialogFragment(ALERT_CONTACT);
+                    alertDialogFragment.show(fragmentManager,"alertDialog");    //警告アラート表示
+                }
+
+                if(address.equals("")) {
+                    int ALERT_ADDRESS = 3;
+                    FragmentManager fragmentManager = getFragmentManager();
+
+                    AlertDialogFragment alertDialogFragment = new AlertDialogFragment(ALERT_ADDRESS);
+                    alertDialogFragment.show(fragmentManager, "alertDialog");    //警告アラート表示
+
+                }
             }
+
             return  true;
         }
         return super.onOptionsItemSelected(item);

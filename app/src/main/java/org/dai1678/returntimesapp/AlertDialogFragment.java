@@ -5,13 +5,12 @@ import android.app.AlertDialog;
 import android.app.DialogFragment;
 import android.os.Bundle;
 
-/**
- * Created by daipc on 17/12/28.
- */
-
+@SuppressLint("ValidFragment")
 public class AlertDialogFragment extends DialogFragment {
 
     private String alertDestination = "行き先名が設定されていません！\nアイコンを設定していない場合は「家」が自動設定されます。";
+
+    private String alertContact = "宛先名が設定されていません！";
 
     private String alertMailAddress = "メールアドレスが設定されていません！";
 
@@ -33,6 +32,10 @@ public class AlertDialogFragment extends DialogFragment {
                 break;
 
             case 2:
+                alert.setMessage(alertContact);
+                break;
+
+            case 3:
                 alert.setMessage(alertMailAddress);
         }
 

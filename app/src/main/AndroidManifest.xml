@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="org.dai1678.returntimesapp">
 
     <!-- ネットワークベース(Networkを使って位置情報を取得する場合は以下の２つを追加)(INTERNETは通信が発生するので必要) -->
@@ -14,29 +15,27 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-
+        android:theme="@style/AppTheme"
+        android:debuggable="true"
+        tools:ignore="HardcodedDebugMode">
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyCWQEu_-ghxt5na0m1NnKl0SNZ85c9CQPc" />
-
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-        <activity android:name="org.dai1678.returntimesapp.PermissionCheckActivity">
+        <activity android:name=".PermissionCheckActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity android:name=".MainActivity" />
-
-        <activity android:name="org.dai1678.returntimesapp.SetDestinationActivity" />
-        <activity android:name="org.dai1678.returntimesapp.SetMailDetailActivity" />
-        <activity android:name="org.dai1678.returntimesapp.SettingProfileActivity"/>
+        <activity android:name=".SetDestinationActivity" />
+        <activity android:name=".SetMailDetailActivity" />
+        <activity android:name=".SettingProfileActivity" />
     </application>
 
 </manifest>
