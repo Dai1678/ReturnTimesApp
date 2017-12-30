@@ -154,6 +154,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         imageMipmapList.clear();
         destinationList.clear();
         placeList.clear();
+        destinationLatLong.clear();
         addressNameList.clear();
         addressMailList.clear();
         listItems.clear();
