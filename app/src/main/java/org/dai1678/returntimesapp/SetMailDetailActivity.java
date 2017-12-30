@@ -21,7 +21,7 @@ public class SetMailDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_set_mail_detail);
 
-        Toolbar toolbar = (Toolbar)findViewById(R.id.setMailDetailToolbar);
+        Toolbar toolbar = findViewById(R.id.setMailDetailToolbar);
         toolbar.setTitle("宛先とメール本文の設定");
         setSupportActionBar(toolbar);
 
@@ -71,7 +71,7 @@ public class SetMailDetailActivity extends AppCompatActivity {
                 finish();
             }else{
                 if(contact.equals("")){
-                    int ALERT_CONTACT = 2;
+                    final int ALERT_CONTACT = 2;
 
                     FragmentManager fragmentManager = getFragmentManager();
 

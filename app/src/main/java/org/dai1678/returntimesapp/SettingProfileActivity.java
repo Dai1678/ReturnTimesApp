@@ -1,5 +1,6 @@
 package org.dai1678.returntimesapp;
 
+import android.app.FragmentManager;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -48,6 +49,9 @@ public class SettingProfileActivity extends AppCompatActivity implements Adapter
     private double longitude;
     private String contact;
     private String address;
+
+    int savedCheckPoint = 0;
+    Boolean savedCheckFlag = false;
 
     Realm realm;
 
@@ -122,6 +126,7 @@ public class SettingProfileActivity extends AppCompatActivity implements Adapter
     //各設定Activityからの結果取得
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
+
         if(requestCode == SET_DESTINATION_REQUEST_CODE){
             if (resultCode == RESULT_OK){
                 Log.i("Destination", data.getStringExtra("destinationName"));
@@ -131,6 +136,7 @@ public class SettingProfileActivity extends AppCompatActivity implements Adapter
                 this.imagePosition = data.getIntExtra("imagePosition",0);
 
                 profileResult.set(0, destinationName);
+                savedCheckPoint += 1;
             }
         }
 
@@ -147,6 +153,7 @@ public class SettingProfileActivity extends AppCompatActivity implements Adapter
                 this.longitude = place.getLatLng().longitude;
 
                 profileResult.set(1, placeName);
+                savedCheckPoint += 1;
 
             }else if(resultCode == PlaceAutocomplete.RESULT_ERROR){
                 Status status = PlaceAutocomplete.getStatus(this,data);
@@ -165,6 +172,7 @@ public class SettingProfileActivity extends AppCompatActivity implements Adapter
                 this.address = data.getStringExtra("address");
 
                 profileResult.set(2, address);
+                savedCheckPoint += 1;
             }
         }
 
@@ -175,6 +183,8 @@ public class SettingProfileActivity extends AppCompatActivity implements Adapter
             CustomProfileListItem item = new CustomProfileListItem(bmp, result);
             listItems.add(item);
         }
+
+        savedCheckFlag = savedCheckProfiles();
 
         adapter.notifyDataSetChanged();
     }
@@ -191,13 +201,28 @@ public class SettingProfileActivity extends AppCompatActivity implements Adapter
             finish();
             return true;
         }else if(item.getItemId() == R.id.save_profile){
-            //TODO すべての設定項目が入力されていないと押せないようにしたい or 設定されていない項目はHomeActivityで未設定と表示する
-            Toast.makeText(SettingProfileActivity.this,"SAVED!",Toast.LENGTH_SHORT).show();
-            savedProfiles();
-            finish();
-            return  true;
+
+            if(savedCheckFlag){
+                Toast.makeText(SettingProfileActivity.this,"SAVED!",Toast.LENGTH_SHORT).show();
+                savedProfiles();
+                finish();
+                return  true;
+            }else{
+                final int ALERT_SAVED = 4;
+                FragmentManager fragmentManager = getFragmentManager();
+
+                AlertDialogFragment alertDialogFragment = new AlertDialogFragment(ALERT_SAVED);
+                alertDialogFragment.show(fragmentManager, "alertDialog");
+            }
+
+
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    //保存データのnullチェック
+    private Boolean savedCheckProfiles(){
+        return savedCheckPoint >= 3;
     }
 
     //データベースへ保存

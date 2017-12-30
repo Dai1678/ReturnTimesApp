@@ -108,6 +108,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             for (int i = 0; i < results.size(); i++) {
 
                 profileItems = results.get(i);
+                assert profileItems != null;
                 Log.i("ID", profileItems.getProfileId().toString());
                 destinationList.add(profileItems.getDestinationName());
                 placeList.add(profileItems.getPlaceName());
@@ -156,6 +157,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             for (int i = 0; i < results.size(); i++) {
 
                 profileItems = results.get(i);
+                assert profileItems != null;
                 Log.i("ID", profileItems.getProfileId().toString());
                 destinationList.add(profileItems.getDestinationName());
                 placeList.add(profileItems.getPlaceName());

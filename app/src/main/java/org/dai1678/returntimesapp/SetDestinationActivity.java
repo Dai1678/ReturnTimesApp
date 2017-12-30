@@ -82,7 +82,7 @@ public class SetDestinationActivity extends AppCompatActivity implements GridVie
             String destinationName = destinationEditText.getText().toString();
 
             if(destinationName.equals("")){
-                int ALERT_DESTINATION = 1;
+                final int ALERT_DESTINATION = 1;
                 FragmentManager fragmentManager = getFragmentManager();
 
                 AlertDialogFragment alertDialogFragment = new AlertDialogFragment(ALERT_DESTINATION);
