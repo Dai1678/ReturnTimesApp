@@ -26,13 +26,11 @@ import java.util.ArrayList;
 
 public class SetDestinationActivity extends AppCompatActivity implements GridView.OnItemClickListener {
 
-    public String[] itemNameArray = {"家","レストラン","病院","銀行","郵便局","駅"};
-    public Integer[] itemImageArray = {R.mipmap.ic_house,R.mipmap.ic_restaurant,R.mipmap.ic_hospital,R.mipmap.ic_bank,R.mipmap.ic_postoffice,R.mipmap.ic_station};
-
     GridView gridView;
 
     private MaterialEditText destinationEditText = null;
-    private int imagePosition = 0;
+    private DestinationItem destinationItem;
+    private Integer imageMipmap;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,8 +51,10 @@ public class SetDestinationActivity extends AppCompatActivity implements GridVie
 
         ArrayList<GridItem> gridItems = new ArrayList<>();
 
-        for(int i=0; i<itemNameArray.length; i++){
-            GridItem item = new GridItem(itemNameArray[i],itemImageArray[i]);
+        destinationItem = new DestinationItem();
+
+        for(int i=0; i<destinationItem.getItemNameList().size(); i++){
+            GridItem item = new GridItem(destinationItem.getItemNameList().get(i), destinationItem.getItemImageList().get(i));
             gridItems.add(item);
         }
 
@@ -91,7 +91,7 @@ public class SetDestinationActivity extends AppCompatActivity implements GridVie
             }else{
                 Intent intent = new Intent();
                 intent.putExtra("destinationName", destinationName);    //行き先名をSettingProfileActivityへ送る
-                intent.putExtra("imagePosition", imagePosition);    //アイコンのpositionをSettingProfileActivityへ送る
+                intent.putExtra("imageMipmap", imageMipmap);    //アイコンのmipmapコードをSettingProfileActivityへ送る
                 setResult(RESULT_OK, intent);
 
                 finish();
@@ -106,7 +106,8 @@ public class SetDestinationActivity extends AppCompatActivity implements GridVie
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
         Log.i("position",String.valueOf(position));
-        this.imagePosition = position;
+        this.imageMipmap = destinationItem.getItemImageList().get(position);
+
     }
 
 }

@@ -4,7 +4,6 @@ import android.app.FragmentManager;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -19,14 +18,10 @@ import android.widget.Toast;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.Status;
-import com.google.android.gms.location.places.AutocompleteFilter;
 import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.Places;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
 
 import io.realm.Realm;
 
@@ -43,7 +38,7 @@ public class SettingProfileActivity extends AppCompatActivity implements Adapter
     int SET_MAIL_DETAIL_REQUEST_CODE = 3;
 
     private String destinationName;
-    private int imagePosition;
+    private int imageMipmap;
     private String placeName;
     private double latitude;
     private double longitude;
@@ -130,10 +125,10 @@ public class SettingProfileActivity extends AppCompatActivity implements Adapter
         if(requestCode == SET_DESTINATION_REQUEST_CODE){
             if (resultCode == RESULT_OK){
                 Log.i("Destination", data.getStringExtra("destinationName"));
-                Log.i("Destination", String.valueOf(data.getIntExtra("imagePosition",0)));
+                Log.i("Destination", String.valueOf(data.getIntExtra("imageMipmap",0)));
 
                 this.destinationName = data.getStringExtra("destinationName");
-                this.imagePosition = data.getIntExtra("imagePosition",0);
+                this.imageMipmap = data.getIntExtra("imageMipmap",0);
 
                 profileResult.set(0, destinationName);
                 savedCheckPoint += 1;
@@ -234,7 +229,7 @@ public class SettingProfileActivity extends AppCompatActivity implements Adapter
 
         items.setProfileId(getNextProfileItemsId());
         items.setDestinationName(destinationName);
-        items.setImagePosition(imagePosition);
+        items.setImageMipmap(imageMipmap);
         items.setPlaceName(placeName);
         items.setLatitude(latitude);
         items.setLongitude(longitude);

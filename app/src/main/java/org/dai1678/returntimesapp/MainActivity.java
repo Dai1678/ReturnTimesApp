@@ -46,6 +46,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     protected Location location;
 
     //ListItem情報： 場所画像id、宛先名、行き先、メアド
+    ArrayList<Integer> imageMipmapList = null;
     ArrayList<String> destinationList = null;
     ArrayList<String> placeList = null;
     ArrayList<String> addressNameList = null;
@@ -53,6 +54,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     ArrayList<CustomHomeListItem> listItems;
     CustomHomeListAdapter adapter;
+
+    int clickPosition;
 
     String nowLatLong;  //現在位置の緯度,経度
     ArrayList<String> destinationLatLong; //行き先の緯度,経度
@@ -94,6 +97,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         TextView emptyView = findViewById(R.id.emptyTextView);
         listView.setEmptyView(emptyView);
 
+        imageMipmapList = new ArrayList<>();
         destinationList = new ArrayList<>();
         placeList = new ArrayList<>();
         addressNameList = new ArrayList<>();
@@ -112,6 +116,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 profileItems = results.get(i);
                 assert profileItems != null;
                 Log.i("ID", profileItems.getProfileId().toString());
+                imageMipmapList.add(profileItems.getImageMipmap());
                 destinationList.add(profileItems.getDestinationName());
                 placeList.add(profileItems.getPlaceName());
                 Log.i("LATITUDE", String.valueOf(profileItems.getLatitude()));
@@ -120,8 +125,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 addressNameList.add(profileItems.getContact());
                 addressMailList.add(profileItems.getMail());
 
-                //TODO 行き先によって画像変更
-                Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_house);
+                Bitmap bmp = BitmapFactory.decodeResource(getResources(), imageMipmapList.get(i));
 
                 CustomHomeListItem item = new CustomHomeListItem(bmp, "行き先 : " + destinationList.get(i), "場所 : " + placeList.get(i)
                         , "宛先" + addressNameList.get(i), "メール" + addressMailList.get(i));
@@ -147,6 +151,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     public void onResume(){
         super.onResume();
 
+        imageMipmapList.clear();
         destinationList.clear();
         placeList.clear();
         addressNameList.clear();
@@ -162,6 +167,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 profileItems = results.get(i);
                 assert profileItems != null;
                 Log.i("ID", profileItems.getProfileId().toString());
+                imageMipmapList.add(profileItems.getImageMipmap());
                 destinationList.add(profileItems.getDestinationName());
                 placeList.add(profileItems.getPlaceName());
                 Log.i("LATITUDE", String.valueOf(profileItems.getLatitude()));
@@ -170,8 +176,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 addressNameList.add(profileItems.getContact());
                 addressMailList.add(profileItems.getMail());
 
-                //TODO 行き先によって画像変更
-                Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_house);
+                Bitmap bmp = BitmapFactory.decodeResource(getResources(), imageMipmapList.get(i));
 
                 CustomHomeListItem item = new CustomHomeListItem(bmp, "行き先 : " + destinationList.get(i), "場所 : " + placeList.get(i)
                         , "宛先 : " + addressNameList.get(i), "メール : " + addressMailList.get(i));
@@ -186,15 +191,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
 
-        //TODO ListViewクリック時だとAPI処理が追いつかずにnull表示になるため、プログレスバーの導入
+        clickPosition = position;
+
         String API_KEY = getString(R.string.google_maps_distance_matrix_key);
         String url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=" + nowLatLong + "&destinations=" + destinationLatLong.get(position) + "&transit_mode=rail&language=ja&avoid=tolls&key=" + API_KEY;  //API処理
         new GeoTask(MainActivity.this).execute(url);
 
-        FragmentManager fragmentManager = getFragmentManager();
-
-        ReturnTimeDialogFragment dialogFragment = new ReturnTimeDialogFragment(requiredTime, arrivalTime, addressMailList.get(position));
-        dialogFragment.show(fragmentManager,"alert dialog");
     }
 
     @Override
@@ -237,7 +239,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     //GeoTaskクラスのインタフェースメソッド
     @Override
-    public void setDouble(String result){
+    public void calculationRequireTime(String result){
 
         String res[] = result.split(","); //res[0] = 帰宅にかかる時間　res[1] = 距離
         Double min = Double.parseDouble(res[0]) / 60;  //APIから秒単位で送られているので、60で割って分単位に変えている
@@ -253,6 +255,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         Log.i("dist", "距離: " + dist + " キロメートル");
 
         arriveTime(HH, mm);  //自宅到着時刻の算出
+        showReturnTimeDialog(); //ダイアログの表示
 
     }
 
@@ -261,7 +264,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         Calendar calendar = Calendar.getInstance();
 
         @SuppressLint("SimpleDateFormat")
-        SimpleDateFormat sdf = new SimpleDateFormat("HH時mm分");  //フォーマット初期化
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH時mm分");  //フォーマット初期化
 
         //現在時刻取得
         int hour = calendar.get(Calendar.HOUR_OF_DAY);
@@ -274,8 +277,15 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         calendar.add(Calendar.MINUTE, addMinute);
         //calendar.add(Calendar.SECOND, addSecond);
 
-        arrivalTime = sdf.format(calendar.getTime());
+        arrivalTime = simpleDateFormat.format(calendar.getTime());
         Log.i("arrivalTime", "予想到着時刻 : " + arrivalTime);
 
+    }
+
+    private void showReturnTimeDialog(){
+        FragmentManager fragmentManager = getFragmentManager();
+
+        ReturnTimeDialogFragment dialogFragment = new ReturnTimeDialogFragment(requiredTime, arrivalTime, addressMailList.get(clickPosition));
+        dialogFragment.show(fragmentManager,"alert dialog");
     }
 }

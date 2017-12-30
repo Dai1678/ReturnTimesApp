@@ -1,5 +1,6 @@
 package org.dai1678.returntimesapp;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
@@ -17,65 +18,61 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-/**
- * Created by SRIVASTAVA on 1/9/2016.
- */
-/*The instance of this class is called by "PermissionCheckActivity",to get the time taken reach the destination from Google Distance Matrix API in background.
-  This class contains interface "Geo" to call the function setDouble(String) defined in "PermissionCheckActivity.class" to display the result.*/
 public class GeoTask extends AsyncTask<String, Void, String> {
-    ProgressDialog pd;
-    Context mContext;
-    Double duration;
-    Geo geo1;
+    private ProgressDialog progressDialog;
+    @SuppressLint("StaticFieldLeak")
+    private Context context;
+    private Geo geo;
 
-    static StringBuilder sb;
-
-    //constructor is used to get the context.
     public GeoTask(Context mContext) {
-        this.mContext = mContext;
-        geo1 = (Geo) mContext;
+        this.context = mContext;
+        geo = (Geo) mContext;
     }
 
-    //This function is executed before before "doInBackground(String...params)" is executed to dispaly the progress dialog
+    //バックグラウンド処理開始前にUIスレッドで実行 ダイアログ生成処理
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        pd = new ProgressDialog(mContext);
-        pd.setMessage("Loading");
-        pd.setCancelable(false);
-        pd.show();
+        progressDialog = new ProgressDialog(context);
+        progressDialog.setMessage("Loading");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
     }
 
-    //This function is executed after the execution of "doInBackground(String...params)" to dismiss the dispalyed progress dialog and call "setDouble(Double)" defined in "MainActivity.java"
+    //バックグラウンド処理終了後に実行
     @Override
     protected void onPostExecute(String aDouble) {
         super.onPostExecute(aDouble);
 
         if (aDouble != null) {
-            geo1.setDouble(aDouble);
-            pd.dismiss();  //ダイアログ閉じる
+            geo.calculationRequireTime(aDouble);
+            progressDialog.dismiss();  //ダイアログ閉じる
         } else
-            Toast.makeText(mContext, "API Error! 適切な値をいれてください", Toast.LENGTH_SHORT).show();
-            pd.dismiss();
+            Toast.makeText(context, "API Error! 適切な値をいれてください", Toast.LENGTH_SHORT).show();
+            progressDialog.dismiss();
     }
 
+    //バックグラウンド処理
     @Override
     protected String doInBackground(String... params) {
         try {
             URL url = new URL(params[0]);
-            HttpURLConnection con = (HttpURLConnection) url.openConnection();
-            con.setRequestMethod("GET");
-            con.connect();
-            int statuscode = con.getResponseCode();
-            if (statuscode == HttpURLConnection.HTTP_OK) {
-                BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
-                sb = new StringBuilder();
-                String line = br.readLine();
+            HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+            httpURLConnection.setRequestMethod("GET");
+            httpURLConnection.connect();
+
+            int statusCode = httpURLConnection.getResponseCode();
+
+            if (statusCode == HttpURLConnection.HTTP_OK) {
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(httpURLConnection.getInputStream()));
+                StringBuilder stringBuilder = new StringBuilder();
+                String line = bufferedReader.readLine();
+
                 while (line != null) {
-                    sb.append(line);
-                    line = br.readLine();
+                    stringBuilder.append(line);
+                    line = bufferedReader.readLine();
                 }
-                String json = sb.toString();
+                String json = stringBuilder.toString();
 
                 Log.d("JSON", json);
                 JSONObject root = new JSONObject(json);
@@ -91,8 +88,9 @@ public class GeoTask extends AsyncTask<String, Void, String> {
                 JSONObject object_distance = object_elements.getJSONObject("distance");
 
                 Log.d("JSON", "object_duration:" + object_duration);
-                return object_duration.getString("value") + "," + object_distance.getString("value");
 
+
+                return object_duration.getString("value") + "," + object_distance.getString("value");
             }
         } catch (MalformedURLException e) {
             Log.d("error", "error1");
@@ -106,37 +104,7 @@ public class GeoTask extends AsyncTask<String, Void, String> {
     }
 
     interface Geo {
-        public void setDouble(String min);
-    }
-
-    //取得した文字列から現住所の部分のみ取得(バグの兆しあり)
-    static String getFromPo() {
-        //String型で代入用変数の宣言
-        StringBuilder test = sb;
-        //取得した文字列の先頭から数えて"]"の位置を取得
-        int cal = test.indexOf("]");
-        //↑で取得した位置から数えて"]"と"["の位置をそれぞれ開始位置と終了位置として取得
-        int endString = test.indexOf("]", cal + 1);
-        int sttString = test.indexOf("[", cal + 1);
-        //開始位置と終了位置から現住所を割り出す
-        String fromPo = test.substring(sttString + 1, endString);
-        //帰れ！
-        return fromPo;
-    }
-
-    //帰る場所（目的地）の取得
-    static String getToPo() {
-
-        //String型で代入用変数の宣言
-        StringBuilder test = sb;
-        //↑で取得した位置から数えて"]"と"["の位置をそれぞれ開始位置と終了位置として取得
-        int endString = test.indexOf("]", 0);
-        int sttString = test.indexOf("[", 0);
-        //開始位置と終了位置から現住所を割り出す
-        String toPo = test.substring(sttString + 1, endString);
-        //帰れ！
-        return toPo;
-
+        void calculationRequireTime(String min);
     }
 
 }
