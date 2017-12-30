@@ -70,7 +70,7 @@ public class ReturnTimeDialogFragment extends DialogFragment implements ImageBut
         if (isInstallLine()){
             startActivity(getIntentSend(view));
         }else{
-            Toast.makeText(getActivity(), "Lineがインストールされていません", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "LineアプリをインストールするとLineを使って連絡ができます！", Toast.LENGTH_SHORT).show();
             getDialog().dismiss();
         }
     }
@@ -86,7 +86,6 @@ public class ReturnTimeDialogFragment extends DialogFragment implements ImageBut
 
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
-            Toast.makeText(getActivity(), "LineアプリをインストールするとLineを使って連絡ができます！", Toast.LENGTH_SHORT).show();
             appInstalled = false;
         }
 
@@ -103,14 +102,14 @@ public class ReturnTimeDialogFragment extends DialogFragment implements ImageBut
                 intent.setType("text/plain");
                 intent.setData(Uri.parse("mailto:" + mailAddress));
                 intent.putExtra(Intent.EXTRA_SUBJECT,"帰宅連絡");
-                intent.putExtra(Intent.EXTRA_TEXT,"帰宅します");     //TODO 送る本文を設定
+                intent.putExtra(Intent.EXTRA_TEXT,arrivalTIme + "に帰宅します");
                 break;
 
             case R.id.lineButton:
                 intent.setAction(Intent.ACTION_VIEW);
                 //TODO 送り先のユーザーを事前に設定できるようにしたい
 
-                intent.setData(Uri.parse("line://msg/text/" + "帰宅します")); //TODO 送るメッセージを取得
+                intent.setData(Uri.parse("line://msg/text/" + arrivalTIme + "に帰宅します"));
                 break;
         }
 
