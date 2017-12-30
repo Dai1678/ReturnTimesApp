@@ -13,6 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -28,6 +29,7 @@ import java.util.Calendar;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
+import io.realm.RealmQuery;
 import io.realm.RealmResults;
 
 
@@ -131,6 +133,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         listView.setAdapter(adapter);
 
         listView.setOnItemClickListener(this);
+        listView.setOnItemLongClickListener(this);
 
     }
 
@@ -195,8 +198,13 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     @Override
-    public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
-        //TODO Listの削除と該当データベースの削除
+    public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long id) {
+        //削除確認ダイアログの表示
+        FragmentManager fragmentManager = getFragmentManager();
+
+        DeleteDialogFragment deleteDialogFragment = new DeleteDialogFragment(listItems, adapter, position);
+        deleteDialogFragment.show(fragmentManager, "deleteDialog");
+
         return false;
     }
 

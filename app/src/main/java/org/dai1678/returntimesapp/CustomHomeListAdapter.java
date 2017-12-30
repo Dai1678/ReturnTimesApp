@@ -30,11 +30,8 @@ class CustomHomeListAdapter extends ArrayAdapter<CustomHomeListItem> {
 
     private static class ViewHolder{
         private ImageView destinationImage;
-        //private TextView listId;
         private TextView destination;
         private TextView place;
-        //private TextView nowLatitude;
-        //private TextView nowLongitude;
         private TextView addressName;
         private TextView addressMail;
     }
