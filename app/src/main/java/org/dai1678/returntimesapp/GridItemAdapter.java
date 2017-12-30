@@ -1,12 +1,13 @@
 package org.dai1678.returntimesapp;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,7 +38,7 @@ public class GridItemAdapter extends ArrayAdapter<GridItem> {
     }
 
     private static class ViewHolder{
-        public ImageButton imageButton;
+        public ImageView imageView;
         public TextView textView;
     }
 
@@ -64,15 +65,8 @@ public class GridItemAdapter extends ArrayAdapter<GridItem> {
         if(convertView == null){
             convertView = this.layoutInflater.inflate(this.resource, null);
             holder = new ViewHolder();
-            holder.imageButton = (ImageButton) convertView.findViewById(R.id.imageItem);
-            holder.imageButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    //TODO クリックで画像の選択処理(1つのみ)
-                    Toast.makeText(getContext(), "Clicked", Toast.LENGTH_SHORT).show();
-                }
-            });
-            holder.textView = (TextView)convertView.findViewById(R.id.imageText);
+            holder.imageView = convertView.findViewById(R.id.imageItem);
+            holder.textView = convertView.findViewById(R.id.imageText);
             convertView.setTag(holder);
         }else{
             holder = (ViewHolder)convertView.getTag();
@@ -80,7 +74,7 @@ public class GridItemAdapter extends ArrayAdapter<GridItem> {
 
         GridItem item = this.items.get(position);
 
-        holder.imageButton.setImageResource(item.getItemImage());
+        holder.imageView.setImageResource(item.getItemImage());
         holder.textView.setText(item.getItemName());
 
         return convertView;

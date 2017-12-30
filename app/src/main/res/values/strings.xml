@@ -2,4 +2,6 @@
     <string name="app_name">ReturnTimesApp</string>
     <string name="txt_btn">帰宅時間計算</string>
     <string name="title_activity_setting_maps">Map</string>
+    <string name="latitude_label">Latitude</string>
+    <string name="longitude_label">Longitude</string>
 </resources>

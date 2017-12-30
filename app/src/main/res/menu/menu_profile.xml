@@ -5,6 +5,7 @@
     <item
         android:id="@+id/save_profile"
         android:title="保存"
+        android:icon="@mipmap/ic_float_check"
         app:showAsAction="always" />
 
 </menu>

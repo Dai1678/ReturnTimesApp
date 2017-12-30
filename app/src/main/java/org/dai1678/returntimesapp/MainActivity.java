@@ -1,128 +1,246 @@
 package org.dai1678.returntimesapp;
 
-import android.Manifest;
-import android.app.Service;
-import android.content.DialogInterface;
+import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.app.FragmentManager;
 import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
-import android.net.Uri;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.widget.EditText;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
-//import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.common.api.GoogleApiClient;
+
+import com.gc.materialdesign.views.ButtonFloat;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
+import io.realm.RealmQuery;
+import io.realm.RealmResults;
 
-public class MainActivity extends AppCompatActivity implements GeoTask.Geo, LocationListener {
-    String strFrom;  //現在位置の緯度経度
-    String strTo; //自宅の緯度経度
 
-    TextView returnTime, distance, location, home, place, arriveHome;  //帰宅時間,距離,現在位置,緯度経度
+/***************************************************************************************************
+ MainActivity    初期表示画面
+ 機能：    連絡先の選択
+ 現在地から帰宅先までの所要時間・予想到着時間の表示
+ メールorLINEへの移動
+ ***************************************************************************************************/
 
-    double latitude;  //緯度
+public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener, View.OnClickListener, GeoTask.Geo {
 
-    double longitude;  //経度
+    private FusedLocationProviderClient fusedLocationProviderClient;
+    protected Location location;
 
-    String times;  //到着時間
+    //ListItem情報： 場所画像id、宛先名、行き先、メアド
+    ArrayList<Integer> imageMipmapList = null;
+    ArrayList<String> destinationList = null;
+    ArrayList<String> placeList = null;
+    ArrayList<String> addressNameList = null;
+    ArrayList<String> addressMailList = null;
 
-    private static final String TAG = MainActivity.class.getSimpleName();
+    ArrayList<CustomHomeListItem> listItems;
+    CustomHomeListAdapter adapter;
 
-    private static final int LOCATION_UPDATE_MIN_TIME = 0;  // 更新時間(目安)
+    int clickPosition;
 
-    private static final int LOCATION_UPDATE_MIN_DISTANCE = 0;  // 更新距離(目安)
+    String nowLatLong;  //現在位置の緯度,経度
+    ArrayList<String> destinationLatLong; //行き先の緯度,経度
 
-    private LocationManager mLocationManager;
+    String requiredTime; //帰宅所要時間
+    String arrivalTime; //予想到着時刻
 
-    private SharedPreferences dataStore;
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
-    private GoogleApiClient client;
-
-    // 許可されたパーミッションの種類を識別する番号
-    private static final int MY_PERMISSIONS_REQUEST_LOCATION = 1;
+    Realm realm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mLocationManager = (LocationManager) this.getSystemService(Service.LOCATION_SERVICE);
+        //Realm init
+        Realm.init(this);
+        RealmConfiguration realmConfig = new RealmConfiguration.Builder().build();
+        //Realm.deleteRealm(realmConfig);
+        realm = Realm.getInstance(realmConfig);
 
-        initialize();  //ID設定
+        //Toolbar
+        Toolbar toolbar = findViewById(R.id.homeToolbar);
+        toolbar.setTitle("連絡先を選択してください");
+        setSupportActionBar(toolbar);
 
-        Intent intent = getIntent();
-        strTo = intent.getStringExtra("data");  //自宅情報代入
+        //右下フロートボタン
+        ButtonFloat buttonFloat = findViewById(R.id.homeFloatingButton);
+        if (buttonFloat != null) {
+            buttonFloat.setDrawableIcon(getResources().getDrawable(R.drawable.ic_float_button));
+        }
+        assert buttonFloat != null;
+        buttonFloat.setOnClickListener(this);
 
-        if(strTo == null){
-            strTo = dataStore.getString("input","Nothing");
-            if(strTo.equals("Nothing")){
-                Toast.makeText(getApplicationContext(),"自宅設定が行われていません",Toast.LENGTH_SHORT).show();
+        //位置情報
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+
+        //ListView処理
+        ListView listView = findViewById(R.id.homeList);
+        TextView emptyView = findViewById(R.id.emptyTextView);
+        listView.setEmptyView(emptyView);
+
+        imageMipmapList = new ArrayList<>();
+        destinationList = new ArrayList<>();
+        placeList = new ArrayList<>();
+        addressNameList = new ArrayList<>();
+        addressMailList = new ArrayList<>();
+
+        destinationLatLong = new ArrayList<>();
+
+        listItems = new ArrayList<>();
+
+        RealmResults<ProfileItems> results = realm.where(ProfileItems.class).findAll();
+        ProfileItems profileItems;
+
+        if(results.size() > 0){
+            for (int i = 0; i < results.size(); i++) {
+
+                profileItems = results.get(i);
+                assert profileItems != null;
+                Log.i("ID", profileItems.getProfileId().toString());
+                imageMipmapList.add(profileItems.getImageMipmap());
+                destinationList.add(profileItems.getDestinationName());
+                placeList.add(profileItems.getPlaceName());
+                Log.i("LATITUDE", String.valueOf(profileItems.getLatitude()));
+                Log.i("LONGITUDE", String.valueOf(profileItems.getLongitude()));
+                destinationLatLong.add(String.valueOf(profileItems.getLatitude()) + "," + String.valueOf(profileItems.getLongitude()));
+                addressNameList.add(profileItems.getContact());
+                addressMailList.add(profileItems.getMail());
+
+                Bitmap bmp = BitmapFactory.decodeResource(getResources(), imageMipmapList.get(i));
+
+                CustomHomeListItem item = new CustomHomeListItem(bmp, "行き先 : " + destinationList.get(i), "場所 : " + placeList.get(i)
+                        , "宛先" + addressNameList.get(i), "メール" + addressMailList.get(i));
+                listItems.add(item);
             }
         }
 
+        adapter = new CustomHomeListAdapter(this, R.layout.main_list_item, listItems);
+        listView.setAdapter(adapter);
 
-        //TODO:デバッグ用
-        //strTo = "35.681298,139.7640582";  //テスト(東京駅)
-
-
-        // Android 6.0以上の場合
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-            // 位置情報の取得が許可されrequestLocationUpdatesているかチェック
-            if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                // 権限があればLocationManagerを取得
-//                Toast.makeText(MainActivity.this, "位置情報の取得は既に許可されています", Toast.LENGTH_SHORT).show();
-                requestLocationUpdates();  //現在地情報取得
-            } else {
-                // なければ権限を求めるダイアログを表示
-                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                        MY_PERMISSIONS_REQUEST_LOCATION);
-            }
-            // Android 6.0以下の場合
-        } else {
-            // インストール時点で許可されているのでチェックの必要なし
-//            Toast.makeText(MainActivity.this, "位置情報の取得は既に許可されています(Android 5.0以下です)", Toast.LENGTH_SHORT).show();
-            requestLocationUpdates();  //現在地情報取得
-        }
-
-
-
-        if (strTo != null) {
-
-            Log.d("test", strFrom);
-            Log.d("test", strTo);
-
-
-            String url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=" + strFrom + "&destinations=" + strTo + "&transit_mode=rail&language=ja&avoid=tolls&key=AIzaSyCRr1HoHvxqLabvjWwWe6SyYZViUuvQreo";  //API処理
-            new GeoTask(MainActivity.this).execute(url);  //JSONデータ処理
-
-        } else {
-            Toast.makeText(getApplicationContext(), "自宅設定が行われていません", Toast.LENGTH_SHORT).show();
-        }
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        //client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
-
+        listView.setOnItemClickListener(this);
+        listView.setOnItemLongClickListener(this);
 
     }
 
-
-    //表示テキスト計算
     @Override
-    public void setDouble(String result) {
+    public void onStart(){
+        super.onStart();
+        lastLocation();
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+
+        imageMipmapList.clear();
+        destinationList.clear();
+        placeList.clear();
+        destinationLatLong.clear();
+        addressNameList.clear();
+        addressMailList.clear();
+        listItems.clear();
+
+        RealmResults<ProfileItems> results = realm.where(ProfileItems.class).findAll();
+        ProfileItems profileItems;
+
+        if(results.size() > 0){
+            for (int i = 0; i < results.size(); i++) {
+
+                profileItems = results.get(i);
+                assert profileItems != null;
+                Log.i("ID", profileItems.getProfileId().toString());
+                imageMipmapList.add(profileItems.getImageMipmap());
+                destinationList.add(profileItems.getDestinationName());
+                placeList.add(profileItems.getPlaceName());
+                Log.i("LATITUDE", String.valueOf(profileItems.getLatitude()));
+                Log.i("LONGITUDE", String.valueOf(profileItems.getLongitude()));
+                destinationLatLong.add(String.valueOf(profileItems.getLatitude()) + "," + String.valueOf(profileItems.getLongitude()));
+                addressNameList.add(profileItems.getContact());
+                addressMailList.add(profileItems.getMail());
+
+                Bitmap bmp = BitmapFactory.decodeResource(getResources(), imageMipmapList.get(i));
+
+                CustomHomeListItem item = new CustomHomeListItem(bmp, "行き先 : " + destinationList.get(i), "場所 : " + placeList.get(i)
+                        , "宛先 : " + addressNameList.get(i), "メール : " + addressMailList.get(i));
+                listItems.add(item);
+            }
+        }
+
+        adapter.notifyDataSetChanged();
+    }
+
+    //ListViewクリック処理
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+
+        clickPosition = position;
+
+        String API_KEY = getString(R.string.google_maps_distance_matrix_key);
+        String url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=" + nowLatLong + "&destinations=" + destinationLatLong.get(position) + "&transit_mode=rail&language=ja&avoid=tolls&key=" + API_KEY;  //API処理
+        new GeoTask(MainActivity.this).execute(url);
+
+    }
+
+    @Override
+    public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long id) {
+        //削除確認ダイアログの表示
+        FragmentManager fragmentManager = getFragmentManager();
+
+        DeleteDialogFragment deleteDialogFragment = new DeleteDialogFragment(listItems, adapter, position);
+        deleteDialogFragment.show(fragmentManager, "deleteDialog");
+
+        return false;
+    }
+
+    //フロートボタンのクリック処理
+    @Override
+    public void onClick(View view) {
+        Intent intent = new Intent(this,SettingProfileActivity.class);
+        startActivity(intent);
+    }
+
+    //端末の位置情報取得
+    @SuppressWarnings("MissingPermission")
+    private void lastLocation(){
+        fusedLocationProviderClient.getLastLocation()
+                .addOnCompleteListener(this, new OnCompleteListener<Location>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Location> task) {
+                        if(task.isSuccessful() && task.getResult() != null){
+                            location = task.getResult();
+
+                            Double nowLatitude = location.getLatitude();  //緯度
+                            Double nowLongitude = location.getLongitude();  //経度
+
+                            nowLatLong = String.valueOf(nowLatitude) + "," + String.valueOf(nowLongitude);
+                            Log.i("nowPosition", nowLatLong);
+                        }
+                    }
+                });
+    }
+
+    //GeoTaskクラスのインタフェースメソッド
+    @Override
+    public void calculationRequireTime(String result){
 
         String res[] = result.split(","); //res[0] = 帰宅にかかる時間　res[1] = 距離
         Double min = Double.parseDouble(res[0]) / 60;  //APIから秒単位で送られているので、60で割って分単位に変えている
@@ -132,109 +250,22 @@ public class MainActivity extends AppCompatActivity implements GeoTask.Geo, Loca
         int HH = times / 3600;  //帰宅にかかる時間の時間部分抽出
         int mm = times % 3600 / 60;  //帰宅にかかる時間の分部分抽出
 
+        requiredTime = (int) (min / 60) + " 時間 " + (int) (min % 60) + " 分";
+
+        Log.i("requiredTime", "所要時間 : " + requiredTime);
+        Log.i("dist", "距離: " + dist + " キロメートル");
+
         arriveTime(HH, mm);  //自宅到着時刻の算出
-
-        returnTime.setText("帰宅にかかる時間: " + (int) (min / 60) + " 時間 " + (int) (min % 60) + " 分");
-        distance.setText("距離: " + dist + " キロメートル");
-        location.setText("現在位置:" + GeoTask.getFromPo());
-        home.setText("自宅:" + GeoTask.getToPo());
+        showReturnTimeDialog(); //ダイアログの表示
 
     }
 
-    //ID設定
-    public void initialize() {
-        returnTime = (TextView) findViewById(R.id.textView_result1);
-        distance = (TextView) findViewById(R.id.textView_result2);
-        location = (TextView) findViewById(R.id.textView_result3);
-        home = (TextView) findViewById(R.id.textView_result4);
-        place = (TextView) findViewById(R.id.placeText);
-        arriveHome = (TextView) findViewById(R.id.returnResult);
-        dataStore = getSharedPreferences("DataStore", MODE_PRIVATE);
-    }
+    public void arriveTime(int addHour, int addMinute){
 
-
-
-
-    // Called when the location has changed.
-    @Override
-    public void onLocationChanged(Location location) {
-        Log.e(TAG, "onLocationChanged.");
-        showLocation(location);
-    }
-
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
-
-    }
-
-    @Override
-    public void onProviderEnabled(String provider) {
-
-    }
-
-    @Override
-    public void onProviderDisabled(String provider) {
-
-    }
-
-    //現在地情報取得
-    private void requestLocationUpdates() {
-        Log.d(TAG, "requestLocationUpdates()");
-        //showProvider(LocationManager.NETWORK_PROVIDER);
-        boolean isNetworkEnabled = mLocationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-        //showNetworkEnabled(isNetworkEnabled);
-        if (isNetworkEnabled) {
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                    == PackageManager.PERMISSION_GRANTED) {
-                //パーミッション許可時
-
-                //パーミッション未許可時
-            } else {
-                // Show rationale and request permission.
-            }
-            //ここで取得
-            mLocationManager.requestLocationUpdates(
-                    LocationManager.NETWORK_PROVIDER,
-                    LOCATION_UPDATE_MIN_TIME,
-                    LOCATION_UPDATE_MIN_DISTANCE,
-                    this);
-            Location location = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-            if (location != null) {
-                showLocation(location);
-            }
-        } else {
-            Toast.makeText(getApplicationContext(), "Networkが無効になっています", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    //現在地の緯度経度取得
-    private void showLocation(Location location) {
-
-        latitude = location.getLatitude();  //緯度取得
-        longitude = location.getLongitude();  //経度取得
-
-        String place = String.valueOf(latitude) + "," + String.valueOf(longitude);  //緯度経度連結
-
-        TextView placeTextView = (TextView) findViewById(R.id.placeText);
-        placeTextView.setText("現在の緯度,経度 = " + String.valueOf(place));  //現在位置の緯度経度表示
-
-        strFrom = place;  //代入
-    }
-
-    //自宅情報取得ボタン
-    public void setClick(View view) {
-        Intent intent = new Intent(getApplicationContext(), SettingMapsActivity.class);
-        //緯度経度を飛ばす
-        intent.putExtra("lat", latitude);
-        intent.putExtra("lng", longitude);
-        startActivity(intent);
-    }
-
-    //到着時刻算出
-    public void arriveTime(int addHour, int addMinute) {
         Calendar calendar = Calendar.getInstance();
 
-        SimpleDateFormat sdf = new SimpleDateFormat("HH時mm分");  //フォーマット初期化
+        @SuppressLint("SimpleDateFormat")
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH時mm分");  //フォーマット初期化
 
         //現在時刻取得
         int hour = calendar.get(Calendar.HOUR_OF_DAY);
@@ -247,94 +278,15 @@ public class MainActivity extends AppCompatActivity implements GeoTask.Geo, Loca
         calendar.add(Calendar.MINUTE, addMinute);
         //calendar.add(Calendar.SECOND, addSecond);
 
-        Log.d("到着時刻", sdf.format(calendar.getTime()));
-
-        times = sdf.format(calendar.getTime());
-
-        arriveHome.setText("到着時間: " + times);  //到着時間表示
+        arrivalTime = simpleDateFormat.format(calendar.getTime());
+        Log.i("arrivalTime", "予想到着時刻 : " + arrivalTime);
 
     }
 
-    public void mailClick(View view){
-        if(strTo==null){
-            Toast.makeText(getApplicationContext(),"自宅設定が行われていません",Toast.LENGTH_SHORT).show();
-        }
-        else{
-            String mailTo = "";  //宛先メールアドレス
+    private void showReturnTimeDialog(){
+        FragmentManager fragmentManager = getFragmentManager();
 
-            String subject = "帰宅連絡";  //件名
-
-            String mailText = times+"頃に帰宅します";  //メール本文
-
-            //宛先メールアドレスが設定されていないとき
-            if(mailTo == ""){
-                mailTo = dataStore.getString("SaveString","Nothing");  //SaveStringから読み出し
-                //未設定時
-                if(mailTo.equals("Nothing")){
-                    Toast.makeText(getApplicationContext(),"メールアドレスが設定されていません",Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            //インテントのインスタンス生成
-            Intent intent = new Intent();
-            //インテントにアクション及び送信情報をセット
-            intent.setAction(Intent.ACTION_SENDTO);
-            intent.setData(Uri.parse("mailto:"+mailTo));
-            intent.putExtra(Intent.EXTRA_SUBJECT,subject);
-            intent.putExtra(Intent.EXTRA_TEXT,mailText);
-
-            //メール起動
-            startActivity(intent);
-        }
+        ReturnTimeDialogFragment dialogFragment = new ReturnTimeDialogFragment(requiredTime, arrivalTime, addressMailList.get(clickPosition));
+        dialogFragment.show(fragmentManager,"alert dialog");
     }
-
-    // 許可を求めるダイアログでクリックした後に呼ばれる
-    // どの種類の権限でもここを通るので位置情報取得の権限なのかどうかをrequestCodeで判別
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        // GPSの権限を求めるコード
-        if (requestCode == MY_PERMISSIONS_REQUEST_LOCATION) {
-            // 許可されたら
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // テキストを表示してLocationManagerを取得
-                // 許可されなかったら
-            } else {
-                // 何もしない
-                Toast.makeText(this, "位置情報取得が拒否されました", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-
-    //宛先メールアドレスのダイアログ
-    public void toClick(View view){
-        //テキスト入力のView
-        final EditText editView = new EditText(MainActivity.this);
-        new AlertDialog.Builder(MainActivity.this)
-                .setIcon(android.R.drawable.ic_dialog_info)
-                .setTitle("宛先メールアドレス入力")
-                //setViewにてビューを設定します。
-                .setView(editView)
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        //入力した文字をトースト出力する
-                        Toast.makeText(MainActivity.this,
-                                editView.getText().toString(),
-                                Toast.LENGTH_SHORT).show();
-
-                        String text = editView.getText().toString();  //保存用変数に格納
-
-                        SharedPreferences.Editor editor = dataStore.edit();
-                        editor.putString("SaveString",text);  //SaveStringというkeyに紐付け
-                        editor.commit();
-
-//                        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-//                        sp.edit().putString("SaveString",editView.getText().toString()).commit();
-                    }
-                })
-                .setNegativeButton("キャンセル", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                    }
-                })
-                .show();
-    }
-
 }

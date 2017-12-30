@@ -9,6 +9,7 @@
         android:id="@+id/destinationImage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
         android:src="@mipmap/ic_launcher"
         android:layout_marginRight="16dp"/>
 
@@ -19,26 +20,33 @@
         android:layout_weight="1">
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:id="@+id/addressName"
-            android:text="宛先 : 母親"
-            android:textSize="17sp"
-            android:textColor="#000"/>
-
-        <TextView
             android:id="@+id/destination"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="#000"
-            android:text="行き先 : 家"
+            android:hint="行き先 : 自宅"
             android:textSize="17sp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/place"
+            android:hint="場所 : 上大岡"
+            android:textSize="17sp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/addressName"
+            android:hint="宛先 : 母親"
+            android:textSize="17sp"
+            android:textColor="#000"/>
 
         <TextView
             android:id="@+id/addressMail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="メール : example@gmail.com"
+            android:hint="メール : example@gmail.com"
             android:textSize="15sp"/>
     </LinearLayout>
 

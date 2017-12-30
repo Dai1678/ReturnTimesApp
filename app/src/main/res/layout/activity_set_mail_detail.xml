@@ -22,7 +22,22 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/setMailDetailToolbar"
         android:layout_centerHorizontal="true"
-        android:padding="60dp"
+        android:padding="50dp"
+        android:hint="宛先名"
+        android:textCursorDrawable="@drawable/text_cursor_cyan"
+        android:textSize="25sp"
+        app:met_baseColor="@android:color/black"
+        app:met_floatingLabel="highlight"
+        app:met_primaryColor="?colorAccent"
+        app:met_singleLineEllipsis="true"
+        />
+
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/addressEdit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/contactEdit"
+        android:layout_centerHorizontal="true"
         android:hint="メールアドレス"
         android:textCursorDrawable="@drawable/text_cursor_cyan"
         android:textSize="25sp"
@@ -30,6 +45,8 @@
         app:met_floatingLabel="highlight"
         app:met_primaryColor="?colorAccent"
         app:met_singleLineEllipsis="true" />
+
+
 
     <!--
     <ListView

@@ -52,6 +52,7 @@ captures/
 
 # Google Services (e.g. APIs or Firebase)
 google-services.json
+/home/daipc/StudioProjects/ReturnTimesApp/app/src/debug/res/values/google_maps_distance_matrix_api.xml
 
 # Freeline
 freeline.py

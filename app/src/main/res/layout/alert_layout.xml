@@ -8,14 +8,16 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="所要時間 : 2時間00分"
+        android:id="@+id/requiredTime"
+        android:hint="所要時間 : "
         android:textSize="20sp"
         android:layout_margin="10dp"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="予想到着時刻 : 20時00分"
+        android:id="@+id/arrivalTime"
+        android:hint="予想到着時刻 : "
         android:textSize="20sp"
         />
 
