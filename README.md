@@ -1,110 +1,52 @@
 # ReturnTimesApp
-ワンタッチ帰宅連絡アプリ  
 
-**目的**  
-ボタン一つで現在位置から自宅までの時間を算出して、メールやLINEで連絡する  
+開発名ReturnTimesAppは、メールやLINEで簡単に帰宅連絡を行うことができるAndroidアプリです。 
 
-**機能**  
+## Description   
 
-優先度A:  
+### 現在実装されている機能  
+- 現在位置から行き先までの帰宅時間算出
+- メーラーへ宛先、本文の自動入力
+- LINEへ本文の自動入力
+- 行き先名、行き先場所、宛先メールアドレスのプロファイル設定
 
-- 自宅場所設定
-- 現在位置取得 →　GPSで現在地取得   
-- 現在位置→自宅の時間算出　→　Google Maps API ウェブサービス Distance Matrix API  
+### 実装予定されている機能
+- アドレス帳との連携
+- LINE宛先の自動入力
 
-優先度B：  
+## Demo  
 
-- メール連携  
-- 自宅非登録時の例外処理実装  
-- 自宅情報保存(SharedPreference)  
-- 現在位置→自宅の帰宅方法(車,電車など) → Distance Matrix APIのmodeを変更
+準備中
 
-優先度C:  
+## Features    
 
-- ウィジェット対応  
-- LINE連携  
 
-**進捗**  
-  
-2016/11/22  
+## quirement  
+- Android (native)
+- Google Distance Matrix API
+- java
+- Realm
 
-- プロジェクト作成
-- githubリポジトリ作成
-- Google Distance Matrix APIを使ったサンプルを拾ったのでコピー。時間算出ボタンを押したときにアプリが落ちる→入力事項がうまく合ってない気がする  
+## Usage
 
-2016/11/23  
+## Installation  
 
-- 2点間の距離と所要時間の表示完了(座標、文字列を変数に入れて両方確認済み)  
-- 現在地の緯度経度、取得時間、Provider、ネットワーク状態の取得・表示完了　→ <https://github.com/Dai1678/gpsGetter>  
+開発中のため、個人的に配布  
 
-2016/11/24  
+## Anything Else  
 
-- ボタンを押してもエラーがでる → ?
+## Author  
 
-2016/11/28  
+Dai Miyamoto  
 
-- GPSで現在位置の緯度経度取得が完了(LocationLisner)  
-- 自宅の緯度経度を入力する設定画面を作成。APIに入れて正常動作を確認。
-- xmlの更新  
+Github : https://github.com/Dai1678  
+Twitter : @daivr7774  
+Qiita : https://qiita.com/daivr7774  
 
-2016/11/30  
+## Reference  
 
-- 自宅非登録時の例外処理実装完了  
-
-2016/12/02  
-
-- 自宅登録をGoogle mapで指定できるようにした  
-- 自宅到着時刻の表示機能を追加  
-- 自宅住所の表示機能を追加  
-  
-2016/12/12  
-
-- 暗黙的Intentでメール機能実装  
-
-**ToDo**  
-2016/11/22  
-
-- 2地点間の移動時間表示  
-- その他機能の実装方法見積もり  
-
-2016/11/23  
-
-- GPS取得した現在地の緯度経度をGoogle Distance Matrix APIとつなげる。  
-- 設定画面作成  
-- その他機能の実装方法見積もり  
-
-2016/11/24  
-
-- MainActivityとGpsGetterの同期  
-- str_fromにGpsGetterで取得した緯度経度を代入して、APIで正常に処理させる  
-- 設定画面作成  
-- その他機能の実装方法見積もり  
-
-2016/11/28  
-
-- 自宅非登録時の例外処理実装
-- xmlテキストの日本語化
-- 自宅情報の入力を住所で行い、アプリ側で緯度経度に変えてAPIに入れる → Google Maps Geocoding API  
-
-2016/11/30  
-
-- パーミッションの処理  
-- 帰宅時間の表示形式の変更  
-
-2016/12/02  
-
-- アプリ起動時に情報の取得  
-- メール機能の実装  
-- APIエラー時にロードしたまま画面が止まる不具合の修正  
-
-2016/12/12  
-
-- 宛先メールアドレスの設定画面  
-
-**参考**  
 https://developers.google.com/maps/android/?hl=ja Android 向けの Google Maps APIサービス一覧  　
-https://developers.google.com/maps/web-services/?hl=ja Webサービス向けのGoogle Maps APIサービス一覧(Androidでも使える)
+https://developers.google.com/maps/web-services/?hl=ja Webサービス向けのGoogle Maps APIサービス一覧
 https://www.youtube.com/watch?v=tXPEOJaeFm8 Google Distance Matrix APIを使ったサンプルの紹介動画。  
 https://github.com/vastavch/GoogleMapsDistanceMatrixAPI_Demo ↑の動画のGithub。これを改造していく。    
-<http://tech.admax.ninja/2014/09/16/how-to-get-location-by-android/>　GPS取得の参考サイト    
-<http://havoc0214.hatenablog.com/entry/2015/09/07/041956>　↑のサイトの詳細説明    
+https://akira-watson.com/android/fusedlocationproviderapi.html　GPS取得の参考サイト    
