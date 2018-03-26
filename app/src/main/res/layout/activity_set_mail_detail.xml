@@ -6,21 +6,10 @@
     android:layout_height="match_parent"
     tools:context="org.dai1678.returntimesapp.SetMailDetailActivity">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/setMailDetailToolbar"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        android:minHeight="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
-    </android.support.v7.widget.Toolbar>
-
     <com.rengwuxian.materialedittext.MaterialEditText
         android:id="@+id/contactEdit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/setMailDetailToolbar"
         android:layout_centerHorizontal="true"
         android:padding="50dp"
         android:hint="宛先名"

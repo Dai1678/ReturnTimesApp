@@ -2,6 +2,7 @@ package org.dai1678.returntimesapp;
 
 import android.app.FragmentManager;
 import android.content.Intent;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -38,13 +39,10 @@ public class SetDestinationActivity extends AppCompatActivity implements GridVie
 
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);   //自動でキーボードが起動するのを防ぐ
 
-        Toolbar toolbar = findViewById(R.id.setDestinationToolbar);
-        toolbar.setTitle("行き先名の設定");
-        setSupportActionBar(toolbar);
-
-        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        ActionBar actionBar = getSupportActionBar();
         if(actionBar != null){
             actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setTitle("行き先名の設定");
         }
 
         destinationEditText = findViewById(R.id.destinationEdit);

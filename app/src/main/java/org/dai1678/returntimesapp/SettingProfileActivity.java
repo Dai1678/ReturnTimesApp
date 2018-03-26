@@ -4,6 +4,7 @@ import android.app.FragmentManager;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -55,23 +56,19 @@ public class SettingProfileActivity extends AppCompatActivity implements Adapter
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting_profile);
 
-        //Toolbar
-        Toolbar toolbar = findViewById(R.id.profileToolbar);
-        toolbar.setTitle("profile設定");
-        setSupportActionBar(toolbar);
-
-        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        ActionBar actionBar = getSupportActionBar();
         if(actionBar != null){
             actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setTitle("設定項目一覧");
         }
 
         //ListView
         ListView listView = findViewById(R.id.profileList);
 
         profileResult = new ArrayList<>();
-        profileResult.add("Title");
-        profileResult.add("Map");
-        profileResult.add("Mail");
+        profileResult.add("行き先名の設定");
+        profileResult.add("住所の設定");
+        profileResult.add("連絡先の設定");
         bmp = BitmapFactory.decodeResource(getResources(),R.mipmap.ic_launcher);     //TODO それぞれ適切な画像をセット
 
         listItems = new ArrayList<>();

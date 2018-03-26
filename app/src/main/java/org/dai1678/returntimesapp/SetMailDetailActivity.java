@@ -2,6 +2,7 @@ package org.dai1678.returntimesapp;
 
 import android.app.FragmentManager;
 import android.content.Intent;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -21,13 +22,10 @@ public class SetMailDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_set_mail_detail);
 
-        Toolbar toolbar = findViewById(R.id.setMailDetailToolbar);
-        toolbar.setTitle("宛先とメール本文の設定");
-        setSupportActionBar(toolbar);
-
-        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        ActionBar actionBar = getSupportActionBar();
         if(actionBar != null){
             actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setTitle("連絡先の設定");
         }
 
         contactEdit = findViewById(R.id.contactEdit);
