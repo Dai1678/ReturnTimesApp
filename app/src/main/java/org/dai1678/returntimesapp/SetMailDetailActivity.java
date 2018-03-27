@@ -29,6 +29,7 @@ public class SetMailDetailActivity extends AppCompatActivity {
         contactEdit = findViewById(R.id.contactEdit);
         addressEdit = findViewById(R.id.addressEdit);
 
+        //TODO メアド入力フォームの下にアドレス帳参照ボタンを入れたい
         //TODO メアド入力フォームの下に送信先LINEユーザー設定フォームをいれたい
 
         /*

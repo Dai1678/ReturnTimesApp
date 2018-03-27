@@ -1,28 +1,20 @@
 package org.dai1678.returntimesapp;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AlertDialog;
+
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-
-import java.util.Locale;
-import java.util.concurrent.Executor;
 
 @SuppressLint("ValidFragment")
 public class ReturnTimeDialogFragment extends DialogFragment implements ImageButton.OnClickListener {
@@ -40,29 +32,30 @@ public class ReturnTimeDialogFragment extends DialogFragment implements ImageBut
     @SuppressLint("SetTextI18n")
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState){
-        AlertDialog dialog;
+        //TODO ダイアログのレイアウト修正
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        View view = getActivity().getLayoutInflater().inflate(R.layout.return_time_dialog, null );
 
-        AlertDialog.Builder alert = new AlertDialog.Builder(getActivity(),R.style.MyAlertDialogStyle);
-        alert.setTitle("連絡をします");
+        builder.setView(view)
+                .setTitle("連絡をします")
+                .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        ReturnTimeDialogFragment.this.getDialog().cancel();
+                    }
+                });
 
-        View alertView = getActivity().getLayoutInflater().inflate(R.layout.alert_layout,null);
-
-        TextView requiredTimeText = alertView.findViewById(R.id.requiredTime);
+        TextView requiredTimeText = view.findViewById(R.id.requiredTime);
         requiredTimeText.setText("所要時間 : " + requiredTime);
-        TextView arrivalTimeText = alertView.findViewById(R.id.arrivalTime);
+        TextView arrivalTimeText = view.findViewById(R.id.arrivalTime);
         arrivalTimeText.setText("予想到着時刻 : " + arrivalTIme);
 
-        ImageView mailButton = alertView.findViewById(R.id.mailButton);
+        ImageView mailButton = view.findViewById(R.id.mailButton);
         mailButton.setOnClickListener(this);
-        ImageView lineButton = alertView.findViewById(R.id.lineButton);
+        ImageView lineButton = view.findViewById(R.id.lineButton);
         lineButton.setOnClickListener(this);
 
-        alert.setView(alertView);
-
-        dialog = alert.create();
-        dialog.show();
-
-        return dialog;
+        return builder.create();
     }
 
     @Override
@@ -96,6 +89,7 @@ public class ReturnTimeDialogFragment extends DialogFragment implements ImageBut
 
         Intent intent = new Intent();
 
+        //TODO 送信文章の編集をできるようにしたい
         switch (view.getId()){
             case R.id.mailButton:
                 intent.setAction(Intent.ACTION_SENDTO);

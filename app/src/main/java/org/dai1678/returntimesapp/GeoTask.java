@@ -24,7 +24,7 @@ public class GeoTask extends AsyncTask<String, Void, String> {
     private Context context;
     private Geo geo;
 
-    public GeoTask(Context mContext) {
+    GeoTask(Context mContext) {
         this.context = mContext;
         geo = (Geo) mContext;
     }
