@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="org.dai1678.returntimesapp.MainActivity">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/emptyTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center"
         android:text="No Data"
-        android:textSize="20sp"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true" />
+        android:textSize="25sp" />
 
     <ListView
         android:id="@+id/homeList"
@@ -21,14 +21,14 @@
 
     </ListView>
 
-    <com.gc.materialdesign.views.ButtonFloat
+    <android.support.design.widget.FloatingActionButton
         android:id="@+id/homeFloatingButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
-        android:layout_margin="25dp">
-
-    </com.gc.materialdesign.views.ButtonFloat>
+        android:layout_margin="@dimen/place_autocomplete_button_padding"
+        android:src="@android:drawable/ic_input_add"
+        app:backgroundTint="@color/colorPrimary"/>
 
 </RelativeLayout>

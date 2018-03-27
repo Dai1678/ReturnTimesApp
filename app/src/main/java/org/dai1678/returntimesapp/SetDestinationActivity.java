@@ -2,10 +2,10 @@ package org.dai1678.returntimesapp;
 
 import android.app.FragmentManager;
 import android.content.Intent;
+import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,8 +13,6 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.GridView;
-
-import com.rengwuxian.materialedittext.MaterialEditText;
 
 import java.util.ArrayList;
 
@@ -29,7 +27,7 @@ public class SetDestinationActivity extends AppCompatActivity implements GridVie
 
     GridView gridView;
 
-    private MaterialEditText destinationEditText = null;
+    private TextInputEditText destinationEditText = null;
     private DestinationItem destinationItem;
     private Integer imageMipmap;
 

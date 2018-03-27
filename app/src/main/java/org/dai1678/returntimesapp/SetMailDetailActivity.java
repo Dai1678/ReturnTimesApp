@@ -2,19 +2,17 @@ package org.dai1678.returntimesapp;
 
 import android.app.FragmentManager;
 import android.content.Intent;
+import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.rengwuxian.materialedittext.MaterialEditText;
-
 public class SetMailDetailActivity extends AppCompatActivity {
 
-    MaterialEditText contactEdit;
-    MaterialEditText addressEdit;
+    TextInputEditText contactEdit;
+    TextInputEditText addressEdit;
     //ListView listView;
 
     @Override

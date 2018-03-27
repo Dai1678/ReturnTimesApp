@@ -7,18 +7,15 @@ import android.graphics.BitmapFactory;
 import android.app.FragmentManager;
 import android.location.Location;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-
-import com.gc.materialdesign.views.ButtonFloat;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -30,9 +27,7 @@ import java.util.Calendar;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
-import io.realm.RealmQuery;
 import io.realm.RealmResults;
-
 
 /***************************************************************************************************
  MainActivity    初期表示画面
@@ -73,8 +68,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         //Realm init
         Realm.init(this);
-        RealmConfiguration realmConfig = new RealmConfiguration.Builder().build();
-        //Realm.deleteRealm(realmConfig);
+        RealmConfiguration realmConfig = new RealmConfiguration.Builder()
+                .deleteRealmIfMigrationNeeded()
+                .build();
         realm = Realm.getInstance(realmConfig);
 
         //ActionBar
@@ -84,12 +80,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         }
 
         //右下フロートボタン
-        ButtonFloat buttonFloat = findViewById(R.id.homeFloatingButton);
+        FloatingActionButton buttonFloat = findViewById(R.id.homeFloatingButton);
         if (buttonFloat != null) {
-            buttonFloat.setDrawableIcon(getResources().getDrawable(R.drawable.ic_float_button));
+            buttonFloat.setOnClickListener(this);
         }
-        assert buttonFloat != null;
-        buttonFloat.setOnClickListener(this);
 
         //位置情報
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
