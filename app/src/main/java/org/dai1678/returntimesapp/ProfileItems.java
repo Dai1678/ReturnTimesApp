@@ -7,7 +7,7 @@ public class ProfileItems extends RealmObject {
     private Integer profileId;
 
     private String destinationName;
-    private int imageMipmap;
+    private int imageDrawable;
 
     private String placeName;
     private double latitude;
@@ -21,7 +21,7 @@ public class ProfileItems extends RealmObject {
 
     public String getDestinationName() { return destinationName; }
 
-    public int getImageMipmap() { return imageMipmap; }
+    public int getImageDrawable() { return imageDrawable; }
 
     public String getPlaceName() {
         return placeName;
@@ -46,7 +46,7 @@ public class ProfileItems extends RealmObject {
 
     public void setDestinationName(String destinationName) { this.destinationName = destinationName; }
 
-    public void setImageMipmap(int imagePosition) { this.imageMipmap = imagePosition; }
+    public void setImageDrawable(int imagePosition) { this.imageDrawable = imagePosition; }
 
     public void setPlaceName(String placeName) {
         this.placeName = placeName;

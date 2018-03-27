@@ -18,7 +18,7 @@ public class CustomProfileListAdapter extends ArrayAdapter<CustomProfileListItem
     private List<CustomProfileListItem> items;
     private LayoutInflater layoutInflater;
 
-    public CustomProfileListAdapter(Context context, int resource, List<CustomProfileListItem> items) {
+    CustomProfileListAdapter(Context context, int resource, List<CustomProfileListItem> items) {
         super(context, resource, items);
 
         this.resource = resource;
@@ -27,8 +27,8 @@ public class CustomProfileListAdapter extends ArrayAdapter<CustomProfileListItem
     }
 
     private static class ViewHolder{
-        public ImageView thumbnail;
-        public TextView textView;
+        ImageView thumbnail;
+        TextView textView;
     }
 
     @NonNull
@@ -39,8 +39,8 @@ public class CustomProfileListAdapter extends ArrayAdapter<CustomProfileListItem
         if(convertView == null){
             convertView = this.layoutInflater.inflate(this.resource,null);
             holder = new ViewHolder();
-            holder.thumbnail = (ImageView)convertView.findViewById(R.id.profileItemImage);
-            holder.textView = (TextView)convertView.findViewById(R.id.textProfile);
+            holder.thumbnail = convertView.findViewById(R.id.profileItemImage);
+            holder.textView = convertView.findViewById(R.id.textProfile);
             convertView.setTag(holder);
         }else{
             holder = (ViewHolder)convertView.getTag();

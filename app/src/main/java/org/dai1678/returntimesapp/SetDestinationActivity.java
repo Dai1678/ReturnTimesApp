@@ -29,7 +29,7 @@ public class SetDestinationActivity extends AppCompatActivity implements GridVie
 
     private TextInputEditText destinationEditText = null;
     private DestinationItem destinationItem;
-    private Integer imageMipmap;
+    private Integer imageDrawable;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,7 +50,7 @@ public class SetDestinationActivity extends AppCompatActivity implements GridVie
         destinationItem = new DestinationItem();
 
         for(int i=0; i<destinationItem.getItemNameList().size(); i++){
-            GridItem item = new GridItem(destinationItem.getItemNameList().get(i), destinationItem.getItemImageList().get(i));
+            GridItem item = new GridItem(destinationItem.getItemNameList().get(i), destinationItem.getItemDrawableList().get(i));
             gridItems.add(item);
         }
 
@@ -87,7 +87,7 @@ public class SetDestinationActivity extends AppCompatActivity implements GridVie
             }else{
                 Intent intent = new Intent();
                 intent.putExtra("destinationName", destinationName);    //行き先名をSettingProfileActivityへ送る
-                intent.putExtra("imageMipmap", imageMipmap);    //アイコンのmipmapコードをSettingProfileActivityへ送る
+                intent.putExtra("imageDrawable", imageDrawable);    //アイコンのmipmapコードをSettingProfileActivityへ送る
                 setResult(RESULT_OK, intent);
 
                 finish();
@@ -102,7 +102,7 @@ public class SetDestinationActivity extends AppCompatActivity implements GridVie
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
         Log.i("position",String.valueOf(position));
-        this.imageMipmap = destinationItem.getItemImageList().get(position);
+        this.imageDrawable = destinationItem.getItemDrawableList().get(position);
 
     }
 

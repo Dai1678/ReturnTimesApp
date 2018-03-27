@@ -7,7 +7,6 @@ import android.graphics.BitmapFactory;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,11 +24,12 @@ import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import java.util.ArrayList;
 
 import io.realm.Realm;
+import io.realm.RealmConfiguration;
 
 public class SettingProfileActivity extends AppCompatActivity implements AdapterView.OnItemClickListener{
 
-    ArrayList<String> profileResult;
-    Bitmap bmp;
+    ArrayList<String> profileStringList;
+    ArrayList<Bitmap> profileBmpList;
 
     ArrayList<CustomProfileListItem> listItems;
     CustomProfileListAdapter adapter;
@@ -39,7 +39,7 @@ public class SettingProfileActivity extends AppCompatActivity implements Adapter
     int SET_MAIL_DETAIL_REQUEST_CODE = 3;
 
     private String destinationName;
-    private int imageMipmap;
+    private int imageDrawable;
     private String placeName;
     private double latitude;
     private double longitude;
@@ -56,6 +56,11 @@ public class SettingProfileActivity extends AppCompatActivity implements Adapter
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting_profile);
 
+        RealmConfiguration realmConfig = new RealmConfiguration.Builder()
+                .deleteRealmIfMigrationNeeded()
+                .build();
+        realm = Realm.getInstance(realmConfig);
+
         ActionBar actionBar = getSupportActionBar();
         if(actionBar != null){
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -65,16 +70,20 @@ public class SettingProfileActivity extends AppCompatActivity implements Adapter
         //ListView
         ListView listView = findViewById(R.id.profileList);
 
-        profileResult = new ArrayList<>();
-        profileResult.add("行き先名の設定");
-        profileResult.add("住所の設定");
-        profileResult.add("連絡先の設定");
-        bmp = BitmapFactory.decodeResource(getResources(),R.mipmap.ic_launcher);     //TODO それぞれ適切な画像をセット
+        profileStringList = new ArrayList<>();
+        profileBmpList = new ArrayList<>();
+
+        profileStringList.add("行き先名の設定");
+        profileStringList.add("住所の設定");
+        profileStringList.add("連絡先の設定");
+        profileBmpList.add(BitmapFactory.decodeResource(getResources(), R.drawable.ic_walk));
+        profileBmpList.add(BitmapFactory.decodeResource(getResources(), R.drawable.ic_location));
+        profileBmpList.add(BitmapFactory.decodeResource(getResources(), R.drawable.ic_contact_mail));
 
         listItems = new ArrayList<>();
         //0番目 : 行き先  1番目 : Map 2番目 : メアド入力
-        for (String profileResult : profileResult) {
-            CustomProfileListItem item = new CustomProfileListItem(bmp, profileResult);
+        for (int i=0; i<profileBmpList.size(); i++){
+            CustomProfileListItem item = new CustomProfileListItem(profileBmpList.get(i), profileStringList.get(i));
             listItems.add(item);
         }
 
@@ -122,12 +131,13 @@ public class SettingProfileActivity extends AppCompatActivity implements Adapter
         if(requestCode == SET_DESTINATION_REQUEST_CODE){
             if (resultCode == RESULT_OK){
                 Log.i("Destination", data.getStringExtra("destinationName"));
-                Log.i("Destination", String.valueOf(data.getIntExtra("imageMipmap",0)));
+                Log.i("Destination", String.valueOf(data.getIntExtra("imageDrawable",0)));
 
                 this.destinationName = data.getStringExtra("destinationName");
-                this.imageMipmap = data.getIntExtra("imageMipmap",0);
+                this.imageDrawable = data.getIntExtra("imageDrawable",0);
 
-                profileResult.set(0, destinationName);
+                profileStringList.set(0, destinationName);
+                profileBmpList.set(0, BitmapFactory.decodeResource(getResources(), imageDrawable));
                 savedCheckPoint += 1;
             }
         }
@@ -144,7 +154,7 @@ public class SettingProfileActivity extends AppCompatActivity implements Adapter
                 this.latitude = place.getLatLng().latitude;
                 this.longitude = place.getLatLng().longitude;
 
-                profileResult.set(1, placeName);
+                profileStringList.set(1, placeName);
                 savedCheckPoint += 1;
 
             }else if(resultCode == PlaceAutocomplete.RESULT_ERROR){
@@ -163,7 +173,7 @@ public class SettingProfileActivity extends AppCompatActivity implements Adapter
                 this.contact = data.getStringExtra("contact");
                 this.address = data.getStringExtra("address");
 
-                profileResult.set(2, address);
+                profileStringList.set(2, address);
                 savedCheckPoint += 1;
             }
         }
@@ -171,8 +181,8 @@ public class SettingProfileActivity extends AppCompatActivity implements Adapter
         listItems.clear();
 
         //Listの更新
-        for (String result : profileResult) {
-            CustomProfileListItem item = new CustomProfileListItem(bmp, result);
+        for (int i=0; i<profileBmpList.size(); i++){
+            CustomProfileListItem item = new CustomProfileListItem(profileBmpList.get(i), profileStringList.get(i));
             listItems.add(item);
         }
 
@@ -219,14 +229,13 @@ public class SettingProfileActivity extends AppCompatActivity implements Adapter
 
     //データベースへ保存
     private void savedProfiles(){
-        realm = Realm.getDefaultInstance();
 
         realm.beginTransaction();
         ProfileItems items = realm.createObject(ProfileItems.class);
 
         items.setProfileId(getNextProfileItemsId());
         items.setDestinationName(destinationName);
-        items.setImageMipmap(imageMipmap);
+        items.setImageDrawable(imageDrawable);
         items.setPlaceName(placeName);
         items.setLatitude(latitude);
         items.setLongitude(longitude);

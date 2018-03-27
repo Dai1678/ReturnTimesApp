@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     protected Location location;
 
     //ListItem情報： 場所画像id、宛先名、行き先、メアド
-    ArrayList<Integer> imageMipmapList = null;
+    ArrayList<Integer> imageDrawableList = null;
     ArrayList<String> destinationList = null;
     ArrayList<String> placeList = null;
     ArrayList<String> addressNameList = null;
@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         TextView emptyView = findViewById(R.id.emptyTextView);
         listView.setEmptyView(emptyView);
 
-        imageMipmapList = new ArrayList<>();
+        imageDrawableList = new ArrayList<>();
         destinationList = new ArrayList<>();
         placeList = new ArrayList<>();
         addressNameList = new ArrayList<>();
@@ -112,7 +112,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 profileItems = results.get(i);
                 assert profileItems != null;
                 Log.i("ID", profileItems.getProfileId().toString());
-                imageMipmapList.add(profileItems.getImageMipmap());
+                imageDrawableList.add(profileItems.getImageDrawable());
                 destinationList.add(profileItems.getDestinationName());
                 placeList.add(profileItems.getPlaceName());
                 Log.i("LATITUDE", String.valueOf(profileItems.getLatitude()));
@@ -121,7 +121,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 addressNameList.add(profileItems.getContact());
                 addressMailList.add(profileItems.getMail());
 
-                Bitmap bmp = BitmapFactory.decodeResource(getResources(), imageMipmapList.get(i));
+                Bitmap bmp = BitmapFactory.decodeResource(getResources(), imageDrawableList.get(i));
 
                 CustomHomeListItem item = new CustomHomeListItem(bmp, "行き先 : " + destinationList.get(i), "場所 : " + placeList.get(i)
                         , "宛先" + addressNameList.get(i), "メール" + addressMailList.get(i));
@@ -147,7 +147,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     public void onResume(){
         super.onResume();
 
-        imageMipmapList.clear();
+        imageDrawableList.clear();
         destinationList.clear();
         placeList.clear();
         destinationLatLong.clear();
@@ -164,7 +164,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 profileItems = results.get(i);
                 assert profileItems != null;
                 Log.i("ID", profileItems.getProfileId().toString());
-                imageMipmapList.add(profileItems.getImageMipmap());
+                imageDrawableList.add(profileItems.getImageDrawable());
                 destinationList.add(profileItems.getDestinationName());
                 placeList.add(profileItems.getPlaceName());
                 Log.i("LATITUDE", String.valueOf(profileItems.getLatitude()));
@@ -173,7 +173,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 addressNameList.add(profileItems.getContact());
                 addressMailList.add(profileItems.getMail());
 
-                Bitmap bmp = BitmapFactory.decodeResource(getResources(), imageMipmapList.get(i));
+                Bitmap bmp = BitmapFactory.decodeResource(getResources(), imageDrawableList.get(i));
 
                 CustomHomeListItem item = new CustomHomeListItem(bmp, "行き先 : " + destinationList.get(i), "場所 : " + placeList.get(i)
                         , "宛先 : " + addressNameList.get(i), "メール : " + addressMailList.get(i));

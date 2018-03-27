@@ -8,7 +8,7 @@ public class CustomProfileListItem {
     private Bitmap profileItemImage;
     private String profileHint;
 
-    public CustomProfileListItem(Bitmap profileItemImage,String profileHint){
+    CustomProfileListItem(Bitmap profileItemImage, String profileHint){
         this.profileItemImage = profileItemImage;
         this.profileHint = profileHint;
     }
