@@ -191,6 +191,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         clickPosition = position;
 
         String API_KEY = getString(R.string.google_maps_distance_matrix_key);
+        //TODO 交通手段の設定項目を追加
         String url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=" + nowLatLong + "&destinations=" + destinationLatLong.get(position) + "&transit_mode=rail&language=ja&avoid=tolls&key=" + API_KEY;  //API処理
         new GeoTask(MainActivity.this).execute(url);
 

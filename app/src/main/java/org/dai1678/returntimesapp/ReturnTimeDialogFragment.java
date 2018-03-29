@@ -32,13 +32,13 @@ public class ReturnTimeDialogFragment extends DialogFragment implements ImageBut
     @SuppressLint("SetTextI18n")
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState){
-        //TODO ダイアログのレイアウト修正
+
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         View view = getActivity().getLayoutInflater().inflate(R.layout.return_time_dialog, null );
 
         builder.setView(view)
-                .setTitle("連絡をします")
-                .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                .setTitle("連絡方法を選択してください")
+                .setPositiveButton("cancel", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         ReturnTimeDialogFragment.this.getDialog().cancel();
@@ -46,9 +46,9 @@ public class ReturnTimeDialogFragment extends DialogFragment implements ImageBut
                 });
 
         TextView requiredTimeText = view.findViewById(R.id.requiredTime);
-        requiredTimeText.setText("所要時間 : " + requiredTime);
+        requiredTimeText.setText("目的地まで" + requiredTime);
         TextView arrivalTimeText = view.findViewById(R.id.arrivalTime);
-        arrivalTimeText.setText("予想到着時刻 : " + arrivalTIme);
+        arrivalTimeText.setText(arrivalTIme + "に到着予定です");
 
         ImageView mailButton = view.findViewById(R.id.mailButton);
         mailButton.setOnClickListener(this);

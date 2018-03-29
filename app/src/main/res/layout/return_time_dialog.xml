@@ -10,7 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/requiredTime"
-        android:hint="所要時間 : "
+        android:hint="目的地まで◯時間◯分"
         android:textSize="20sp"
         android:layout_margin="10dp"/>
 
@@ -18,13 +18,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/arrivalTime"
-        android:hint="予想到着時刻 : "
+        android:hint="◯時◯分に到着予定です"
         android:textSize="20sp"
         />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:orientation="horizontal"
         android:gravity="center">
 
@@ -32,16 +33,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/mailButton"
-            android:layout_margin="10dp"
-            android:layout_marginEnd="30dp"
             android:src="@android:drawable/ic_dialog_email"
             android:backgroundTint="@color/colorPrimary"/>
 
         <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:id="@+id/lineButton"
-            android:layout_margin="10dp" />
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="20dp"
+            android:src="@drawable/ic_line" />
     </LinearLayout>
 
 </LinearLayout>
