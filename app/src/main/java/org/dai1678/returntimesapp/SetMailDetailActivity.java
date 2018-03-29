@@ -1,19 +1,28 @@
 package org.dai1678.returntimesapp;
 
+import android.app.Activity;
 import android.app.FragmentManager;
+import android.content.CursorLoader;
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
+import android.provider.ContactsContract;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 
-public class SetMailDetailActivity extends AppCompatActivity {
+public class SetMailDetailActivity extends AppCompatActivity implements View.OnClickListener {
 
     TextInputEditText contactEdit;
     TextInputEditText addressEdit;
-    //ListView listView;
+    Button quoteAddressButton;
+
+    private static int PICK_CONTACT = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,18 +37,11 @@ public class SetMailDetailActivity extends AppCompatActivity {
 
         contactEdit = findViewById(R.id.contactEdit);
         addressEdit = findViewById(R.id.addressEdit);
+        quoteAddressButton = findViewById(R.id.quoteAddress);
 
-        //TODO メアド入力フォームの下にアドレス帳参照ボタンを入れたい
+        quoteAddressButton.setOnClickListener(this);
+
         //TODO メアド入力フォームの下に送信先LINEユーザー設定フォームをいれたい
-
-        /*
-        listView = (ListView)findViewById(R.id.templateTextList);
-        final String[] templateText = {"◯時◯分に帰宅します","◯時◯分に到着します","◯時◯分に家を出ます"};
-
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this,android.R.layout.simple_list_item_single_choice,templateText);
-
-        listView.setAdapter(arrayAdapter);
-        */
     }
 
     //ListViewのチェック処理
@@ -89,6 +91,55 @@ public class SetMailDetailActivity extends AppCompatActivity {
             return  true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onClick(View view) {
+
+        if (view.getId() == R.id.quoteAddress){
+            Intent intent = new Intent();
+            intent.setAction(Intent.ACTION_PICK);
+            intent.setData(ContactsContract.Contacts.CONTENT_URI);
+            startActivityForResult(intent, PICK_CONTACT);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == PICK_CONTACT){
+            if (resultCode == Activity.RESULT_OK){
+                Uri contactData = data.getData();
+                CursorLoader cursorLoader = new CursorLoader(this, contactData, null, null, null, null);
+                Cursor cursor = cursorLoader.loadInBackground();
+
+                if (cursor.moveToFirst()){
+                    String id = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
+
+                    String name = cursor.getString(cursor.getColumnIndexOrThrow(ContactsContract.Contacts.DISPLAY_NAME));
+
+                    String mailAddress = "";
+
+                    Cursor mail = getContentResolver().query(
+                            ContactsContract.CommonDataKinds.Email.CONTENT_URI, null,
+                            ContactsContract.CommonDataKinds.Email.CONTACT_ID + "=" + id, null, null);
+
+                    assert mail != null;
+                    if (mail.moveToFirst()){
+                        mailAddress = mail.getString(mail.getColumnIndex(ContactsContract.CommonDataKinds.Email.DATA));
+                    }
+
+                    mail.close();
+
+                    contactEdit.setText(name);
+                    addressEdit.setText(mailAddress);
+
+                }
+
+                cursor.close();
+            }
+        }
     }
 
 }
