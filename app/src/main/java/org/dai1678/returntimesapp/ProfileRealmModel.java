@@ -2,17 +2,14 @@ package org.dai1678.returntimesapp;
 
 import io.realm.RealmObject;
 
-public class ProfileItems extends RealmObject {
+public class ProfileRealmModel extends RealmObject {
 
     private Integer profileId;
-
     private String destinationName;
     private int imageDrawable;
-
     private String placeName;
     private double latitude;
     private double longitude;
-
     private String contact;
     private String mail;
 

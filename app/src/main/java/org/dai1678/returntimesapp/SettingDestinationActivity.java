@@ -17,19 +17,17 @@ import android.widget.GridView;
 import java.util.ArrayList;
 
 /***************************************************************************************************
- SetDestinationActivity     第一設定画面
+ SettingDestinationActivity     設定画面
  機能：    連絡相手のメールアドレス入力
           行き先の選択(家、レストラン、病院、銀行、郵便局、駅)　
           場所名と画像positionを取得
 ***************************************************************************************************/
 
-public class SetDestinationActivity extends AppCompatActivity implements GridView.OnItemClickListener {
+public class SettingDestinationActivity extends AppCompatActivity implements GridView.OnItemClickListener {
 
-    GridView gridView;
-
-    private TextInputEditText destinationEditText = null;
+    private TextInputEditText destinationEditText;
     private DestinationItem destinationItem;
-    private Integer imageDrawable;
+    private Integer imageDrawableId;    //画像のResourceId
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,7 +52,7 @@ public class SetDestinationActivity extends AppCompatActivity implements GridVie
             gridItems.add(item);
         }
 
-        gridView = findViewById(R.id.gridView);
+        GridView gridView = findViewById(R.id.gridView);
         gridView.setChoiceMode(GridView.CHOICE_MODE_SINGLE);
         GridItemAdapter adapter = new GridItemAdapter(this,R.layout.grid_item,gridItems);
         gridView.setAdapter(adapter);
@@ -87,7 +85,7 @@ public class SetDestinationActivity extends AppCompatActivity implements GridVie
             }else{
                 Intent intent = new Intent();
                 intent.putExtra("destinationName", destinationName);    //行き先名をSettingProfileActivityへ送る
-                intent.putExtra("imageDrawable", imageDrawable);    //アイコンのmipmapコードをSettingProfileActivityへ送る
+                intent.putExtra("imageDrawableId", imageDrawableId);    //アイコンのmipmapコードをSettingProfileActivityへ送る
                 setResult(RESULT_OK, intent);
 
                 finish();
@@ -102,7 +100,7 @@ public class SetDestinationActivity extends AppCompatActivity implements GridVie
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
         Log.i("position",String.valueOf(position));
-        this.imageDrawable = destinationItem.getItemDrawableList().get(position);
+        this.imageDrawableId = destinationItem.getItemDrawableList().get(position);
 
     }
 

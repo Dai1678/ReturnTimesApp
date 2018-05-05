@@ -16,11 +16,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
-public class SetMailDetailActivity extends AppCompatActivity implements View.OnClickListener {
+public class SettingMailAddressActivity extends AppCompatActivity implements View.OnClickListener {
 
     TextInputEditText contactEdit;
     TextInputEditText addressEdit;
-    Button quoteAddressButton;
 
     private static int PICK_CONTACT = 0;
 
@@ -37,14 +36,12 @@ public class SetMailDetailActivity extends AppCompatActivity implements View.OnC
 
         contactEdit = findViewById(R.id.contactEdit);
         addressEdit = findViewById(R.id.addressEdit);
-        quoteAddressButton = findViewById(R.id.quoteAddress);
+        Button quoteAddressButton = findViewById(R.id.quoteAddress);
 
         quoteAddressButton.setOnClickListener(this);
 
         //TODO メアド入力フォームの下に送信先LINEユーザー設定フォームをいれたい
     }
-
-    //ListViewのチェック処理
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
@@ -68,24 +65,20 @@ public class SetMailDetailActivity extends AppCompatActivity implements View.OnC
                 setResult(RESULT_OK, intent);
 
                 finish();
-            }else{
-                if(contact.equals("")){
-                    final int ALERT_CONTACT = 2;
+            }else if (contact.equals("")) {
+                final int ALERT_CONTACT = 2;
 
-                    FragmentManager fragmentManager = getFragmentManager();
+                FragmentManager fragmentManager = getFragmentManager();
 
-                    AlertDialogFragment alertDialogFragment = new AlertDialogFragment(ALERT_CONTACT);
-                    alertDialogFragment.show(fragmentManager,"alertDialog");    //警告アラート表示
-                }
+                AlertDialogFragment alertDialogFragment = new AlertDialogFragment(ALERT_CONTACT);
+                alertDialogFragment.show(fragmentManager,"alertDialog");    //警告アラート表示
 
-                if(address.equals("")) {
-                    int ALERT_ADDRESS = 3;
-                    FragmentManager fragmentManager = getFragmentManager();
+            } else if (address.equals("")) {
+                int ALERT_ADDRESS = 3;
+                FragmentManager fragmentManager = getFragmentManager();
 
-                    AlertDialogFragment alertDialogFragment = new AlertDialogFragment(ALERT_ADDRESS);
-                    alertDialogFragment.show(fragmentManager, "alertDialog");    //警告アラート表示
-
-                }
+                AlertDialogFragment alertDialogFragment = new AlertDialogFragment(ALERT_ADDRESS);
+                alertDialogFragment.show(fragmentManager, "alertDialog");    //警告アラート表示
             }
 
             return  true;
@@ -100,7 +93,7 @@ public class SetMailDetailActivity extends AppCompatActivity implements View.OnC
             Intent intent = new Intent();
             intent.setAction(Intent.ACTION_PICK);
             intent.setData(ContactsContract.Contacts.CONTENT_URI);
-            startActivityForResult(intent, PICK_CONTACT);
+            startActivityForResult(intent, PICK_CONTACT);   //スマホの連絡帳へIntent
         }
     }
 

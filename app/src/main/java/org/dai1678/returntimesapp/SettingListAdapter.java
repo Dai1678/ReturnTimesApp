@@ -12,13 +12,13 @@ import android.widget.TextView;
 
 import java.util.List;
 
-public class CustomProfileListAdapter extends ArrayAdapter<CustomProfileListItem> {
+public class SettingListAdapter extends ArrayAdapter<SettingListModel> {
 
     private int resource;
-    private List<CustomProfileListItem> items;
+    private List<SettingListModel> items;
     private LayoutInflater layoutInflater;
 
-    CustomProfileListAdapter(Context context, int resource, List<CustomProfileListItem> items) {
+    SettingListAdapter(Context context, int resource, List<SettingListModel> items) {
         super(context, resource, items);
 
         this.resource = resource;
@@ -46,7 +46,7 @@ public class CustomProfileListAdapter extends ArrayAdapter<CustomProfileListItem
             holder = (ViewHolder)convertView.getTag();
         }
 
-        CustomProfileListItem item = this.items.get(position);
+        SettingListModel item = this.items.get(position);
 
         holder.thumbnail.setImageBitmap(item.getProfileItemImage());
 

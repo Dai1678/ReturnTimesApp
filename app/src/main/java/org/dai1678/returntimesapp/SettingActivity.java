@@ -26,28 +26,25 @@ import java.util.ArrayList;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 
-public class SettingProfileActivity extends AppCompatActivity implements AdapterView.OnItemClickListener{
+public class SettingActivity extends AppCompatActivity implements AdapterView.OnItemClickListener{
 
-    ArrayList<String> profileStringList;
-    ArrayList<Bitmap> profileBmpList;
+    ArrayList<SettingListModel> listItems = new ArrayList<>();
+    SettingListAdapter adapter;
 
-    ArrayList<CustomProfileListItem> listItems;
-    CustomProfileListAdapter adapter;
-
-    int SET_DESTINATION_REQUEST_CODE = 1;
-    int PLACE_AUTOCOMPLETE_REQUEST_CODE = 2;
-    int SET_MAIL_DETAIL_REQUEST_CODE = 3;
+    private final int SET_DESTINATION_REQUEST_CODE = 1;
+    private final int PLACE_AUTOCOMPLETE_REQUEST_CODE = 2;
+    private final int SET_MAIL_DETAIL_REQUEST_CODE = 3;
 
     private String destinationName;
-    private int imageDrawable;
+    private int imageDrawableId;
     private String placeName;
     private double latitude;
     private double longitude;
     private String contact;
     private String address;
 
-    int savedCheckPoint = 0;
-    Boolean savedCheckFlag = false;
+    int savedCheckPoint = 0;    //各SettingActivityで入力されると値が増える
+    Boolean savedCheckFlag = false; //savedCheckPointが3になるとtrue
 
     Realm realm;
 
@@ -70,31 +67,20 @@ public class SettingProfileActivity extends AppCompatActivity implements Adapter
         //ListView
         ListView listView = findViewById(R.id.profileList);
 
-        profileStringList = new ArrayList<>();
-        profileBmpList = new ArrayList<>();
-
-        profileStringList.add("行き先名の設定");
-        profileStringList.add("住所の設定");
-        profileStringList.add("連絡先の設定");
-        profileBmpList.add(BitmapFactory.decodeResource(getResources(), R.drawable.ic_walk));
-        profileBmpList.add(BitmapFactory.decodeResource(getResources(), R.drawable.ic_location));
-        profileBmpList.add(BitmapFactory.decodeResource(getResources(), R.drawable.ic_contact_mail));
-
-        listItems = new ArrayList<>();
-        //0番目 : 行き先  1番目 : Map 2番目 : メアド入力
-        for (int i=0; i<profileBmpList.size(); i++){
-            CustomProfileListItem item = new CustomProfileListItem(profileBmpList.get(i), profileStringList.get(i));
-            listItems.add(item);
+        SettingListModel listModel = null;
+        for (int i=0; i<3; i++){
+            if (i==0) listModel = new SettingListModel((BitmapFactory.decodeResource(getResources(), R.drawable.ic_walk)), "行き先名の設定");
+            if (i==1) listModel = new SettingListModel((BitmapFactory.decodeResource(getResources(), R.drawable.ic_location)), "住所の設定");
+            if (i==2) listModel = new SettingListModel((BitmapFactory.decodeResource(getResources(), R.drawable.ic_contact_mail)), "連絡先の設定");
+            listItems.add(listModel);
         }
 
-        adapter = new CustomProfileListAdapter(this,R.layout.profile_item,listItems);
+        adapter = new SettingListAdapter(this, R.layout.profile_item, listItems);
         listView.setAdapter(adapter);
-
 
         listView.setOnItemClickListener(this);
     }
 
-    //ListViewクリック処理
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
 
@@ -102,7 +88,7 @@ public class SettingProfileActivity extends AppCompatActivity implements Adapter
 
         switch (position){
             case 0:
-                intent = new Intent(this.getApplicationContext(),SetDestinationActivity.class);
+                intent = new Intent(this.getApplicationContext(),SettingDestinationActivity.class);
                 startActivityForResult(intent, SET_DESTINATION_REQUEST_CODE);
                 break;
 
@@ -110,15 +96,13 @@ public class SettingProfileActivity extends AppCompatActivity implements Adapter
                 try {
                     intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN).build(this);    //プレイスオートコンプリートへ
                     startActivityForResult(intent,PLACE_AUTOCOMPLETE_REQUEST_CODE);
-                } catch (GooglePlayServicesRepairableException e) {
-                    Log.i("Place:",e.toString());e.printStackTrace();
-                } catch (GooglePlayServicesNotAvailableException e) {
-                    Log.i("Place:",e.toString());
+                } catch (GooglePlayServicesRepairableException | GooglePlayServicesNotAvailableException e) {
+                    e.printStackTrace();
                 }
                 break;
 
             case 2:
-                intent = new Intent(this.getApplicationContext(),SetMailDetailActivity.class);
+                intent = new Intent(this.getApplicationContext(),SettingMailAddressActivity.class);
                 startActivityForResult(intent, SET_MAIL_DETAIL_REQUEST_CODE);
                 break;
         }
@@ -130,14 +114,12 @@ public class SettingProfileActivity extends AppCompatActivity implements Adapter
 
         if(requestCode == SET_DESTINATION_REQUEST_CODE){
             if (resultCode == RESULT_OK){
-                Log.i("Destination", data.getStringExtra("destinationName"));
-                Log.i("Destination", String.valueOf(data.getIntExtra("imageDrawable",0)));
-
                 this.destinationName = data.getStringExtra("destinationName");
-                this.imageDrawable = data.getIntExtra("imageDrawable",0);
+                this.imageDrawableId = data.getIntExtra("imageDrawableId",0);
 
-                profileStringList.set(0, destinationName);
-                profileBmpList.set(0, BitmapFactory.decodeResource(getResources(), imageDrawable));
+                SettingListModel destinationList = new SettingListModel((BitmapFactory.decodeResource(getResources(), imageDrawableId)), destinationName);
+                listItems.set(0, destinationList);
+
                 savedCheckPoint += 1;
             }
         }
@@ -145,16 +127,14 @@ public class SettingProfileActivity extends AppCompatActivity implements Adapter
         else if(requestCode == PLACE_AUTOCOMPLETE_REQUEST_CODE){
             if(resultCode == RESULT_OK){
                 Place place = PlaceAutocomplete.getPlace(this,data);
-                Log.i("Place",place.getName().toString());
-                Log.i("Place",place.getAddress().toString());
-                Log.i("Place", String.valueOf(place.getLatLng().latitude));
-                Log.i("Place", String.valueOf(place.getLatLng().longitude));
 
                 this.placeName = place.getName().toString();
                 this.latitude = place.getLatLng().latitude;
                 this.longitude = place.getLatLng().longitude;
 
-                profileStringList.set(1, placeName);
+                SettingListModel placeList = new SettingListModel((BitmapFactory.decodeResource(getResources(), R.drawable.ic_location)), placeName);
+                listItems.set(1, placeList);
+
                 savedCheckPoint += 1;
 
             }else if(resultCode == PlaceAutocomplete.RESULT_ERROR){
@@ -167,28 +147,57 @@ public class SettingProfileActivity extends AppCompatActivity implements Adapter
 
         else if (requestCode == SET_MAIL_DETAIL_REQUEST_CODE){
             if(resultCode == RESULT_OK){
-                Log.i("MAIL", data.getStringExtra("contact"));
-                Log.i("MAIL", data.getStringExtra("address"));
-
                 this.contact = data.getStringExtra("contact");
                 this.address = data.getStringExtra("address");
 
-                profileStringList.set(2, address);
+                SettingListModel addressList = new SettingListModel((BitmapFactory.decodeResource(getResources(), R.drawable.ic_contact_mail)), address);
+                listItems.set(2, addressList);
+
                 savedCheckPoint += 1;
             }
         }
 
-        listItems.clear();
-
-        //Listの更新
-        for (int i=0; i<profileBmpList.size(); i++){
-            CustomProfileListItem item = new CustomProfileListItem(profileBmpList.get(i), profileStringList.get(i));
-            listItems.add(item);
-        }
+        adapter.notifyDataSetChanged();
 
         savedCheckFlag = savedCheckProfiles();
+    }
 
-        adapter.notifyDataSetChanged();
+    //保存データのnullチェック
+    private Boolean savedCheckProfiles(){
+        return savedCheckPoint >= 3;
+    }
+
+    //データベースへ保存
+    private void savedProfiles(){
+
+        realm.beginTransaction();
+        ProfileRealmModel items = realm.createObject(ProfileRealmModel.class);
+
+        items.setProfileId(getNextProfileItemsId());
+        items.setDestinationName(destinationName);
+        items.setImageDrawable(imageDrawableId);
+        items.setPlaceName(placeName);
+        items.setLatitude(latitude);
+        items.setLongitude(longitude);
+        items.setContact(contact);
+        items.setMail(address);
+
+        realm.commitTransaction();
+    }
+
+    //id設定
+    public Integer getNextProfileItemsId(){
+        Integer nextItemsId = 1;
+
+        //idの最大値を取得
+        Number maxItemsId = realm.where(ProfileRealmModel.class).max("profileId");
+
+        //NULLチェック
+        if(maxItemsId != null){
+            nextItemsId = maxItemsId.intValue() + 1;
+        }
+
+        return nextItemsId;
     }
 
     @Override
@@ -205,7 +214,7 @@ public class SettingProfileActivity extends AppCompatActivity implements Adapter
         }else if(item.getItemId() == R.id.save_profile){
 
             if(savedCheckFlag){
-                Toast.makeText(SettingProfileActivity.this,"SAVED!",Toast.LENGTH_SHORT).show();
+                Toast.makeText(SettingActivity.this,"SAVED!",Toast.LENGTH_SHORT).show();
                 savedProfiles();
                 finish();
                 return  true;
@@ -216,48 +225,7 @@ public class SettingProfileActivity extends AppCompatActivity implements Adapter
                 AlertDialogFragment alertDialogFragment = new AlertDialogFragment(ALERT_SAVED);
                 alertDialogFragment.show(fragmentManager, "alertDialog");
             }
-
-
         }
         return super.onOptionsItemSelected(item);
     }
-
-    //保存データのnullチェック
-    private Boolean savedCheckProfiles(){
-        return savedCheckPoint >= 3;
-    }
-
-    //データベースへ保存
-    private void savedProfiles(){
-
-        realm.beginTransaction();
-        ProfileItems items = realm.createObject(ProfileItems.class);
-
-        items.setProfileId(getNextProfileItemsId());
-        items.setDestinationName(destinationName);
-        items.setImageDrawable(imageDrawable);
-        items.setPlaceName(placeName);
-        items.setLatitude(latitude);
-        items.setLongitude(longitude);
-        items.setContact(contact);
-        items.setMail(address);
-
-        realm.commitTransaction();
-    }
-
-    //id設定
-    public Integer getNextProfileItemsId(){
-        Integer nextItemsId = 1;
-
-        //idの最大値を取得
-        Number maxItemsId = realm.where(ProfileItems.class).max("profileId");
-
-        //NULLチェック
-        if(maxItemsId != null){
-            nextItemsId = maxItemsId.intValue() + 1;
-        }
-
-        return nextItemsId;
-    }
-
 }

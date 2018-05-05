@@ -6,7 +6,7 @@ public class GridItem {
     private Integer itemImage;
     private boolean isSelected;
 
-    public GridItem(String itemName, Integer itemImage){
+    GridItem(String itemName, Integer itemImage){
         this.itemName = itemName;
         this.itemImage = itemImage;
     }

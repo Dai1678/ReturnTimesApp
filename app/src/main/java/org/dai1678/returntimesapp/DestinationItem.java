@@ -1,7 +1,5 @@
 package org.dai1678.returntimesapp;
 
-import android.graphics.drawable.Drawable;
-
 import java.util.Arrays;
 import java.util.List;
 

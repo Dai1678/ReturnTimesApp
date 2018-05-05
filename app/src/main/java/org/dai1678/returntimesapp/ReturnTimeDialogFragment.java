@@ -61,7 +61,7 @@ public class ReturnTimeDialogFragment extends DialogFragment implements ImageBut
     @Override
     public void onClick(View view) {
         if (isInstallLine()){
-            startActivity(getIntentSend(view));
+            startActivity(getIntent(view));
         }else{
             Toast.makeText(getActivity(), "LineアプリをインストールするとLineを使って連絡ができます！", Toast.LENGTH_SHORT).show();
             getDialog().dismiss();
@@ -85,7 +85,7 @@ public class ReturnTimeDialogFragment extends DialogFragment implements ImageBut
         return appInstalled;
     }
 
-    public Intent getIntentSend(View view){
+    public Intent getIntent(View view){
 
         Intent intent = new Intent();
 

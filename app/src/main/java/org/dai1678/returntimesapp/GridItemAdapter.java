@@ -29,7 +29,7 @@ public class GridItemAdapter extends ArrayAdapter<GridItem> {
     private LayoutInflater layoutInflater;
 
 
-    public GridItemAdapter(Context context, int resource, List<GridItem> items){
+    GridItemAdapter(Context context, int resource, List<GridItem> items){
         super(context,resource,items);
 
         this.resource = resource;
@@ -38,8 +38,8 @@ public class GridItemAdapter extends ArrayAdapter<GridItem> {
     }
 
     private static class ViewHolder{
-        public ImageView imageView;
-        public TextView textView;
+        ImageView imageView;
+        TextView textView;
     }
 
     @Override

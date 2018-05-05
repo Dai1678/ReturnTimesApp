@@ -1,8 +1,9 @@
 package org.dai1678.returntimesapp;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.app.FragmentManager;
 import android.location.Location;
@@ -11,11 +12,12 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -39,25 +41,15 @@ import io.realm.RealmResults;
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener, View.OnClickListener, GeoTask.Geo {
 
     private FusedLocationProviderClient fusedLocationProviderClient;
-    protected Location location;
 
-    //ListItem情報： 場所画像id、宛先名、行き先、メアド
-    ArrayList<Integer> imageDrawableList = null;
-    ArrayList<String> destinationList = null;
-    ArrayList<String> placeList = null;
-    ArrayList<String> addressNameList = null;
-    ArrayList<String> addressMailList = null;
+    ArrayList<ProfileListModel> listItems = new ArrayList<>();
+    ProfileListAdapter adapter;
 
-    ArrayList<CustomHomeListItem> listItems;
-    CustomHomeListAdapter adapter;
-
-    int clickPosition;
+    int clickPosition;  //onItemClickでクリックしたListViewのposition
 
     String nowLatLong;  //現在位置の緯度,経度
-    ArrayList<String> destinationLatLong; //行き先の緯度,経度
-
-    String requiredTime; //帰宅所要時間
-    String arrivalTime; //予想到着時刻
+    ArrayList<String> LatLongList = new ArrayList<>();  //目的地の緯度経度
+    ArrayList<String> mailAddressList = new ArrayList<>();  //連絡相手のメールアドレス
 
     Realm realm;
 
@@ -66,70 +58,31 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //Realm init
         Realm.init(this);
         RealmConfiguration realmConfig = new RealmConfiguration.Builder()
                 .deleteRealmIfMigrationNeeded()
                 .build();
         realm = Realm.getInstance(realmConfig);
 
-        //ActionBar
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null){
             actionBar.setTitle("連絡先を選択してください");
         }
 
-        //右下フロートボタン
         FloatingActionButton buttonFloat = findViewById(R.id.homeFloatingButton);
         if (buttonFloat != null) {
             buttonFloat.setOnClickListener(this);
         }
 
-        //位置情報
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
-        //ListView処理
         ListView listView = findViewById(R.id.homeList);
         TextView emptyView = findViewById(R.id.emptyTextView);
         listView.setEmptyView(emptyView);
 
-        imageDrawableList = new ArrayList<>();
-        destinationList = new ArrayList<>();
-        placeList = new ArrayList<>();
-        addressNameList = new ArrayList<>();
-        addressMailList = new ArrayList<>();
+        pullListItem(); //RealmからListに表示する情報取得
 
-        destinationLatLong = new ArrayList<>();
-
-        listItems = new ArrayList<>();
-
-        RealmResults<ProfileItems> results = realm.where(ProfileItems.class).findAll();
-        ProfileItems profileItems;
-
-        if(results.size() > 0){
-            for (int i = 0; i < results.size(); i++) {
-
-                profileItems = results.get(i);
-                assert profileItems != null;
-                Log.i("ID", profileItems.getProfileId().toString());
-                imageDrawableList.add(profileItems.getImageDrawable());
-                destinationList.add(profileItems.getDestinationName());
-                placeList.add(profileItems.getPlaceName());
-                Log.i("LATITUDE", String.valueOf(profileItems.getLatitude()));
-                Log.i("LONGITUDE", String.valueOf(profileItems.getLongitude()));
-                destinationLatLong.add(String.valueOf(profileItems.getLatitude()) + "," + String.valueOf(profileItems.getLongitude()));
-                addressNameList.add(profileItems.getContact());
-                addressMailList.add(profileItems.getMail());
-
-                Bitmap bmp = BitmapFactory.decodeResource(getResources(), imageDrawableList.get(i));
-
-                CustomHomeListItem item = new CustomHomeListItem(bmp, "行き先 : " + destinationList.get(i), "場所 : " + placeList.get(i)
-                        , "宛先" + addressNameList.get(i), "メール" + addressMailList.get(i));
-                listItems.add(item);
-            }
-        }
-
-        adapter = new CustomHomeListAdapter(this, R.layout.main_list_item, listItems);
+        adapter = new ProfileListAdapter(this, R.layout.main_list_item, listItems);
         listView.setAdapter(adapter);
 
         listView.setOnItemClickListener(this);
@@ -137,51 +90,62 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     }
 
+    @SuppressWarnings("MissingPermission")  //TODO ここでPermissionDispatcher起動したい
     @Override
     public void onStart(){
         super.onStart();
-        lastLocation();
+
+        //端末の位置情報取得
+        fusedLocationProviderClient.getLastLocation()
+                .addOnCompleteListener(this, new OnCompleteListener<Location>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Location> task) {
+                        if(task.isSuccessful() && task.getResult() != null){
+                            Location location = task.getResult();
+
+                            Double nowLatitude = location.getLatitude();  //緯度
+                            Double nowLongitude = location.getLongitude();  //経度
+
+                            nowLatLong = String.valueOf(nowLatitude) + "," + String.valueOf(nowLongitude);
+                        }
+                    }
+                });
     }
 
     @Override
     public void onResume(){
         super.onResume();
 
-        imageDrawableList.clear();
-        destinationList.clear();
-        placeList.clear();
-        destinationLatLong.clear();
-        addressNameList.clear();
-        addressMailList.clear();
         listItems.clear();
+        pullListItem();
+        adapter.notifyDataSetChanged();
+    }
 
-        RealmResults<ProfileItems> results = realm.where(ProfileItems.class).findAll();
-        ProfileItems profileItems;
+    private void pullListItem(){
+
+        ProfileListModel listModel = null;
+        RealmResults<ProfileRealmModel> results = realm.where(ProfileRealmModel.class).findAll();
 
         if(results.size() > 0){
             for (int i = 0; i < results.size(); i++) {
 
-                profileItems = results.get(i);
-                assert profileItems != null;
-                Log.i("ID", profileItems.getProfileId().toString());
-                imageDrawableList.add(profileItems.getImageDrawable());
-                destinationList.add(profileItems.getDestinationName());
-                placeList.add(profileItems.getPlaceName());
-                Log.i("LATITUDE", String.valueOf(profileItems.getLatitude()));
-                Log.i("LONGITUDE", String.valueOf(profileItems.getLongitude()));
-                destinationLatLong.add(String.valueOf(profileItems.getLatitude()) + "," + String.valueOf(profileItems.getLongitude()));
-                addressNameList.add(profileItems.getContact());
-                addressMailList.add(profileItems.getMail());
+                ProfileRealmModel realmModel = results.get(i);
 
-                Bitmap bmp = BitmapFactory.decodeResource(getResources(), imageDrawableList.get(i));
+                if (realmModel != null){
+                    listModel = new ProfileListModel(BitmapFactory.decodeResource(getResources(), realmModel.getImageDrawable()),
+                            "行き先 : " + realmModel.getDestinationName(),
+                            "場所 : " + realmModel.getPlaceName(),
+                            "宛先 : " + realmModel.getContact(),
+                            "メール : " + realmModel.getMail());
 
-                CustomHomeListItem item = new CustomHomeListItem(bmp, "行き先 : " + destinationList.get(i), "場所 : " + placeList.get(i)
-                        , "宛先 : " + addressNameList.get(i), "メール : " + addressMailList.get(i));
-                listItems.add(item);
+                    LatLongList.add(String.valueOf(realmModel.getLatitude()) + "," + String.valueOf(realmModel.getLongitude()));
+                    mailAddressList.add(realmModel.getMail());
+                }
+
+                listItems.add(listModel);
+
             }
         }
-
-        adapter.notifyDataSetChanged();
     }
 
     //ListViewクリック処理
@@ -191,74 +155,28 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         clickPosition = position;
 
         String API_KEY = getString(R.string.google_maps_distance_matrix_key);
-        //TODO 交通手段の設定項目を追加
-        String url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=" + nowLatLong + "&destinations=" + destinationLatLong.get(position) + "&transit_mode=rail&language=ja&avoid=tolls&key=" + API_KEY;  //API処理
+        String transmitMode = "rail";  //TODO 交通手段の設定項目を追加
+
+        String url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=" + nowLatLong + "&destinations=" + LatLongList.get(position) + "&transit_mode=" + transmitMode + "&language=ja&avoid=tolls&key=" + API_KEY;  //API処理
         new GeoTask(MainActivity.this).execute(url);
-
-    }
-
-    @Override
-    public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long id) {
-        //削除確認ダイアログの表示
-        FragmentManager fragmentManager = getFragmentManager();
-
-        DeleteDialogFragment deleteDialogFragment = new DeleteDialogFragment(listItems, adapter, position);
-        deleteDialogFragment.show(fragmentManager, "deleteDialog");
-
-        return false;
-    }
-
-    //フロートボタンのクリック処理
-    @Override
-    public void onClick(View view) {
-        Intent intent = new Intent(this,SettingProfileActivity.class);
-        startActivity(intent);
-    }
-
-    //端末の位置情報取得
-    @SuppressWarnings("MissingPermission")
-    private void lastLocation(){
-        fusedLocationProviderClient.getLastLocation()
-                .addOnCompleteListener(this, new OnCompleteListener<Location>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Location> task) {
-                        if(task.isSuccessful() && task.getResult() != null){
-                            location = task.getResult();
-
-                            Double nowLatitude = location.getLatitude();  //緯度
-                            Double nowLongitude = location.getLongitude();  //経度
-
-                            nowLatLong = String.valueOf(nowLatitude) + "," + String.valueOf(nowLongitude);
-                            Log.i("nowPosition", nowLatLong);
-                        }
-                    }
-                });
     }
 
     //GeoTaskクラスのインタフェースメソッド
     @Override
-    public void calculationRequireTime(String result){
+    public void calculationTime(String result){
 
+        //所要帰宅時間の算出
         String res[] = result.split(","); //res[0] = 帰宅にかかる時間　res[1] = 距離
         Double min = Double.parseDouble(res[0]) / 60;  //APIから秒単位で送られているので、60で割って分単位に変えている
-        int dist = Integer.parseInt(res[1]) / 1000;
+        //int dist = Integer.parseInt(res[1]) / 1000;
         int times = Integer.parseInt(res[0]);
 
         int HH = times / 3600;  //帰宅にかかる時間の時間部分抽出
         int mm = times % 3600 / 60;  //帰宅にかかる時間の分部分抽出
 
-        requiredTime = (int) (min / 60) + " 時間 " + (int) (min % 60) + " 分";
+        String requiredTime = (int) (min / 60) + " 時間 " + (int) (min % 60) + " 分";
 
-        Log.i("requiredTime", "所要時間 : " + requiredTime);
-        Log.i("dist", "距離: " + dist + " キロメートル");
-
-        arriveTime(HH, mm);  //自宅到着時刻の算出
-        showReturnTimeDialog(); //ダイアログの表示
-
-    }
-
-    public void arriveTime(int addHour, int addMinute){
-
+        //自宅到着時刻の算出
         Calendar calendar = Calendar.getInstance();
 
         @SuppressLint("SimpleDateFormat")
@@ -270,20 +188,66 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         int second = calendar.get(Calendar.SECOND);
 
         //現在時刻に帰宅にかかる時間を足す
-        calendar.set(hour,minute,second);  //現在時刻取得
-        calendar.add(Calendar.HOUR_OF_DAY, addHour);
-        calendar.add(Calendar.MINUTE, addMinute);
-        //calendar.add(Calendar.SECOND, addSecond);
+        calendar.set(hour,minute,second);
+        calendar.add(Calendar.HOUR_OF_DAY, HH);
+        calendar.add(Calendar.MINUTE, mm);
 
-        arrivalTime = simpleDateFormat.format(calendar.getTime());
-        Log.i("arrivalTime", "予想到着時刻 : " + arrivalTime);
+        String arrivalTime = simpleDateFormat.format(calendar.getTime());
+
+        showReturnTimeDialog(requiredTime, arrivalTime); //ダイアログの表示
 
     }
 
-    private void showReturnTimeDialog(){
+    //帰宅時間結果と連絡方法選択ダイアログの表示
+    private void showReturnTimeDialog(String requiredTime, String arrivalTime){
         FragmentManager fragmentManager = getFragmentManager();
 
-        ReturnTimeDialogFragment dialogFragment = new ReturnTimeDialogFragment(requiredTime, arrivalTime, addressMailList.get(clickPosition));
-        dialogFragment.show(fragmentManager,"alert dialog");
+        ReturnTimeDialogFragment dialogFragment = new ReturnTimeDialogFragment(requiredTime, arrivalTime, mailAddressList.get(clickPosition));
+        dialogFragment.show(fragmentManager,"returnTimeDialog");
     }
+
+    @Override
+    public boolean onItemLongClick(AdapterView<?> adapterView, final View view, final int position, long id) {
+        //削除確認ダイアログの表示
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("削除確認")
+                .setMessage("削除しますか?")
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        listItems.remove(position);
+                        deleteRealmData(position);
+                        adapter.notifyDataSetChanged();
+                        Toast.makeText(MainActivity.this, "削除しました", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .setNegativeButton("Cancel", null)
+                .setCancelable(true);
+
+        builder.show();
+        return true;
+    }
+
+    //フロートボタンのクリック処理
+    @Override
+    public void onClick(View view) {
+        Intent intent = new Intent(this,SettingActivity.class);
+        startActivity(intent);
+    }
+
+    private void deleteRealmData(int position){
+        //Realm realm = Realm.getDefaultInstance();
+
+        RealmResults<ProfileRealmModel> results = realm.where(ProfileRealmModel.class).findAll();
+        if (results.size() > 0){
+            ProfileRealmModel item = results.get(position);
+
+            if (item != null) {
+                realm.beginTransaction();
+                item.deleteFromRealm();
+                realm.commitTransaction();
+            }
+        }
+    }
+
 }

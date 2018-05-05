@@ -45,7 +45,7 @@ public class GeoTask extends AsyncTask<String, Void, String> {
         super.onPostExecute(aDouble);
 
         if (aDouble != null) {
-            geo.calculationRequireTime(aDouble);
+            geo.calculationTime(aDouble);
             progressDialog.dismiss();  //ダイアログ閉じる
         } else
             Toast.makeText(context, "API Error! 適切な値をいれてください", Toast.LENGTH_SHORT).show();
@@ -104,7 +104,7 @@ public class GeoTask extends AsyncTask<String, Void, String> {
     }
 
     interface Geo {
-        void calculationRequireTime(String min);
+        void calculationTime(String min);
     }
 
 }

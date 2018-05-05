@@ -3,12 +3,12 @@ package org.dai1678.returntimesapp;
 
 import android.graphics.Bitmap;
 
-public class CustomProfileListItem {
+public class SettingListModel {
 
     private Bitmap profileItemImage;
     private String profileHint;
 
-    CustomProfileListItem(Bitmap profileItemImage, String profileHint){
+    SettingListModel(Bitmap profileItemImage, String profileHint){
         this.profileItemImage = profileItemImage;
         this.profileHint = profileHint;
     }

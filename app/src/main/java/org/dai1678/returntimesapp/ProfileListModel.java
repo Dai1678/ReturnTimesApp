@@ -2,10 +2,9 @@ package org.dai1678.returntimesapp;
 
 import android.graphics.Bitmap;
 
-public class CustomHomeListItem {
+public class ProfileListModel {
 
     private Bitmap destinationImage;
-    private String listId;
     private String destination;
     private String place;
     private String destinationLatitude;
@@ -13,9 +12,8 @@ public class CustomHomeListItem {
     private String addressName;
     private String addressMail;
 
-    public CustomHomeListItem(Bitmap thumbnail, String destination, String place, String addressName, String addressMail){
+    ProfileListModel(Bitmap thumbnail, String destination, String place, String addressName, String addressMail){
         this.destinationImage = thumbnail;
-        //this.listId = listId;
         this.destination = destination;
         this.place = place;
         this.addressName = addressName;
@@ -24,10 +22,6 @@ public class CustomHomeListItem {
 
     public void setDestinationImage(Bitmap destinationImage){
         this.destinationImage = destinationImage;
-    }
-
-    public void setListId(String listId) {
-        this.listId = listId;
     }
 
     public void setDestination(String destination){
@@ -56,10 +50,6 @@ public class CustomHomeListItem {
 
     public Bitmap getDestinationImage(){
         return this.destinationImage;
-    }
-
-    public String getListId() {
-        return listId;
     }
 
     public String getDestination(){

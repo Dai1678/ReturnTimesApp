@@ -37,9 +37,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".MainActivity" />
-        <activity android:name=".SetDestinationActivity" />
-        <activity android:name=".SetMailDetailActivity" />
-        <activity android:name=".SettingProfileActivity" />
+        <activity android:name=".SettingDestinationActivity" />
+        <activity android:name=".SettingMailAddressActivity" />
+        <activity android:name=".SettingActivity" />
     </application>
 
 </manifest>
